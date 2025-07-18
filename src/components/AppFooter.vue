@@ -62,6 +62,7 @@ export default {
   color: white;
   padding: 2rem 1rem 1rem;
   font-family: "Cairo", sans-serif;
+  margin-top: 20px;
 }
 
 .footer-container {
