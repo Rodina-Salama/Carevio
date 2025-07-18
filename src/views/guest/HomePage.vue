@@ -5,10 +5,10 @@
         <Carousel
           :items-to-show="1"
           :autoplay="true"
-          :autoplayTimeout="1000000"
+          :autoplayTimeout="10000"
           :wrapAround="true"
           :pauseAutoplayOnHover="true"
-          :transition="2500"
+          :transition="4500"
           :mouseDrag="false"
           direction="forward"
         >
@@ -374,18 +374,18 @@ select {
 .features {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .feature {
-  flex: 1 1 calc(25% - 2rem); /* 4 cards per row (25% width minus gap) */
-  min-width: 250px;
-  max-width: 300px;
+  flex: 1 1 calc(25% - 1.5rem); /* 4 cards per row (25% width minus gap) */
+  min-width: 200px;
+  max-width: 250px;
   background-color: #f9f9f9;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -600,17 +600,21 @@ select {
   max-width: 1200px;
   margin: 0 auto;
 }
-
 .section-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
+  position: relative;
   margin-bottom: 3rem;
 }
 
 .section-header h2 {
   font-size: 2rem;
   color: #19599a;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
 }
 
 .explore-btn {

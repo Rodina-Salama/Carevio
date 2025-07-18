@@ -120,7 +120,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
 }
 
 .service-card:hover {
@@ -137,7 +137,7 @@ export default {
 }
 
 .service-icon img {
-  width: 200px;
+  width: 300px;
   height: 200px;
   object-fit: contain;
 }
