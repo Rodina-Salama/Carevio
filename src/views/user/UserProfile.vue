@@ -1,9 +1,9 @@
 <template>
-  <h1>Join as a nurse</h1>
+  <h1>UserProfile</h1>
 </template>
 
 <script>
 export default {
-  name: "JoinAsNurse",
+  name: "UserProfile",
 };
 </script>

@@ -288,10 +288,11 @@ const navigateToServices = () => {
   top: 0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top:10px;
 }
 
 .hero-text {
@@ -300,7 +301,7 @@ const navigateToServices = () => {
   color: white;
   text-align: center;
   background: rgba(6, 33, 58, 0.6);
-  padding: 2rem;
+  padding: 3rem;
   border-radius: 10px;
   z-index: 10;
 }
@@ -308,8 +309,8 @@ const navigateToServices = () => {
 .hero-text h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  padding-top: 2.5rem;
-
+  padding-top: 4rem;
+ 
 }
 
 .highlight {
@@ -402,14 +403,13 @@ select {
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
- 
 }
 
 /* Medium screens (3 cards per row) */
 @media (max-width: 1024px) {
   .feature {
     flex: 1 1 calc(33.33% - 2rem); /* 3 cards per row */
-     margin-bottom:60px;
+    margin-bottom: 60px;
   }
 }
 
@@ -425,7 +425,7 @@ select {
   .feature {
     flex: 1 1 100%; /* Full width */
     max-width: 100%;
-    margin-bottom:60px;
+    margin-bottom: 60px;
   }
 }
 
@@ -475,7 +475,6 @@ select {
   padding: 4rem 1rem;
   background-color: #f8f9fa;
   text-align: center;
-  
 }
 
 .container {
@@ -489,17 +488,17 @@ select {
   font-size: clamp(1.8rem, 4vw, 2.2rem);
   color: #19599a;
   text-align: center;
- min-width: 300px;
+  min-width: 300px;
 }
 
 .subtitle {
   font-size: clamp(1rem, 2vw, 1.1rem);
   color: #555;
   max-width: 800px;
-  margin:auto;
+  margin: auto;
   line-height: 1.6;
   margin-top: 5px;
-  margin-bottom:30px;
+  margin-bottom: 30px;
 }
 
 .testimonials-carousel {
@@ -624,7 +623,7 @@ select {
   align-items: center;
   position: relative;
   margin-bottom: 2rem;
-   margin-top: 50px;
+  margin-top: 50px;
 }
 
 .section-header h2 {
@@ -634,8 +633,7 @@ select {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  margin-bottom:50px;
- 
+  margin-bottom: 50px;
 }
 
 .explore-btn {
