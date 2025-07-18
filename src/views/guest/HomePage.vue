@@ -140,9 +140,9 @@
       <div class="container">
         <div class="section-header">
           <h2>Our Services</h2>
-          <router-link to="/services" class="explore-btn">
+          <button @click="navigateToServices" class="explore-btn">
             Explore More Services →
-          </router-link>
+          </button>
         </div>
 
         <div class="services-grid">
@@ -194,8 +194,8 @@
     </section>
   </div>
 </template>
-
 <script setup>
+/* eslint-disable */
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Slide } from "vue3-carousel";
@@ -220,19 +220,23 @@ const testimonials = [
     rating: 5,
   },
   {
-    name: "Sarah Mohamed",
+    name: "Ahmed Samir",
     text: "The caregiver was professional and compassionate. She took excellent care of my elderly mother and followed all medical instructions perfectly.",
+    rating: 4,
+  },
+  {
+    name: "Rodina",
+    text: "Booking was easy and the nurse was very knowledgeable. Will definitely use this service again for post-surgery care.",
     rating: 5,
   },
   {
-    name: "Ahmed Samir",
-    text: "Booking was easy and the nurse was very knowledgeable. Will definitely use this service again for post-surgery care.",
-    rating: 4,
+    name: "Sarah Mohamed",
+    text: "At first I worried about strangers coming to my home. But after the first visit, I felt completely safe. Very professional.",
+    rating: 5,
   },
 ];
 
 const handleSearch = () => {
-  // Navigate to BrowseNurse page with query parameters
   router.push({
     path: "/browse",
     query: {
@@ -242,8 +246,17 @@ const handleSearch = () => {
     },
   });
 };
-</script>
 
+// Scroll-to-top solution
+const navigateToServices = () => {
+  router.push("/services").then(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+};
+</script>
 <!-- Your existing styles remain exactly the same -->
 <style scoped>
 .home-page {
@@ -287,7 +300,7 @@ const handleSearch = () => {
   color: white;
   text-align: center;
   background: rgba(6, 33, 58, 0.6);
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 10px;
   z-index: 10;
 }
@@ -295,7 +308,8 @@ const handleSearch = () => {
 .hero-text h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  padding-top: 2rem;
+  padding-top: 2.5rem;
+
 }
 
 .highlight {
@@ -388,12 +402,14 @@ select {
   padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+ 
 }
 
 /* Medium screens (3 cards per row) */
 @media (max-width: 1024px) {
   .feature {
     flex: 1 1 calc(33.33% - 2rem); /* 3 cards per row */
+     margin-bottom:60px;
   }
 }
 
@@ -409,6 +425,7 @@ select {
   .feature {
     flex: 1 1 100%; /* Full width */
     max-width: 100%;
+    margin-bottom:60px;
   }
 }
 
@@ -458,6 +475,7 @@ select {
   padding: 4rem 1rem;
   background-color: #f8f9fa;
   text-align: center;
+  
 }
 
 .container {
@@ -470,18 +488,18 @@ select {
 .section-header h2 {
   font-size: clamp(1.8rem, 4vw, 2.2rem);
   color: #19599a;
-  margin-bottom: 1rem;
   text-align: center;
-  margin: auto;
+ min-width: 300px;
 }
 
 .subtitle {
   font-size: clamp(1rem, 2vw, 1.1rem);
   color: #555;
   max-width: 800px;
-  margin: 0 auto 2rem;
+  margin:auto;
   line-height: 1.6;
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom:30px;
 }
 
 .testimonials-carousel {
@@ -605,7 +623,8 @@ select {
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+   margin-top: 50px;
 }
 
 .section-header h2 {
@@ -615,6 +634,8 @@ select {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
+  margin-bottom:50px;
+ 
 }
 
 .explore-btn {
