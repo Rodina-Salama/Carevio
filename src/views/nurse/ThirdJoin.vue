@@ -246,7 +246,7 @@ const handleSubmit = async () => {
 
     localStorage.removeItem("personalData");
     localStorage.removeItem("professionalData");
-    router.push("/confirmation");
+    router.push("/confirm");
   } catch (error) {
     console.error("Submission error:", error);
     alert(`Submission failed: ${error.message}`);
