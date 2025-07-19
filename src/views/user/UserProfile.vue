@@ -53,21 +53,20 @@ export default {
   },
   methods: {
     editProfile() {
-      alert("Edit Profile clicked");
-      // Add your edit profile logic here
+      // Navigate to edit profile page
+      this.$router.push("/editprofile");
     },
     changePassword() {
-      alert("Change Password clicked");
-      // Add your change password logic here
+      // Navigate to change password page
+      this.$router.push("/changepassword");
     },
     logout() {
-      alert("Logout clicked");
-      // Add your logout logic here
+      // Navigate to sign in page
+      this.$router.push("/signin");
     },
   },
 };
 </script>
-
 <style scoped>
 .profile-container {
   max-width: 500px; /* Slightly narrower container */

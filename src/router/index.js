@@ -12,6 +12,8 @@ import ThirdJoin from "@/views/nurse/ThirdJoin.vue";
 import FourthConfirm from "@/views/nurse/FourthConfirm.vue";
 import NurseProfile from "@/views/nurse/NurseProfile.vue";
 import UserProfile from "@/views/user/UserProfile.vue";
+import EditProfile from "@/views/user/EditProfile.vue";
+import ChangePassword from "@/views/user/ChangePassword.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -27,6 +29,12 @@ const routes = [
   { path: "/confirm", name: "FourthConfirm", component: FourthConfirm },
   { path: "/nurseprofile", name: "NurseProfile", component: NurseProfile },
   { path: "/userprofile", name: "UserProfile", component: UserProfile },
+  { path: "/editprofile", name: "EditProfile", component: EditProfile },
+  {
+    path: "/changepassword",
+    name: "ChangePassword",
+    component: ChangePassword,
+  },
 ];
 /* eslint-disable */
 const router = createRouter({

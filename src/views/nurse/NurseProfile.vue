@@ -4,7 +4,7 @@
       <div class="nurse-profile-card">
         <div class="header-section">
           <div class="avatar-info-wrapper">
-            <img :src="require('@/assets/NurseProfile.jpg')" class="avatar" />
+            <img :src="require('@/assets/sophia.jpg')" class="avatar" />
             <div class="info">
               <h2>{{ nurseData.name }}</h2>
               <p class="title">{{ nurseData.title }}</p>
@@ -129,7 +129,7 @@ export default {
         {
           id: 1,
           author: "Fatima Mahmoud",
-          authorImage: require("@/assets/NurseProfileFatima.jpg"),
+          authorImage: require("@/assets/sophia.jpg"),
           time: "3 weeks ago",
           text: "Miss Layla provided exceptional care for my grandmother.",
           rating: 5,
@@ -137,7 +137,7 @@ export default {
         {
           id: 2,
           author: "Omar Ali",
-          authorImage: require("@/assets/NurseProfileOmar.png"),
+          authorImage: require("@/assets/sophia.jpg"),
           time: "1 month ago",
           text: "Layla was professional and helpful during my recovery.",
           rating: 4,

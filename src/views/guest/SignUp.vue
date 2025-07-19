@@ -74,7 +74,7 @@
         <button type="submit" class="btn btn-primary">Create Account</button>
 
         <p class="login-link">
-          Already have an account? <a href="#">Log In</a>
+          Already have an account? <a href="SignInPage">Log In</a>
         </p>
       </form>
     </main>
@@ -110,6 +110,7 @@ export default {
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!regex.test(this.user.email)) {
         this.errorMessage = "Please enter a valid email address.";
+        this.successMessage = "";
       } else {
         this.errorMessage = "";
       }
@@ -118,6 +119,7 @@ export default {
       const regex = /^(01)[0-2,5]{1}[0-9]{8}$/;
       if (!regex.test(this.user.phone)) {
         this.errorMessage = "Phone must be a valid Egyptian number.";
+        this.successMessage = "";
       } else {
         this.errorMessage = "";
       }
@@ -127,6 +129,7 @@ export default {
       if (!regex.test(this.user.password)) {
         this.errorMessage =
           "Password must contain at least 6 characters, one uppercase, one lowercase and one number.";
+        this.successMessage = "";
       } else {
         this.errorMessage = "";
       }
@@ -134,6 +137,7 @@ export default {
     validatePasswordConfirmation() {
       if (this.user.password !== this.user.passwordConfirmation) {
         this.errorMessage = "Passwords do not match.";
+        this.successMessage = "";
       } else {
         this.errorMessage = "";
       }
@@ -158,17 +162,23 @@ export default {
                 .then(() => {
                   this.successMessage =
                     "Verification email sent. Please check your inbox.";
-                  router.push({ name: "LoginPage" });
+                  this.errorMessage = "";
+                  setTimeout(() => {
+                    router.push({ name: "SignIn" });
+                  }, 2000);
                 })
                 .catch(() => {
                   this.errorMessage = "Failed to send verification email.";
+                  this.successMessage = "";
                 });
             })
             .catch(() => {
               this.errorMessage = "Failed to set display name.";
+              this.successMessage = "";
             });
         })
         .catch((error) => {
+          this.successMessage = "";
           if (error.code === "auth/email-already-in-use") {
             this.errorMessage = "This email is already in use.";
           } else if (error.code === "auth/invalid-email") {
