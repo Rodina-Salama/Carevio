@@ -1,19 +1,24 @@
-// src/firebase.js
+// Import Firebase core and needed services
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDWsxFnywQc3uLrz9HRmdyTgRNdDSVssuk",
-  authDomain: "home-nursing-app.firebaseapp.com",
-  projectId: "home-nursing-app",
-  storageBucket: "home-nursing-app.firebasestorage.app",
-  messagingSenderId: "998997103926",
-  appId: "1:998997103926:web:28b2a46793eb63f0cdcf97",
-  measurementId: "G-MKTRK3P02Z",
+  apiKey: "AIzaSyB_21mju5TVqyQt8aBTJKF2iLjVDCCn0D8",
+  authDomain: "carevio-61abd.firebaseapp.com",
+  projectId: "carevio-61abd",
+  storageBucket: "carevio-61abd.appspot.com", // <-- تصحيح هنا
+  messagingSenderId: "732378027185",
+  appId: "1:732378027185:web:8e3568d544e38648903e90",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize services
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-export { db };
+// Export them to use in your components
+export { auth, db };
