@@ -69,7 +69,7 @@ export default {
 </script>
 <style scoped>
 .profile-container {
-  max-width: 500px; /* Slightly narrower container */
+  max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f5f5f5;

@@ -89,8 +89,10 @@
 <script setup>
 import { ref } from "vue";
 
+// Menu state
 const isMenuOpen = ref(false);
 
+// Menu actions
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };
@@ -320,4 +322,3 @@ const closeMenu = () => {
   }
 }
 </style>
-[

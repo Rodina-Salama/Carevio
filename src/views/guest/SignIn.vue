@@ -1,44 +1,56 @@
 <template>
-  <div class="login-page">
-    <main class="login-content">
-      <form @submit.prevent="loginUser" class="auth-form">
-        <h2 class="form-title">Welcome Back</h2>
+  <div class="page-container">
+    <div class="centered-container">
+      <div class="login-container">
+        <div class="login-left">
+          <form @submit.prevent="loginUser" class="auth-form">
+            <h2 class="form-title">Welcome Back</h2>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            v-model="user.email"
-            placeholder="Enter your email"
-            required
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                v-model="user.email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                v-model="user.password"
+                placeholder="Enter your Password"
+                required
+              />
+            </div>
+
+            <div class="error-message" v-if="messageError">
+              {{ messageError }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Log In</button>
+
+            <p class="signup-link">
+              Don't Have Account?
+              <router-link to="/signup" class="signup-link-text"
+                >Sign Up</router-link
+              >
+            </p>
+          </form>
+        </div>
+        <div class="login-right">
+          <img
+            src="@/assets/nurseman.png"
+            alt="Login illustration"
+            class="login-image"
           />
         </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            v-model="user.password"
-            placeholder="Enter your Password"
-            required
-          />
-        </div>
-
-        <!-- ✅ Error message section -->
-        <div class="error-message" v-if="messageError">
-          {{ messageError }}
-        </div>
-
-        <button type="submit" class="btn btn-primary">Log In</button>
-
-        <p class="signup-link">
-          Don't Have Account?
-          <a href="http://localhost:8080/#/signup">Sign Up</a>
-        </p>
-      </form>
-    </main>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,7 +79,7 @@ export default {
           this.messageError = "Invalid email or password";
           setTimeout(() => {
             this.messageError = "";
-          }, 4000); // 🕓 hides after 4 seconds
+          }, 4000);
         });
     },
   },
@@ -75,211 +87,204 @@ export default {
 </script>
 
 <style scoped>
-.login-page {
+.page-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
   background-color: #f0f2f5;
   font-family: Arial, sans-serif;
-  margin: 0;
-  justify-content: center;
-  align-items: center;
+  padding: 20px;
 }
 
-.login-content {
-  flex-grow: 0;
+.centered-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.login-container {
+  display: flex;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.login-left {
+  flex: 1;
+  padding: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  width: 100%;
+}
+
+.login-right {
+  flex: 1;
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.login-image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 .auth-form {
-  background-color: #fff;
-  padding: 40px 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 450px;
-  text-align: center;
-  margin: 0 auto;
+  max-width: 400px;
 }
 
 .form-title {
   margin-bottom: 30px;
-  color: #333;
+  color: #2d3748;
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
+  text-align: center;
 }
 
 .form-group {
   margin-bottom: 20px;
-  text-align: left;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  color: #555;
+  color: #4a5568;
   font-weight: 500;
   font-size: 1rem;
 }
 
 .form-group input {
-  width: calc(100% - 22px);
-  padding: 12px 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1.1rem;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
 }
 
 .form-group input:focus {
-  border-color: #007bff;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
 
 .btn-primary {
   width: 100%;
   padding: 15px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #4299e1;
+  color: white;
   border: none;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  font-weight: bold;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   margin-top: 20px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
+  background-color: #3182ce;
+  transform: translateY(-1px);
 }
 
 .signup-link {
   margin-top: 25px;
-  color: #666;
+  color: #718096;
   font-size: 0.95rem;
+  text-align: center;
 }
 
-.signup-link a {
-  color: #007bff;
+.signup-link-text {
+  color: #4299e1;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.signup-link a:hover {
+.signup-link-text:hover {
+  color: #3182ce;
   text-decoration: underline;
 }
 
-/* ✅ Error Message Style */
 .error-message {
-  background-color: #ffe6e6;
-  color: #d8000c;
-  border: 1px solid #d8000c;
-  padding: 12px 16px;
-  border-radius: 5px;
+  background-color: #fff5f5;
+  color: #c53030;
+  border: 1px solid #fed7d7;
+  padding: 12px;
+  border-radius: 6px;
   margin-top: 10px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   text-align: center;
-  animation: shake 0.3s ease;
+  animation: shake 0.4s ease;
 }
 
 @keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-
-  25% {
-    transform: translateX(-5px);
-  }
-
-  50% {
-    transform: translateX(5px);
-  }
-
-  75% {
-    transform: translateX(-5px);
-  }
-
+  0%,
   100% {
     transform: translateX(0);
   }
+  25% {
+    transform: translateX(-6px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+  75% {
+    transform: translateX(-6px);
+  }
 }
 
-/* ✅ Responsive */
+@media (max-width: 900px) {
+  .login-container {
+    max-width: 800px;
+  }
+}
+
 @media (max-width: 768px) {
-  .login-content {
-    padding: 15px;
+  .login-container {
+    flex-direction: column;
+    max-width: 500px;
   }
 
-  .auth-form {
-    padding: 30px 20px;
-    margin: 0 auto;
+  .login-right {
+    padding: 30px;
   }
 
-  .form-title {
-    font-size: 1.8rem;
-    margin-bottom: 25px;
-  }
-
-  .form-group label {
-    font-size: 0.95rem;
-  }
-
-  .form-group input {
-    font-size: 1rem;
-    padding: 10px;
-  }
-
-  .btn-primary {
-    font-size: 1rem;
-    padding: 12px;
-  }
-
-  .signup-link {
-    font-size: 0.9rem;
-  }
-
-  .error-message {
-    font-size: 0.95rem;
-    padding: 10px 14px;
+  .login-left {
+    padding: 40px;
   }
 }
 
 @media (max-width: 480px) {
-  .login-content {
-    padding: 10px;
+  .login-left {
+    padding: 30px 20px;
   }
 
-  .auth-form {
-    padding: 25px 15px;
-    margin: 0 auto;
+  .login-right {
+    padding: 20px;
   }
 
   .form-title {
-    font-size: 1.6rem;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
   }
 
   .form-group input {
-    font-size: 0.95rem;
+    padding: 12px;
   }
 
   .btn-primary {
-    font-size: 0.95rem;
-    padding: 10px;
-  }
-
-  .signup-link {
-    font-size: 0.85rem;
-  }
-
-  .error-message {
-    font-size: 0.85rem;
-    padding: 8px 12px;
+    padding: 14px;
   }
 }
 </style>
