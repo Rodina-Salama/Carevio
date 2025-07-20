@@ -63,10 +63,7 @@
           />
         </div>
 
-        <div v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
-
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
         <div v-if="successMessage" class="success-message">
           {{ successMessage }}
         </div>
@@ -74,7 +71,8 @@
         <button type="submit" class="btn btn-primary">Create Account</button>
 
         <p class="login-link">
-          Already have an account? <a href="SignInPage">Log In</a>
+          Already have an account?
+          <a href="http://localhost:8080/#/signIn">Sign In</a>
         </p>
       </form>
     </main>
@@ -82,12 +80,13 @@
 </template>
 
 <script>
-import { auth } from "@/firebase";
+import { auth, db } from "@/firebase";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import router from "@/router";
 
 export default {
@@ -107,42 +106,30 @@ export default {
   },
   methods: {
     validateEmail() {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!regex.test(this.user.email)) {
-        this.errorMessage = "Please enter a valid email address.";
-        this.successMessage = "";
-      } else {
-        this.errorMessage = "";
-      }
+      const regex = /^[^\s@]+@[^\s@]+\.(com|net|org|io|eg|edu|gov|co)$/i;
+      this.errorMessage = !regex.test(this.user.email)
+        ? "Please enter a valid email with an accepted domain (e.g. .com, .net, .org...)."
+        : "";
     },
     validatePhone() {
       const regex = /^(01)[0-2,5]{1}[0-9]{8}$/;
-      if (!regex.test(this.user.phone)) {
-        this.errorMessage = "Phone must be a valid Egyptian number.";
-        this.successMessage = "";
-      } else {
-        this.errorMessage = "";
-      }
+      this.errorMessage = !regex.test(this.user.phone)
+        ? "Phone must be a valid Egyptian number."
+        : "";
     },
     validatePassword() {
       const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/;
-      if (!regex.test(this.user.password)) {
-        this.errorMessage =
-          "Password must contain at least 6 characters, one uppercase, one lowercase and one number.";
-        this.successMessage = "";
-      } else {
-        this.errorMessage = "";
-      }
+      this.errorMessage = !regex.test(this.user.password)
+        ? "Password must contain at least 6 characters, one uppercase, one lowercase and one number."
+        : "";
     },
     validatePasswordConfirmation() {
-      if (this.user.password !== this.user.passwordConfirmation) {
-        this.errorMessage = "Passwords do not match.";
-        this.successMessage = "";
-      } else {
-        this.errorMessage = "";
-      }
+      this.errorMessage =
+        this.user.password !== this.user.passwordConfirmation
+          ? "Passwords do not match."
+          : "";
     },
-    registerUser() {
+    async registerUser() {
       this.errorMessage = "";
       this.successMessage = "";
 
@@ -151,44 +138,38 @@ export default {
         return;
       }
 
-      createUserWithEmailAndPassword(auth, this.user.email, this.user.password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          updateProfile(user, {
-            displayName: this.user.fullName,
-          })
-            .then(() => {
-              sendEmailVerification(user)
-                .then(() => {
-                  this.successMessage =
-                    "Verification email sent. Please check your inbox.";
-                  this.errorMessage = "";
-                  setTimeout(() => {
-                    router.push({ name: "SignIn" });
-                  }, 2000);
-                })
-                .catch(() => {
-                  this.errorMessage = "Failed to send verification email.";
-                  this.successMessage = "";
-                });
-            })
-            .catch(() => {
-              this.errorMessage = "Failed to set display name.";
-              this.successMessage = "";
-            });
-        })
-        .catch((error) => {
-          this.successMessage = "";
-          if (error.code === "auth/email-already-in-use") {
-            this.errorMessage = "This email is already in use.";
-          } else if (error.code === "auth/invalid-email") {
-            this.errorMessage = "Invalid email address.";
-          } else if (error.code === "auth/weak-password") {
-            this.errorMessage = "Password should be at least 6 characters.";
-          } else {
-            this.errorMessage = "Registration failed. Please try again.";
-          }
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          this.user.email,
+          this.user.password
+        );
+        const currentUser = userCredential.user;
+
+        await updateProfile(currentUser, { displayName: this.user.fullName });
+
+        await setDoc(doc(db, "users", currentUser.uid), {
+          fullName: this.user.fullName,
+          email: this.user.email,
+          phone: this.user.phone,
+          type: "user",
+          createdAt: serverTimestamp(),
         });
+
+        await sendEmailVerification(currentUser);
+
+        this.successMessage =
+          "Verification email sent. Please check your inbox.";
+        setTimeout(() => router.push({ name: "SignIn" }), 2000);
+      } catch (error) {
+        const errorMap = {
+          "auth/email-already-in-use": "This email is already in use.",
+          "auth/invalid-email": "Invalid email address.",
+          "auth/weak-password": "Password should be at least 6 characters.",
+        };
+        this.errorMessage =
+          errorMap[error.code] || "Registration failed. Please try again.";
+      }
     },
   },
 };
@@ -200,17 +181,17 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #e9ebee;
+  background-color: #ffffff;
   padding: 20px;
 }
 
 .register-content {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   background: white;
   padding: 35px 25px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .auth-form {
@@ -220,7 +201,7 @@ export default {
 .form-title {
   text-align: center;
   margin-bottom: 20px;
-  font-size: 22px;
+  font-size: 24px;
   color: #1c1e21;
 }
 
@@ -230,9 +211,11 @@ export default {
 
 .form-group label {
   font-size: 14px;
+  font-weight: bold;
   color: #1c1e21;
   display: block;
   margin-bottom: 5px;
+  text-align: left;
 }
 
 .form-group input {
@@ -252,7 +235,7 @@ export default {
 .btn-primary {
   width: 100%;
   padding: 14px;
-  background-color: #1877f2;
+  background-color: #19599a;
   color: white;
   border: none;
   border-radius: 6px;
@@ -262,7 +245,7 @@ export default {
 }
 
 .btn-primary:hover {
-  background-color: #165edb;
+  background-color: #67aef5;
 }
 
 .login-link {
@@ -272,9 +255,13 @@ export default {
 }
 
 .login-link a {
-  color: #1877f2;
+  color: #19599a;
   text-decoration: none;
   font-weight: bold;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
 }
 
 .error-message {
