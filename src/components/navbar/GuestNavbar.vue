@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" v-if="!loading">
     <div class="navbar-brand">
       <img src="@/assets/icon.jpg" alt="Logo" class="logo" />
       <span class="site-name">Carevio</span>
@@ -13,20 +13,12 @@
     <div class="navbar-menu" :class="{ active: isMenuOpen }">
       <ul class="nav-links">
         <li>
-          <router-link
-            to="/"
-            @click="closeMenu"
-            active-class="active-link"
-            exact-active-class="active-link"
+          <router-link to="/" @click="closeMenu" active-class="active-link"
             >Home</router-link
           >
         </li>
         <li>
-          <router-link
-            to="/about"
-            @click="closeMenu"
-            active-class="active-link"
-            exact-active-class="active-link"
+          <router-link to="/about" @click="closeMenu" active-class="active-link"
             >About Us</router-link
           >
         </li>
@@ -35,7 +27,6 @@
             to="/browse"
             @click="closeMenu"
             active-class="active-link"
-            exact-active-class="active-link"
             >Browse Nurses</router-link
           >
         </li>
@@ -44,7 +35,6 @@
             to="/services"
             @click="closeMenu"
             active-class="active-link"
-            exact-active-class="active-link"
             >Services</router-link
           >
         </li>
@@ -53,86 +43,105 @@
             to="/contact"
             @click="closeMenu"
             active-class="active-link"
-            exact-active-class="active-link"
             >Contact Us</router-link
           >
         </li>
 
-        <!-- ✅ Show these tabs only when user is signed in -->
         <template v-if="user">
+          <li>
+            <router-link
+              to="/booking"
+              @click="closeMenu"
+              active-class="active-link"
+              >My Bookings</router-link
+            >
+          </li>
           <li>
             <router-link
               to="/userprofile"
               @click="closeMenu"
               active-class="active-link"
-              exact-active-class="active-link"
               >My Profile</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              to="/mybookings"
-              @click="closeMenu"
-              active-class="active-link"
-              exact-active-class="active-link"
-              >My Bookings</router-link
             >
           </li>
         </template>
       </ul>
 
       <div class="navbar-actions">
-        <router-link
-          to="/signin"
-          class="btn outline"
-          @click="closeMenu"
-          active-class="active-btn"
-          >Log In</router-link
-        >
-        <router-link
-          to="/join"
-          class="btn"
-          @click="closeMenu"
-          active-class="active-btn"
-          >Join as Nurse</router-link
-        >
-        <router-link
-          to="/signup"
-          class="btn"
-          @click="closeMenu"
-          active-class="active-btn"
-          >Sign Up</router-link
-        >
+        <template v-if="user">
+          <div class="user-info">
+            <span>👋 Hello {{ fullName || user.email }}</span>
+            <button class="btn outline" @click="logout">Logout</button>
+          </div>
+        </template>
+        <template v-else>
+          <router-link to="/join" class="btn outline" @click="closeMenu"
+            >Join as Nurse</router-link
+          >
+          <router-link to="/signin" class="btn" @click="closeMenu"
+            >Sign In</router-link
+          >
+          <router-link to="/signup" class="btn" @click="closeMenu"
+            >Sign Up</router-link
+          >
+        </template>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-// import { ref, onMounted } from "vue";
-// import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { ref, onMounted } from "vue";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
-// const isMenuOpen = ref(false);
-// const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
-// const closeMenu = () => (isMenuOpen.value = false);
+const auth = getAuth();
+const user = ref(null);
+const fullName = ref("");
+const profileImage = ref(""); // Still fetched in case you reuse it elsewhere
+const isMenuOpen = ref(false);
+const loading = ref(true);
 
-// const auth = getAuth();
-// const user = ref(null);
-// const defaultAvatar = "https://via.placeholder.com/40";
+const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
+const closeMenu = () => (isMenuOpen.value = false);
 
-// onMounted(() => {
-//   onAuthStateChanged(auth, (currentUser) => {
-//     user.value = currentUser;
-//   });
-// });
+onMounted(() => {
+  onAuthStateChanged(auth, async (currentUser) => {
+    user.value = currentUser;
 
-// const logout = async () => {
-//   await signOut(auth);
-//   user.value = null;
-//   closeMenu();
-// };
+    if (currentUser) {
+      try {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          profileImage.value = data.profileImage || "";
+          fullName.value = data.fullName || "";
+        } else {
+          profileImage.value = "";
+          fullName.value = "";
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        profileImage.value = "";
+        fullName.value = "";
+      }
+    }
+
+    loading.value = false;
+  });
+});
+
+const logout = async () => {
+  await signOut(auth);
+  user.value = null;
+  profileImage.value = "";
+  fullName.value = "";
+  closeMenu();
+};
 </script>
-
 <style scoped>
 .navbar {
   display: flex;

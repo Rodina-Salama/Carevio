@@ -77,8 +77,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-// لو بتديك error من "@/firebase/config" اكتبي بداله المسار النسبي 👇
-import { db } from "../../firebase/config";
+import { db } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const booking = ref(null);
