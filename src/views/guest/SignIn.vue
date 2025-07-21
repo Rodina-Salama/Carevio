@@ -27,6 +27,9 @@
                 required
               />
             </div>
+            <p class="forgot-password">
+              <router-link to="/forgotpassword">Forgot password?</router-link>
+            </p>
 
             <div class="error-message" v-if="messageError">
               {{ messageError }}

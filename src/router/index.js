@@ -14,6 +14,7 @@ import NurseProfile from "@/views/nurse/NurseProfile.vue";
 import UserProfile from "@/views/user/UserProfile.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
 import ChangePassword from "@/views/user/ChangePassword.vue";
+import ForgotPassword from "@/views/guest/ForgotPassword.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -34,6 +35,11 @@ const routes = [
     path: "/changepassword",
     name: "ChangePassword",
     component: ChangePassword,
+  },
+  {
+    path: "/forgotpassword",
+    name: "ForgotPassword",
+    component: ForgotPassword,
   },
 ];
 /* eslint-disable */
