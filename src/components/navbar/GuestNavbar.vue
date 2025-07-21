@@ -109,28 +109,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+// import { ref, onMounted } from "vue";
+// import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
-const isMenuOpen = ref(false);
-const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
-const closeMenu = () => (isMenuOpen.value = false);
+// const isMenuOpen = ref(false);
+// const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
+// const closeMenu = () => (isMenuOpen.value = false);
 
-const auth = getAuth();
-const user = ref(null);
-const defaultAvatar = "https://via.placeholder.com/40";
+// const auth = getAuth();
+// const user = ref(null);
+// const defaultAvatar = "https://via.placeholder.com/40";
 
-onMounted(() => {
-  onAuthStateChanged(auth, (currentUser) => {
-    user.value = currentUser;
-  });
-});
+// onMounted(() => {
+//   onAuthStateChanged(auth, (currentUser) => {
+//     user.value = currentUser;
+//   });
+// });
 
-const logout = async () => {
-  await signOut(auth);
-  user.value = null;
-  closeMenu();
-};
+// const logout = async () => {
+//   await signOut(auth);
+//   user.value = null;
+//   closeMenu();
+// };
 </script>
 
 <style scoped>

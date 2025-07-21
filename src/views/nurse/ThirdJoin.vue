@@ -292,7 +292,12 @@ const handleSubmit = async () => {
       status: "under_review",
       createdAt: new Date().toISOString(),
     });
-
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      email: email,
+      type: "nurse",
+      createdAt: new Date().toISOString(),
+    });
     localStorage.removeItem("personalData");
     localStorage.removeItem("professionalData");
     router.push("/confirm");

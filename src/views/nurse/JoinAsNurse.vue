@@ -201,8 +201,6 @@ const router = useRouter();
 
 // Form data
 const formData = ref({
-  firstName: "",
-  lastName: "",
   dob: "",
   gender: "",
   nationalId: "",
@@ -239,15 +237,6 @@ onMounted(() => {
 
 // Handle submit
 const handleSubmit = () => {
-  // Required fields check
-  if (
-    !formData.value.firstName ||
-    !formData.value.lastName ||
-    !formData.value.nationalId
-  ) {
-    alert("Please fill in all required fields");
-    return;
-  }
   if (!/^[\u0600-\u06FF\s]+$/.test(formData.value.firstNameAr)) {
     alert("الاسم الأول بالعربي يجب أن يحتوي على حروف عربية فقط");
     return;
