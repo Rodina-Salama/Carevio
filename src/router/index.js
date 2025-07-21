@@ -15,6 +15,7 @@ import UserProfile from "@/views/user/UserProfile.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
 import ChangePassword from "@/views/user/ChangePassword.vue";
 import ForgotPassword from "@/views/guest/ForgotPassword.vue";
+import BookingConfirmation from "@/views/BookingConfirmation/BookingConfirmation.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -41,8 +42,13 @@ const routes = [
     name: "ForgotPassword",
     component: ForgotPassword,
   },
+  {
+    path: "/booking",
+    name: "BookingConfirmation",
+    component: BookingConfirmation,
+  },
 ];
-/* eslint-disable */
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes,

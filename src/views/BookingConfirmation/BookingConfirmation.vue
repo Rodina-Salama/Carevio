@@ -1,22 +1,3 @@
-<script setup>
-import { ref, onMounted } from "vue";
-import { db } from "@/firebase/config";
-import { collection, getDocs } from "firebase/firestore";
-
-const booking = ref(null);
-
-onMounted(async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "bookings"));
-    if (!querySnapshot.empty) {
-      booking.value = querySnapshot.docs[0].data();
-    }
-  } catch (error) {
-    console.error("Error fetching booking:", error);
-  }
-});
-</script>
-
 <template>
   <div class="booking-page">
     <div class="back-button">← Back</div>
@@ -93,6 +74,26 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+// لو بتديك error من "@/firebase/config" اكتبي بداله المسار النسبي 👇
+import { db } from "../../firebase/config";
+import { collection, getDocs } from "firebase/firestore";
+
+const booking = ref(null);
+
+onMounted(async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "bookings"));
+    if (!querySnapshot.empty) {
+      booking.value = querySnapshot.docs[0].data();
+    }
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+  }
+});
+</script>
 
 <style scoped>
 .booking-page {
