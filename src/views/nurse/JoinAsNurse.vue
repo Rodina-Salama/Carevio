@@ -15,26 +15,81 @@
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <div class="form-grid">
-          <!-- First Name -->
+          <!-- First Name (English) -->
           <div class="input-group">
-            <label for="firstName">First Name</label>
+            <label for="firstNameEn">First Name (English)</label>
             <input
               type="text"
-              id="firstName"
-              v-model="formData.firstName"
-              placeholder="Enter your first name"
+              id="firstNameEn"
+              v-model="formData.firstNameEn"
+              placeholder="Enter your first name in English"
               required
+              pattern="^[A-Za-z\s]+$"
+              title="Only English letters allowed"
             />
           </div>
 
-          <!-- Last Name -->
+          <!-- First Name (Arabic) -->
           <div class="input-group">
-            <label for="lastName">Last Name</label>
+            <label for="firstNameAr">الاسم الأول (بالعربي)</label>
             <input
               type="text"
-              id="lastName"
-              v-model="formData.lastName"
-              placeholder="Enter your last name"
+              id="firstNameAr"
+              v-model="formData.firstNameAr"
+              placeholder="اكتب اسمك بالعربي"
+              required
+              pattern="^[\u0600-\u06FF\s]+$"
+              title="الاسم يجب أن يكون باللغة العربية فقط"
+            />
+          </div>
+          <!-- Last Name (English) -->
+          <div class="input-group">
+            <label for="lastNameEn">Last Name (English)</label>
+            <input
+              type="text"
+              id="lastNameEn"
+              v-model="formData.lastNameEn"
+              placeholder="Enter your last name in English"
+              required
+              pattern="^[A-Za-z\s]+$"
+              title="Only English letters allowed"
+            />
+          </div>
+          <!-- Last Name (Arabic) -->
+          <div class="input-group">
+            <label for="lastNameAr">اسم العائلة (بالعربي)</label>
+            <input
+              type="text"
+              id="lastNameAr"
+              v-model="formData.lastNameAr"
+              placeholder="اكتب اسم العائلة بالعربي"
+              required
+              pattern="^[\u0600-\u06FF\s]+$"
+              title="اسم العائلة يجب أن يكون باللغة العربية فقط"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              v-model="formData.password"
+              placeholder="Enter your password"
+              required
+              pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}"
+              title="Password must be at least 8 characters long and include uppercase, lowercase letters, and a number."
+            />
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="input-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              v-model="formData.confirmPassword"
+              placeholder="Confirm your password"
               required
             />
           </div>
@@ -137,13 +192,14 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-// Form data with default empty values
+// Form data
 const formData = ref({
   firstName: "",
   lastName: "",
@@ -154,9 +210,11 @@ const formData = ref({
   email: "",
   city: "",
   area: "",
+  password: "",
+  confirmPassword: "",
 });
 
-// Location data
+// Cities and areas
 const cities = ["Cairo", "Alexandria", "Giza", "Luxor", "Aswan"];
 const areas = {
   Cairo: ["Downtown", "Maadi", "Zamalek", "Nasr City"],
@@ -166,7 +224,7 @@ const areas = {
   Aswan: ["Aswan City", "Elephantine Island"],
 };
 
-// Load saved data when component mounts
+// Load saved data
 onMounted(() => {
   const savedData = localStorage.getItem("personalData");
   if (savedData) {
@@ -174,13 +232,14 @@ onMounted(() => {
       formData.value = JSON.parse(savedData);
     } catch (e) {
       console.error("Failed to parse saved data:", e);
-      localStorage.removeItem("personalData"); // Clear corrupted data
+      localStorage.removeItem("personalData");
     }
   }
 });
 
+// Handle submit
 const handleSubmit = () => {
-  // Validate required fields before proceeding
+  // Required fields check
   if (
     !formData.value.firstName ||
     !formData.value.lastName ||
@@ -189,11 +248,46 @@ const handleSubmit = () => {
     alert("Please fill in all required fields");
     return;
   }
+  if (!/^[\u0600-\u06FF\s]+$/.test(formData.value.firstNameAr)) {
+    alert("الاسم الأول بالعربي يجب أن يحتوي على حروف عربية فقط");
+    return;
+  }
 
-  // Save to localStorage
+  if (!/^[A-Za-z\s]+$/.test(formData.value.firstNameEn)) {
+    alert("First name (English) must contain only English letters");
+    return;
+  }
+
+  if (!/^[\u0600-\u06FF\s]+$/.test(formData.value.lastNameAr)) {
+    alert("اسم العائلة بالعربي يجب أن يحتوي على حروف عربية فقط");
+    return;
+  }
+
+  if (!/^[A-Za-z\s]+$/.test(formData.value.lastNameEn)) {
+    alert("Last name (English) must contain only English letters");
+    return;
+  }
+
+  // Password match check
+  if (formData.value.password !== formData.value.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  // Password strength check
+  if (
+    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(
+      formData.value.password
+    )
+  ) {
+    alert(
+      "Password must be at least 8 characters long and include uppercase, lowercase letters, and a number."
+    );
+    return;
+  }
+
+  // Save and navigate
   localStorage.setItem("personalData", JSON.stringify(formData.value));
-
-  // Navigate to next step
   router.push("/secondjoin");
 };
 </script>

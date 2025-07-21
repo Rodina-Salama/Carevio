@@ -110,20 +110,6 @@
             </div>
           </div>
 
-          <!-- Upload Nursing License -->
-          <div class="input-group">
-            <label for="licenseUpload"
-              >Upload Nursing License (PDF or Image)</label
-            >
-            <input
-              type="file"
-              id="licenseUpload"
-              @change="handleFileUpload"
-              accept=".pdf,.jpg,.jpeg,.png"
-              required
-            />
-          </div>
-
           <!-- Bio -->
           <div class="input-group full-width">
             <label for="bio">Bio</label>
@@ -167,13 +153,8 @@ const formData = ref({
     german: false,
   },
   licenseNumber: "",
-  licenseFile: null,
   bio: "",
 });
-
-const handleFileUpload = (event) => {
-  formData.value.licenseFile = event.target.files[0];
-};
 
 const goBack = () => {
   router.push("/join");

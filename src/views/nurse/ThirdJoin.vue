@@ -93,7 +93,7 @@
                 type="file"
                 id="criminalRecord"
                 ref="criminalRecordInput"
-                accept=".pdf,image/*"
+                accept="image/*,.pdf"
                 @change="handleFileUpload('criminalRecord', $event)"
                 required
               />
@@ -110,7 +110,7 @@
                 type="file"
                 id="nursingLicense"
                 ref="nursingLicenseInput"
-                accept=".pdf,image/*"
+                accept="image/*,.pdf"
                 @change="handleFileUpload('nursingLicense', $event)"
                 required
               />
@@ -138,10 +138,18 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { db, storage } from "@/firebase"; // Updated import path
+import axios from "axios";
+import { db } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { ref as storageRef, uploadBytes } from "firebase/storage";
+import { auth } from "@/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
+const CLOUDINARY_UPLOAD_PRESET = "Nurse_information"; // لازم تعملي unsigned upload preset من Cloudinary Dashboard
+const getUploadUrl = (file) => {
+  return file.type.startsWith("image/")
+    ? "https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload"
+    : "https://api.cloudinary.com/v1_1/dqa1o4xga/raw/upload";
+};
 const router = useRouter();
 const isSubmitting = ref(false);
 
@@ -154,7 +162,7 @@ const documents = ref({
   nursingLicense: null,
 });
 
-const validateFile = (file, type, maxSizeMB = 5) => {
+const validateFile = (file, type, maxSizeMB = 2) => {
   const validTypes = {
     pdf: ["application/pdf"],
     image: ["image/jpeg", "image/png"],
@@ -197,23 +205,66 @@ const handleFileUpload = (field, event) => {
 
 const goBack = () => router.push("/secondjoin");
 
+const uploadToCloudinary = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+  const url = getUploadUrl(file);
+
+  try {
+    const response = await axios.post(url, formData);
+    return response.data.secure_url;
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    throw error;
+  }
+};
 const handleSubmit = async () => {
+  // Prevent multiple submissions
   if (isSubmitting.value) return;
   isSubmitting.value = true;
 
   try {
+    // Get data from previous steps
     const personalData = JSON.parse(localStorage.getItem("personalData"));
     const professionalData = JSON.parse(
       localStorage.getItem("professionalData")
     );
 
+    // Ensure the first step was completed
     if (!personalData?.nationalId) {
       throw new Error("Please complete Step 1: Personal Information");
     }
 
+    // Ensure the second step was completed
     if (!professionalData?.licenseNumber) {
       throw new Error("Please complete Step 2: Professional Information");
     }
+
+    const email = personalData.email;
+    const password = personalData.password;
+
+    // Create user with email and password in Firebase Authentication
+    let userCredential;
+    try {
+      userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+    } catch (authError) {
+      // Handle common auth errors
+      if (authError.code === "auth/email-already-in-use") {
+        throw new Error(
+          "Email is already registered. Please use a different email."
+        );
+      } else {
+        throw new Error(`Authentication failed: ${authError.message}`);
+      }
+    }
+
+    const user = userCredential.user;
 
     const documentUrls = {};
     const uploadPromises = [];
@@ -221,22 +272,20 @@ const handleSubmit = async () => {
     for (const [field, file] of Object.entries(documents.value)) {
       if (!file) continue;
 
-      const fileExt =
-        field === "cv" ? ".pdf" : file.type.includes("image") ? ".jpg" : ".pdf";
-      const filePath = `documents/${
-        personalData.nationalId
-      }/${field}_${Date.now()}${fileExt}`;
-
       uploadPromises.push(
-        uploadBytes(storageRef(storage, filePath), file).then(() => {
-          documentUrls[field] = filePath;
+        uploadToCloudinary(file).then((url) => {
+          documentUrls[field] = {
+            url: url,
+          };
         })
       );
     }
 
     await Promise.all(uploadPromises);
-
-    await setDoc(doc(db, "applications", personalData.nationalId), {
+    delete personalData.password;
+    delete personalData.confirmPassword;
+    await setDoc(doc(db, "applications", user.uid), {
+      type: "nurse",
       personal: personalData,
       professional: professionalData,
       documents: documentUrls,

@@ -82,40 +82,27 @@
       </ul>
 
       <div class="navbar-actions">
-        <template v-if="user">
-          <div class="user-info">
-            <img
-              :src="user.photoURL || defaultAvatar"
-              class="profile-img"
-              alt="Profile"
-            />
-            <span>{{ user.displayName || user.email }}</span>
-            <button class="btn outline" @click="logout">Logout</button>
-          </div>
-        </template>
-        <template v-else>
-          <router-link
-            to="/join"
-            class="btn outline"
-            @click="closeMenu"
-            active-class="active-btn"
-            >Join as Nurse</router-link
-          >
-          <router-link
-            to="/signin"
-            class="btn"
-            @click="closeMenu"
-            active-class="active-btn"
-            >Sign In</router-link
-          >
-          <router-link
-            to="/signup"
-            class="btn"
-            @click="closeMenu"
-            active-class="active-btn"
-            >Sign Up</router-link
-          >
-        </template>
+        <router-link
+          to="/signin"
+          class="btn outline"
+          @click="closeMenu"
+          active-class="active-btn"
+          >Log In</router-link
+        >
+        <router-link
+          to="/join"
+          class="btn"
+          @click="closeMenu"
+          active-class="active-btn"
+          >Join as Nurse</router-link
+        >
+        <router-link
+          to="/signup"
+          class="btn"
+          @click="closeMenu"
+          active-class="active-btn"
+          >Sign Up</router-link
+        >
       </div>
     </div>
   </nav>

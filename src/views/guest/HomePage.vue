@@ -178,17 +178,6 @@
               safety and efficacy.
             </p>
           </div>
-
-          <div class="service-card">
-            <div class="service-icon">
-              <img src="@/assets/service4.png" alt="Bedridden Patient" />
-            </div>
-            <h3>Bedridden Patient</h3>
-            <p>
-              Dedicated assistance for bedridden patients, focusing on comfort
-              and comprehensive care.
-            </p>
-          </div>
         </div>
       </div>
     </section>
@@ -292,7 +281,7 @@ const navigateToServices = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top:10px;
+  padding-top: 10px;
 }
 
 .hero-text {
@@ -310,7 +299,6 @@ const navigateToServices = () => {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   padding-top: 4rem;
- 
 }
 
 .highlight {
@@ -653,24 +641,44 @@ select {
   transform: translateY(-2px);
 }
 
+.services-section {
+  padding: 4rem 1rem;
+  background-color: #f8f9fa;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: #19599a;
+  margin-bottom: 1rem;
+}
+
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
 }
 
 .service-card {
   background: white;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 1.5rem;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 50px;
-  border: 4px rgba(120, 119, 119, 0.1) solid;
+  align-items: center;
+  margin: 1rem 0;
 }
 
 .service-card:hover {
@@ -681,21 +689,21 @@ select {
 .service-icon {
   width: 100%;
   margin: 0 auto 1.5rem;
-  flex: 0 0 170px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .service-icon img {
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 200px;
   object-fit: contain;
 }
 
 .service-card h3 {
   color: #19599a;
   font-size: 1.3rem;
+  margin-bottom: 1rem;
 }
 
 .service-card p {
@@ -704,10 +712,9 @@ select {
 }
 
 /* Responsive adjustments */
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   .services-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
   }
 }
 
@@ -716,24 +723,14 @@ select {
     padding: 2rem 1rem;
   }
 
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
   .services-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
-  .service-icon {
-    flex: 0 0 150px;
-  }
-
   .service-icon img {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
   }
 }
 </style>
