@@ -1,12 +1,9 @@
-// src/firebase/config.js
-
 // Import Firebase core and needed services
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage"; // ✅ أضفنا storage
+import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyB_21mju5TVqyQt8aBTJKF2iLjVDCCn0D8",
   authDomain: "carevio-61abd.firebaseapp.com",
@@ -19,10 +16,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize services
+// Export Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app); // ✅ تهيئة storage
+const storage = getStorage(app);
 
-// Export them to use in your components
 export { auth, db, storage };

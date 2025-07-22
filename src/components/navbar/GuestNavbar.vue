@@ -57,48 +57,92 @@
             >Contact Us</router-link
           >
         </li>
+
+        <!-- ✅ Show these tabs only when user is signed in -->
+        <template v-if="user">
+          <li>
+            <router-link
+              to="/userprofile"
+              @click="closeMenu"
+              active-class="active-link"
+              exact-active-class="active-link"
+              >My Profile</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/mybookings"
+              @click="closeMenu"
+              active-class="active-link"
+              exact-active-class="active-link"
+              >My Bookings</router-link
+            >
+          </li>
+        </template>
       </ul>
 
       <div class="navbar-actions">
-        <router-link
-          to="/join"
-          class="btn outline"
-          @click="closeMenu"
-          active-class="active-btn"
-          >Join as Nurse</router-link
-        >
-        <router-link
-          to="/signin"
-          class="btn"
-          @click="closeMenu"
-          active-class="active-btn"
-          >Sign In</router-link
-        >
-        <router-link
-          to="/signup"
-          class="btn"
-          @click="closeMenu"
-          active-class="active-btn"
-          >Sign Up</router-link
-        >
+        <template v-if="user">
+          <div class="user-info">
+            <img
+              :src="user.photoURL || defaultAvatar"
+              class="profile-img"
+              alt="Profile"
+            />
+            <span>{{ user.displayName || user.email }}</span>
+            <button class="btn outline" @click="logout">Logout</button>
+          </div>
+        </template>
+        <template v-else>
+          <router-link
+            to="/join"
+            class="btn outline"
+            @click="closeMenu"
+            active-class="active-btn"
+            >Join as Nurse</router-link
+          >
+          <router-link
+            to="/signin"
+            class="btn"
+            @click="closeMenu"
+            active-class="active-btn"
+            >Sign In</router-link
+          >
+          <router-link
+            to="/signup"
+            class="btn"
+            @click="closeMenu"
+            active-class="active-btn"
+            >Sign Up</router-link
+          >
+        </template>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
-// Menu state
 const isMenuOpen = ref(false);
+const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
+const closeMenu = () => (isMenuOpen.value = false);
 
-// Menu actions
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
-};
+const auth = getAuth();
+const user = ref(null);
+const defaultAvatar = "https://via.placeholder.com/40";
 
-const closeMenu = () => {
-  isMenuOpen.value = false;
+onMounted(() => {
+  onAuthStateChanged(auth, (currentUser) => {
+    user.value = currentUser;
+  });
+});
+
+const logout = async () => {
+  await signOut(auth);
+  user.value = null;
+  closeMenu();
 };
 </script>
 
@@ -212,7 +256,19 @@ const closeMenu = () => {
   color: white;
 }
 
-/* Mobile styles */
+.profile-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .hamburger {
   display: none;
   background: none;
@@ -298,7 +354,6 @@ const closeMenu = () => {
     padding: 0.75rem;
   }
 
-  /* Hamburger animation */
   .hamburger.active .bar:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
   }

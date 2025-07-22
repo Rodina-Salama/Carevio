@@ -14,6 +14,13 @@ import NurseProfile from "@/views/nurse/NurseProfile.vue";
 import UserProfile from "@/views/user/UserProfile.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
 import ChangePassword from "@/views/user/ChangePassword.vue";
+import ForgotPassword from "@/views/guest/ForgotPassword.vue";
+import DashBoard from "@/views/nurse/DashBoard.vue";
+import NurseReviews from "@/views/nurse/NurseReviews.vue";
+import NurseBookings from "@/views/nurse/NurseBookings.vue";
+import NurseAvailability from "@/views/nurse/NurseAvailability.vue";
+import NurseEarnings from "@/views/nurse/NurseEarnings.vue";
+import NurseEdit from "@/views/nurse/NurseEdit.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -31,10 +38,29 @@ const routes = [
   { path: "/userprofile", name: "UserProfile", component: UserProfile },
   { path: "/editprofile", name: "EditProfile", component: EditProfile },
   {
+    path: "/forgotpassword",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+  },
+  {
     path: "/changepassword",
     name: "ChangePassword",
     component: ChangePassword,
   },
+  {
+    path: "/dashboard",
+    name: "DashBoard",
+    component: DashBoard,
+  },
+  { path: "/nursereviews", name: "NurseReviews", component: NurseReviews },
+  { path: "/nursebookings", name: "NurseBookings", component: NurseBookings },
+  {
+    path: "/nurseavailability",
+    name: "NurseAvailability",
+    component: NurseAvailability,
+  },
+  { path: "/nurseearnings", name: "NurseEarnings", component: NurseEarnings },
+  { path: "/nurseedit", name: "NurseEdit", component: NurseEdit },
 ];
 /* eslint-disable */
 const router = createRouter({

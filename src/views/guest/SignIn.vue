@@ -27,6 +27,9 @@
                 required
               />
             </div>
+            <p class="forgot-password">
+              <router-link to="/forgotpassword">Forgot password?</router-link>
+            </p>
 
             <div class="error-message" v-if="messageError">
               {{ messageError }}
@@ -234,12 +237,15 @@ export default {
   100% {
     transform: translateX(0);
   }
+
   25% {
     transform: translateX(-6px);
   }
+
   50% {
     transform: translateX(6px);
   }
+
   75% {
     transform: translateX(-6px);
   }

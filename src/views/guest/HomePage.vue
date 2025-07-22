@@ -192,6 +192,34 @@
         </div>
       </div>
     </section>
+    <!-- Floating AI Chatbot Widget -->
+    <div class="chatbot-widget" :class="{ open: chatbotOpen }">
+      <div class="chatbot-header" @click="toggleChatbot">
+        <span>Carevio AI Chatbot</span>
+        <button class="chatbot-close-btn" v-if="chatbotOpen">×</button>
+        <button class="chatbot-open-btn" v-else>💬</button>
+      </div>
+      <div v-if="chatbotOpen" class="chatbot-body">
+        <div class="chatbot-messages">
+          <div
+            v-for="(msg, idx) in chatbotMessages"
+            :key="idx"
+            :class="['chatbot-message', msg.sender]"
+          >
+            <span>{{ msg.text }}</span>
+          </div>
+        </div>
+        <form class="chatbot-input-row" @submit.prevent="sendChatbotMessage">
+          <input
+            v-model="chatbotInput"
+            type="text"
+            placeholder="Ask about our services..."
+            class="chatbot-input"
+          />
+          <button type="submit" class="chatbot-send-btn">Send</button>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
@@ -292,7 +320,7 @@ const navigateToServices = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top:10px;
+  padding-top: 10px;
 }
 
 .hero-text {
@@ -310,7 +338,6 @@ const navigateToServices = () => {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   padding-top: 4rem;
- 
 }
 
 .highlight {
@@ -396,7 +423,8 @@ select {
 }
 
 .feature {
-  flex: 1 1 calc(25% - 1.5rem); /* 4 cards per row (25% width minus gap) */
+  flex: 1 1 calc(25% - 1.5rem);
+  /* 4 cards per row (25% width minus gap) */
   min-width: 200px;
   max-width: 250px;
   background-color: #f9f9f9;
@@ -408,7 +436,8 @@ select {
 /* Medium screens (3 cards per row) */
 @media (max-width: 1024px) {
   .feature {
-    flex: 1 1 calc(33.33% - 2rem); /* 3 cards per row */
+    flex: 1 1 calc(33.33% - 2rem);
+    /* 3 cards per row */
     margin-bottom: 60px;
   }
 }
@@ -416,14 +445,16 @@ select {
 /* Small screens (2 cards per row) */
 @media (max-width: 768px) {
   .feature {
-    flex: 1 1 calc(50% - 2rem); /* 2 cards per row */
+    flex: 1 1 calc(50% - 2rem);
+    /* 2 cards per row */
   }
 }
 
 /* Extra small screens (1 card per row) */
 @media (max-width: 480px) {
   .feature {
-    flex: 1 1 100%; /* Full width */
+    flex: 1 1 100%;
+    /* Full width */
     max-width: 100%;
     margin-bottom: 60px;
   }
@@ -606,6 +637,7 @@ select {
     border-radius: 8px;
   }
 }
+
 /*service section*/
 
 .services-section {
@@ -617,6 +649,7 @@ select {
   max-width: 1200px;
   margin: 0 auto;
 }
+
 .section-header {
   display: flex;
   justify-content: flex-end;
@@ -722,6 +755,7 @@ select {
     gap: 1rem;
     margin-bottom: 1rem;
   }
+
   .services-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -734,6 +768,133 @@ select {
   .service-icon img {
     width: 200px;
     height: 200px;
+  }
+}
+
+/* --- AI Chatbot Widget Styles --- */
+.chatbot-widget {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  width: 350px;
+  max-width: 90vw;
+  background: #f7fbff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(25, 89, 154, 0.18);
+  transition: box-shadow 0.3s, transform 0.3s;
+  font-family: inherit;
+  overflow: hidden;
+}
+
+.chatbot-widget:not(.open) {
+  height: 56px;
+  width: 56px;
+  min-width: 56px;
+  background: #19599a;
+  box-shadow: 0 2px 8px rgba(25, 89, 154, 0.18);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.chatbot-header {
+  background: #19599a;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+.chatbot-close-btn,
+.chatbot-open-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.chatbot-body {
+  padding: 1rem;
+  background: #f7fbff;
+  max-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.chatbot-messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 0.7rem;
+  max-height: 200px;
+}
+
+.chatbot-message {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 12px;
+  max-width: 80%;
+  word-break: break-word;
+  font-size: 1rem;
+}
+
+.chatbot-message.bot {
+  background: #e3f2fd;
+  color: #19599a;
+  align-self: flex-start;
+}
+
+.chatbot-message.user {
+  background: #19599a;
+  color: #fff;
+  align-self: flex-end;
+}
+
+.chatbot-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chatbot-input {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #cfd8dc;
+  font-size: 1rem;
+  outline: none;
+}
+
+.chatbot-send-btn {
+  background: #19599a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chatbot-send-btn:hover {
+  background: #009acb;
+}
+
+@media (max-width: 600px) {
+  .chatbot-widget {
+    right: 10px;
+    bottom: 10px;
+    width: 95vw;
+    max-width: 95vw;
   }
 }
 </style>

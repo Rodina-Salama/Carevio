@@ -2,19 +2,27 @@
   <div id="app">
     <GuestNavbar />
     <router-view />
-    <AppFooter />
+    <chat-bot></chat-bot>
+    <AppFooter v-if="!isNurseRoute" />
   </div>
 </template>
 
 <script>
 import GuestNavbar from "@/components/navbar/GuestNavbar.vue";
 import AppFooter from "@/components/AppFooter.vue";
+import ChatBot from "@/components/ChatBot.vue";
 
 export default {
   name: "App",
   components: {
     GuestNavbar,
     AppFooter,
+    ChatBot,
+  },
+  computed: {
+    isNurseRoute() {
+      return this.$route.path.startsWith("/nurse");
+    },
   },
 };
 </script>
