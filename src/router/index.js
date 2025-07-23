@@ -14,6 +14,12 @@ import NurseProfile from "@/views/nurse/NurseProfile.vue";
 import UserProfile from "@/views/user/UserProfile.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
 import ChangePassword from "@/views/user/ChangePassword.vue";
+import DashBoard from "@/views/nurse/DashBoard.vue";
+import NurseAvailability from "@/views/nurse/NurseAvailability.vue";
+import NurseBookings from "@/views/nurse/NurseBookings.vue";
+import NurseEdit from "@/views/nurse/NurseEdit.vue";
+import NurseReviews from "@/views/nurse/NurseReviews.vue";
+import NurseEarnings from "@/views/nurse/NurseEarnings.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -36,6 +42,16 @@ const routes = [
     name: "ChangePassword",
     component: ChangePassword,
   },
+  { path: "/dashboard", name: "DashBoard", component: DashBoard },
+  {
+    path: "/nurseavailability",
+    name: "NurseAvailability",
+    component: NurseAvailability,
+  },
+  { path: "/nursebookings", name: "NurseBookings", component: NurseBookings },
+  { path: "/nurseedit", name: "NurseEdits", component: NurseEdit },
+  { path: "/nursereviews", name: "NurseReviews", component: NurseReviews },
+  { path: "/nurseearnings", name: "NurseEarnings", component: NurseEarnings },
 ];
 /* eslint-disable */
 const router = createRouter({
