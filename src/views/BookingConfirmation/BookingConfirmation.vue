@@ -81,7 +81,6 @@ const handlePaypalClick = () => {
   const left = (window.innerWidth - width) / 2;
   const top = (window.innerHeight - height) / 2;
 
-  // فتح نافذة تسجيل الدخول في PayPal
   window.open(
     paypalLink,
     "PayPalLogin",
