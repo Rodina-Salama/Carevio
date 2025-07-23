@@ -73,7 +73,7 @@
           <h3>Additional Documents</h3>
           <div class="upload-grid">
             <div class="upload-group">
-              <label>Personal Photo</label>
+              <label>Personal Photo (choose a professional photo)</label>
               <input
                 type="file"
                 id="photo"

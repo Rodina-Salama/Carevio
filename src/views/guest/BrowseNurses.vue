@@ -70,7 +70,14 @@
             {{ nurse.professional.bio || "No bio available." }}
           </p>
           <div class="actions">
-            <button class="view-btn">View</button>
+            <button>
+              <router-link
+                :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
+                class="view-btn"
+              >
+                View
+              </router-link>
+            </button>
           </div>
         </div>
       </template>

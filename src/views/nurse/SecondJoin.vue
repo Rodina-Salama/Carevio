@@ -40,6 +40,18 @@
             />
           </div>
 
+          <!-- Price-->
+          <div class="input-group">
+            <label for="Price">Price</label>
+            <input
+              type="text"
+              id="price"
+              v-model="formData.price"
+              placeholder="Enter your Price (Price/hour)"
+              required
+            />
+          </div>
+
           <!-- Shifts -->
           <div class="input-group">
             <label>available time</label>
@@ -139,6 +151,7 @@ const formData = ref({
   specialization: [],
   licenseNumber: "",
   bio: "",
+  price: "",
 });
 
 const goBack = () => {
@@ -158,6 +171,11 @@ const handleSubmit = () => {
 
   if (formData.value.shifts.length === 0) {
     alert("Please select at least one shift.");
+    return;
+  }
+  const price = parseFloat(formData.value.price);
+  if (isNaN(price) || price < 100 || price > 1000) {
+    alert("Price must be a number between 100 and 1000.");
     return;
   }
   // Store data in localStorage

@@ -35,7 +35,12 @@ const routes = [
   { path: "/secondjoin", name: "SecondJoin", component: SecondJoin },
   { path: "/thirdjoin", name: "ThirdJoin", component: ThirdJoin },
   { path: "/confirm", name: "FourthConfirm", component: FourthConfirm },
-  { path: "/nurseprofile", name: "NurseProfile", component: NurseProfile },
+  {
+    path: "/nurse/:id",
+    name: "NurseProfile",
+    component: NurseProfile,
+    props: true,
+  },
   { path: "/userprofile", name: "UserProfile", component: UserProfile },
   { path: "/editprofile", name: "EditProfile", component: EditProfile },
   {
