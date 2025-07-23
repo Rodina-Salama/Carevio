@@ -16,13 +16,13 @@
       <form @submit.prevent="handleSubmit" class="form-content">
         <!-- Document Upload Sections -->
         <div class="upload-section">
-          <h3>CV (PDF)</h3>
+          <h3 style="color: #555">CV (PNG/JPG)</h3>
           <div class="upload-group">
             <input
               type="file"
               id="cv"
               ref="cvInput"
-              accept=".pdf"
+              accept="image/*"
               @change="handleFileUpload('cv', $event)"
               required
             />
@@ -42,7 +42,7 @@
                 type="file"
                 id="idFront"
                 ref="idFrontInput"
-                accept="image/*,.pdf"
+                accept="image/*"
                 @change="handleFileUpload('idFront', $event)"
                 required
               />
@@ -57,7 +57,7 @@
                 type="file"
                 id="idBack"
                 ref="idBackInput"
-                accept="image/*,.pdf"
+                accept="image/*"
                 @change="handleFileUpload('idBack', $event)"
                 required
               />
@@ -88,29 +88,12 @@
               }}</span>
             </div>
             <div class="upload-group">
-              <label>Criminal Record</label>
-              <input
-                type="file"
-                id="criminalRecord"
-                ref="criminalRecordInput"
-                accept="image/*,.pdf"
-                @change="handleFileUpload('criminalRecord', $event)"
-                required
-              />
-              <label for="criminalRecord" class="upload-btn">Choose File</label>
-              <span class="file-name">{{
-                documents.criminalRecord
-                  ? documents.criminalRecord.name
-                  : "No file chosen"
-              }}</span>
-            </div>
-            <div class="upload-group">
               <label>Nursing License</label>
               <input
                 type="file"
                 id="nursingLicense"
                 ref="nursingLicenseInput"
-                accept="image/*,.pdf"
+                accept="image/*"
                 @change="handleFileUpload('nursingLicense', $event)"
                 required
               />
@@ -142,13 +125,15 @@ import axios from "axios";
 import { db } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { auth } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
 
 const CLOUDINARY_UPLOAD_PRESET = "Nurse_information"; // لازم تعملي unsigned upload preset من Cloudinary Dashboard
-const getUploadUrl = (file) => {
-  return file.type.startsWith("image/")
-    ? "https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload"
-    : "https://api.cloudinary.com/v1_1/dqa1o4xga/raw/upload";
+const getUploadUrl = () => {
+  return "https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload";
 };
 const router = useRouter();
 const isSubmitting = ref(false);
@@ -158,26 +143,18 @@ const documents = ref({
   idFront: null,
   idBack: null,
   photo: null,
-  criminalRecord: null,
   nursingLicense: null,
 });
 
-const validateFile = (file, type, maxSizeMB = 2) => {
-  const validTypes = {
-    pdf: ["application/pdf"],
-    image: ["image/jpeg", "image/png"],
-  };
+const validateFile = (file, maxSizeMB = 5) => {
+  const validImageTypes = ["image/jpeg", "image/png"];
 
   if (file.size > maxSizeMB * 1024 * 1024) {
     throw new Error(`File too large (max ${maxSizeMB}MB)`);
   }
 
-  if (type === "pdf" && !validTypes.pdf.includes(file.type)) {
-    throw new Error("Only PDF files are allowed");
-  }
-
-  if (type === "image" && !validTypes.image.includes(file.type)) {
-    throw new Error("Only JPG/PNG images are allowed");
+  if (!validImageTypes.includes(file.type)) {
+    throw new Error("Only JPG/PNG image files are allowed");
   }
 };
 
@@ -186,15 +163,7 @@ const handleFileUpload = (field, event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    switch (field) {
-      case "cv":
-      case "criminalRecord":
-      case "nursingLicense":
-        validateFile(file, "pdf", 10);
-        break;
-      default:
-        validateFile(file, "image", 5);
-    }
+    validateFile(file); // كله بقى صورة فقط (5MB max)
 
     documents.value[field] = file;
   } catch (error) {
@@ -202,7 +171,6 @@ const handleFileUpload = (field, event) => {
     event.target.value = "";
   }
 };
-
 const goBack = () => router.push("/secondjoin");
 
 const uploadToCloudinary = async (file) => {
@@ -244,7 +212,6 @@ const handleSubmit = async () => {
 
     const email = personalData.email;
     const password = personalData.password;
-
     // Create user with email and password in Firebase Authentication
     let userCredential;
     try {
@@ -265,6 +232,10 @@ const handleSubmit = async () => {
     }
 
     const user = userCredential.user;
+    await updateProfile(user, {
+      displayName: personalData.firstNameEn,
+    });
+    await sendEmailVerification(user);
 
     const documentUrls = {};
     const uploadPromises = [];
@@ -282,19 +253,19 @@ const handleSubmit = async () => {
     }
 
     await Promise.all(uploadPromises);
-    delete personalData.password;
     delete personalData.confirmPassword;
     await setDoc(doc(db, "applications", user.uid), {
       type: "nurse",
       personal: personalData,
       professional: professionalData,
       documents: documentUrls,
-      status: "under_review",
+      status: "Pending",
       createdAt: new Date().toISOString(),
     });
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       email: email,
+      password: password,
       type: "nurse",
       createdAt: new Date().toISOString(),
     });
@@ -421,6 +392,13 @@ input[type="file"] {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.upload-group label:not(.upload-btn) {
+  color: #555;
+  font-weight: 600;
+  font-size: 0.95rem;
+
+  margin-bottom: 0.25rem;
 }
 
 .form-actions {

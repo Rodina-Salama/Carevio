@@ -155,7 +155,7 @@
               @change="formData.area = ''"
               required
             >
-              <option value="" disabled selected>Select your city</option>
+              <option value="" disabled>Select your city</option>
               <option v-for="city in cities" :key="city" :value="city">
                 {{ city }}
               </option>
@@ -171,7 +171,7 @@
               :disabled="!formData.city"
               required
             >
-              <option value="" disabled selected>Select your area</option>
+              <option value="" disabled>Select your area</option>
               <option
                 v-for="area in areas[formData.city] || []"
                 :key="area"
@@ -198,9 +198,13 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+import { cities, areas } from "@/data/locationOptions";
 
-// Form data
 const formData = ref({
+  firstNameEn: "",
+  firstNameAr: "",
+  lastNameEn: "",
+  lastNameAr: "",
   dob: "",
   gender: "",
   nationalId: "",
@@ -211,16 +215,6 @@ const formData = ref({
   password: "",
   confirmPassword: "",
 });
-
-// Cities and areas
-const cities = ["Cairo", "Alexandria", "Giza", "Luxor", "Aswan"];
-const areas = {
-  Cairo: ["Downtown", "Maadi", "Zamalek", "Nasr City"],
-  Alexandria: ["Miami", "Stanley", "Sidi Gaber", "Smouha"],
-  Giza: ["Dokki", "Mohandessin", "Haram", "6th of October"],
-  Luxor: ["Karnak", "Luxor City"],
-  Aswan: ["Aswan City", "Elephantine Island"],
-};
 
 // Load saved data
 onMounted(() => {
@@ -271,6 +265,19 @@ const handleSubmit = () => {
   ) {
     alert(
       "Password must be at least 8 characters long and include uppercase, lowercase letters, and a number."
+    );
+    return;
+  }
+  // Validate national ID
+  if (!/^\d{14}$/.test(formData.value.nationalId)) {
+    alert("National ID must be 14 digits.");
+    return;
+  }
+
+  //validate phone number
+  if (!/^01[0-2,5]{1}[0-9]{8}$/.test(formData.value.phone)) {
+    alert(
+      "Enter a valid Egyptian phone number (11 digits, starting with 010/011/012/015)."
     );
     return;
   }

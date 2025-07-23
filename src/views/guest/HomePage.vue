@@ -29,22 +29,33 @@
             </p>
 
             <div class="search-bar">
+              <!-- City -->
               <select v-model="selectedCity">
                 <option value="">Choose city</option>
-                <option>Cairo</option>
-                <option>Alexandria</option>
+                <option v-for="city in cities" :key="city" :value="city">
+                  {{ city }}
+                </option>
               </select>
-              <select v-model="selectedArea">
+
+              <!-- Area -->
+              <select v-model="selectedArea" :disabled="!selectedCity">
                 <option value="">Choose area</option>
-                <option>NasrCity</option>
-                <option>Heliopolis</option>
-                <option>Maadi</option>
+                <option v-for="area in filteredAreas" :key="area" :value="area">
+                  {{ area }}
+                </option>
               </select>
+
               <select v-model="selectedService">
                 <option value="">Search service</option>
-                <option>Wound care</option>
-                <option>Elderly care</option>
+                <option
+                  v-for="service in specializationOptions"
+                  :key="service"
+                  :value="service"
+                >
+                  {{ service }}
+                </option>
               </select>
+
               <button class="search-btn" @click="handleSearch">Search</button>
             </div>
           </div>
@@ -213,15 +224,21 @@
 </template>
 <script setup>
 /* eslint-disable */
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 
 import slider1 from "@/assets/slider1.jpg";
 import slider2 from "@/assets/slider2.jpg";
+import { cities, areas } from "@/data/locationOptions";
+import { specializationOptions } from "@/data/specializationOptions";
 
 const router = useRouter();
+
+const filteredAreas = computed(() => {
+  return areas[selectedCity.value] || [];
+});
 
 // Refs for form inputs
 const selectedCity = ref("");

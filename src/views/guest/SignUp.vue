@@ -230,6 +230,7 @@ export default {
           email: this.user.email,
           phone: this.user.phone,
           type: "user",
+          password: this.user.password,
           createdAt: serverTimestamp(),
         });
 

@@ -312,9 +312,8 @@ textarea {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #ddd;
+  border: 1px solid #dd;
 }
-
 .review-form button {
   background: #28a745;
   color: white;

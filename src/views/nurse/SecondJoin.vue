@@ -42,84 +42,40 @@
 
           <!-- Shifts -->
           <div class="input-group">
-            <label>Shifts</label>
+            <label>available time</label>
             <div class="checkbox-group">
-              <div class="checkbox-item">
+              <div
+                class="checkbox-item"
+                v-for="(shift, index) in shiftOptions"
+                :key="index"
+              >
                 <label>
                   <input
                     type="checkbox"
-                    value="morning"
+                    :value="shift"
                     v-model="formData.shifts"
                   />
-                  Morning
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="evening"
-                    v-model="formData.shifts"
-                  />
-                  Evening
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="overnight"
-                    v-model="formData.shifts"
-                  />
-                  Overnight
+                  {{ shift.charAt(0).toUpperCase() + shift.slice(1) }}
                 </label>
               </div>
             </div>
           </div>
-
           <!-- Languages -->
           <div class="input-group">
             <label>Languages</label>
             <div class="checkbox-group">
-              <div class="checkbox-item">
+              <div
+                class="checkbox-item"
+                v-for="(lang, index) in languageOptions"
+                :key="index"
+              >
                 <label>
                   <input
                     type="checkbox"
-                    value="arabic"
+                    :value="lang"
                     v-model="formData.languages"
                   />
-                  Arabic
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="english"
-                    v-model="formData.languages"
-                  />
-                  English
-                </label>
-              </div>
-              <!-- لو حابة تضيفي لغات زيادة -->
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="french"
-                    v-model="formData.languages"
-                  />
-                  French
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="german"
-                    v-model="formData.languages"
-                  />
-                  German
+                  {{ lang.charAt(0).toUpperCase() + lang.slice(1) }}
                 </label>
               </div>
             </div>
@@ -128,94 +84,18 @@
           <div class="input-group">
             <label>Specialization</label>
             <div class="checkbox-group">
-              <div class="checkbox-item">
+              <div
+                class="checkbox-item"
+                v-for="(spec, index) in specializationOptions"
+                :key="index"
+              >
                 <label>
                   <input
                     type="checkbox"
-                    value="Elderly Care"
+                    :value="spec"
                     v-model="formData.specialization"
                   />
-                  Elderly Care
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Pediatric Support"
-                    v-model="formData.specialization"
-                  />
-                  Pediatric Support
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Injections & IV Therapy"
-                    v-model="formData.specialization"
-                  />
-                  Injections & IV Therapy
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Bedridden Patient"
-                    v-model="formData.specialization"
-                  />
-                  Bedridden Patient
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Disability Care"
-                    v-model="formData.specialization"
-                  />
-                  Disability Care
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Vital Signs Monitoring"
-                    v-model="formData.specialization"
-                  />
-                  Vital Signs Monitoring
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Wound Dressing"
-                    v-model="formData.specialization"
-                  />
-                  Wound Dressing
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Catheter Care"
-                    v-model="formData.specialization"
-                  />
-                  Catheter Care
-                </label>
-              </div>
-              <div class="checkbox-item">
-                <label>
-                  <input
-                    type="checkbox"
-                    value="Post-Surgical Care"
-                    v-model="formData.specialization"
-                  />
-                  Post-Surgical Care
+                  {{ spec }}
                 </label>
               </div>
             </div>
@@ -244,9 +124,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-
+import { shiftOptions } from "@/data/shiftOptions";
+import { languageOptions } from "@/data/languageOptions";
+import { specializationOptions } from "@/data/specializationOptions";
 const router = useRouter();
 
 // Form data
@@ -282,6 +164,12 @@ const handleSubmit = () => {
   localStorage.setItem("professionalData", JSON.stringify(formData.value));
   router.push("/thirdjoin");
 };
+onMounted(() => {
+  const saved = localStorage.getItem("professionalData");
+  if (saved) {
+    Object.assign(formData.value, JSON.parse(saved));
+  }
+});
 </script>
 
 <style scoped>
@@ -391,6 +279,7 @@ const handleSubmit = () => {
 .checkbox-item label {
   margin-bottom: 0;
   font-weight: normal;
+  color: #333;
 }
 
 .full-width {
