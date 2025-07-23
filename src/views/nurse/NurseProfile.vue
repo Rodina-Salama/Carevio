@@ -1,354 +1,228 @@
 <template>
   <div class="nurse-profile-container">
     <div class="nurse-profile-page">
-      <div class="nurse-profile-card">
-        <div class="header-section">
-          <div class="avatar-info-wrapper">
-            <img :src="require('@/assets/sophia.jpg')" class="avatar" />
-            <div class="info">
-              <h2>{{ nurseData.name }}</h2>
-              <p class="title">{{ nurseData.title }}</p>
-              <p class="location">{{ nurseData.location }}</p>
+      <div class="nurse-profile-header">
+        <div class="nurse-profile-left">
+          <img
+            class="nurse-image"
+            :src="nurse?.documents?.photo?.url"
+            alt="Nurse Photo"
+          />
+          <div class="nurse-info">
+            <h2 class="nurse-name">
+              {{ nurse?.personal?.firstNameEn }}
+            </h2>
+            <div class="nurse-subinfo">
+              <span class="nurse-location">
+                {{ nurse?.personal?.city }}, {{ nurse?.personal?.area }}
+              </span>
             </div>
           </div>
-
-          <div class="price-section">
-            <p>
-              Price per visit: <span>{{ nurseData.pricePerVisit }} LE</span>
-            </p>
-            <button @click="handleBookNow" class="btn-book-now">
-              BOOK NOW
-            </button>
-          </div>
         </div>
-
-        <div class="description-section">
-          <p>{{ nurseData.description }}</p>
-        </div>
-
-        <div class="services-section">
-          <h3>Services</h3>
-          <div class="service-tags">
-            <span
-              v-for="service in nurseData.services"
-              :key="service"
-              class="tag"
-              >{{ service }}</span
+        <div class="nurse-profile-right">
+          <div class="price-label">
+            Price per visit :
+            <span class="price-value"
+              >{{ nurse?.professional?.price }} EGP</span
             >
           </div>
+          <button class="action-button">BOOK NOW</button>
         </div>
       </div>
+      <div class="shift-section" v-if="nurse?.professional?.shifts?.length">
+        <h4 class="section-title">Available time</h4>
+        <p class="section-text">
+          {{ nurse.professional.shifts.join(", ") }}
+        </p>
+        <p class="section-text">{{ nurse.professional.shift }}</p>
+      </div>
+      <div class="experience-section" v-if="nurse?.professional?.experience">
+        <h4 class="section-title">Experience</h4>
+        <p class="section-text">{{ nurse?.professional?.experience }} years</p>
+      </div>
+      <div class="bio-section" v-if="nurse?.professional?.bio">
+        <h4 class="section-title">About</h4>
+        <p class="section-text">{{ nurse?.professional?.bio }}</p>
+      </div>
 
-      <div class="review-section">
-        <h3>Reviews</h3>
-        <div class="average-rating">
-          Average rating: <span>{{ averageRating }}</span> ({{
-            reviews.length
-          }}
-          review<span v-if="reviews.length !== 1">s</span>)
-        </div>
-
-        <div class="reviews-list">
-          <div class="review-item" v-for="review in reviews" :key="review.id">
-            <div class="review-header">
-              <div class="reviewer-info">
-                <img
-                  :src="review.authorImage || defaultUserImage"
-                  class="reviewer-avatar"
-                />
-                <div class="reviewer-details">
-                  <span class="author">{{ review.author }}</span>
-                  <span class="time">{{ review.time }}</span>
-                </div>
-              </div>
-              <div class="rating">
-                <span
-                  v-for="star in 5"
-                  :key="star"
-                  class="star"
-                  :class="{ filled: star <= review.rating }"
-                  >★</span
-                >
-              </div>
-            </div>
-            <p class="review-text">{{ review.text }}</p>
-          </div>
-        </div>
-
-        <div class="add-review-form">
-          <h4>Add Your Review</h4>
-          <form @submit.prevent="submitReview" class="review-form">
-            <div class="form-group">
-              <label>Your Rating:</label>
-              <div class="star-rating-input">
-                <span
-                  v-for="star in 5"
-                  :key="star"
-                  class="star"
-                  :class="{ filled: star <= newRating }"
-                  @click="newRating = star"
-                  >★</span
-                >
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Your Review:</label>
-              <textarea
-                v-model="newReviewText"
-                rows="5"
-                placeholder="Share your experience here..."
-                required
-              ></textarea>
-            </div>
-
-            <button type="submit" :disabled="!newReviewText || newRating === 0">
-              Submit Review
-            </button>
-          </form>
+      <div
+        class="services-section"
+        v-if="nurse?.professional?.specialization?.length"
+      >
+        <h4>Services</h4>
+        <div class="services-list">
+          <span
+            class="service-chip"
+            v-for="(service, idx) in nurse.professional.specialization"
+            :key="idx"
+          >
+            {{ service }}
+          </span>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      nurseData: {
-        name: "Layla Hassan",
-        title: "Experienced Registered Nurse",
-        location: "Cairo, Egypt",
-        pricePerVisit: 150,
-        description:
-          "Layla Hassan is a compassionate and experienced registered nurse with a passion for providing personalized care at home. With over 10 years of experience in the healthcare industry, she has developed a deep understanding of patient needs and a commitment to delivering high-quality care.",
-        services: ["Elderly Care", "Post Surgery"],
-      },
-      reviews: [
-        {
-          id: 1,
-          author: "Fatima Mahmoud",
-          authorImage: require("@/assets/sophia.jpg"),
-          time: "3 weeks ago",
-          text: "Miss Layla provided exceptional care for my grandmother.",
-          rating: 5,
-        },
-        {
-          id: 2,
-          author: "Omar Ali",
-          authorImage: require("@/assets/sophia.jpg"),
-          time: "1 month ago",
-          text: "Layla was professional and helpful during my recovery.",
-          rating: 4,
-        },
-      ],
-      newReviewText: "",
-      newRating: 0,
-    };
-  },
-  computed: {
-    averageRating() {
-      if (this.reviews.length === 0) return "N/A";
-      const total = this.reviews.reduce((sum, r) => sum + r.rating, 0);
-      return (total / this.reviews.length).toFixed(1);
-    },
-  },
-  methods: {
-    handleBookNow() {
-      alert("Booking functionality would go here!");
-    },
-    submitReview() {
-      if (this.newReviewText.trim() && this.newRating > 0) {
-        const newReview = {
-          id: this.reviews.length + 1,
-          text: this.newReviewText.trim(),
-          rating: this.newRating,
-          author: "You",
-          authorImage: this.defaultUserImage,
-          time: "Just now",
-        };
-        this.reviews.unshift(newReview);
-        this.newReviewText = "";
-        this.newRating = 0;
-      }
-    },
-  },
-};
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/firebase";
+
+const route = useRoute();
+const nurseId = route.params.id;
+const nurse = ref(null);
+
+onMounted(async () => {
+  const docRef = doc(db, "applications", nurseId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    nurse.value = docSnap.data();
+  } else {
+    console.log("No such document!");
+  }
+});
 </script>
 
 <style scoped>
 .nurse-profile-container {
-  font-family: "Segoe UI", sans-serif;
-  color: #333;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+  background-color: #f9f9f9;
 }
 
 .nurse-profile-page {
-  padding: 40px 120px;
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+  max-width: 900px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  padding: 32px 48px;
 }
 
-.nurse-profile-card,
-.review-section {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
-}
-
-.header-section {
-  display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
-}
-
-.avatar-info-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-}
-
-.info h2 {
-  margin: 10px 0 5px;
-  font-size: 1.5em;
-}
-
-.title {
-  font-weight: 600;
-  color: #555;
-}
-
-.location {
-  color: #777;
-  font-size: 0.9em;
-}
-
-.price-section {
-  margin-left: 50%;
-  text-align: right;
-}
-
-.price-section p {
-  font-size: 1.2em;
-}
-
-.price-section span {
-  color: #19599a;
-  font-weight: bold;
-}
-
-.btn-book-now {
-  background: #19599a;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  margin-top: 10px;
-  font-weight: 600;
-}
-
-.description-section p {
-  margin: 0;
-  line-height: 1.6;
-  text-align: left;
-}
-
-.services-section .tag {
-  background: #e0e6ed;
-  border-radius: 15px;
-  padding: 6px 12px;
-  margin: 4px;
-  display: inline-block;
-}
-
-.review-header {
+.nurse-profile-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 32px;
+  margin-bottom: 32px;
 }
 
-.reviewer-info {
+.nurse-profile-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 24px;
 }
 
-.reviewer-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.nurse-image {
+  width: 140px;
+  height: 140px;
   object-fit: cover;
+  border-radius: 12px;
+  background: #f2f2f2;
+  border: 1px solid #e5e7eb;
 }
 
-.reviewer-details {
+.nurse-info h2 {
+  font-size: 24px;
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  align-text: left;
+}
+
+.nurse-title {
+  color: #2563eb;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.nurse-location {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.nurse-profile-right {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
 }
 
-.star {
-  color: #ccc;
-  cursor: pointer;
+.price-label {
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 8px;
 }
 
-.star.filled {
-  color: #ffc107;
+.price-value {
+  font-weight: 600;
+  font-size: 20px;
+  color: #1d4ed8;
+  margin-left: 4px;
 }
 
-textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #dd;
-}
-.review-form button {
-  background: #28a745;
+.action-button {
+  background-color: #19599a;
   color: white;
-  padding: 10px 20px;
-  border-radius: 6px;
-  border: none;
-  margin-top: 10px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+.action-button:hover {
+  background-color: #009acb;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .nurse-profile-page {
-    padding: 20px;
-  }
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: left;
+}
 
-  .header-section {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+.section-text {
+  line-height: 1.6;
+  color: #444;
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 16px;
+}
 
-  .price-section {
-    margin-left: 0;
-    text-align: center;
-  }
+.experience-section,
+.bio-section,
+.services-section,
+.shift-section {
+  margin-bottom: 24px;
+}
 
-  .review-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
+.services-section h4 {
+  font-size: 17px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-align: left;
+}
 
-  .rating {
-    margin-top: 8px;
-  }
+.services-title {
+  font-weight: 700;
+  font-size: 17px;
+  margin-bottom: 8px;
+  display: block;
+  color: #111;
+}
+
+.services-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.service-chip {
+  background: #f3f4f6;
+  color: #374151;
+  border-radius: 16px;
+  padding: 6px 16px;
+  font-size: 15px;
+  border: 1px solid #e5e7eb;
 }
 </style>

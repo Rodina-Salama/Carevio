@@ -33,7 +33,7 @@ export default {
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
-  --button-color: #4f46e5;
+  --button-color: #19599a;
 }
 
 body {

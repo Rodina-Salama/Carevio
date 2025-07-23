@@ -46,7 +46,7 @@
             <div class="avatar"></div>
             <div>
               <h2 class="name">
-                {{ nurse.personal.firstNameEn }} {{ nurse.personal.lastNameEn }}
+                {{ nurse.personal.firstNameEn }}
               </h2>
               <div class="rating">★ 4.8 <span class="votes">(89)</span></div>
             </div>
@@ -182,20 +182,22 @@ export default {
 
 .search-btn,
 .reset-btn {
-  background-color: #2563eb;
+  background-color: #19599a;
   color: white;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
 }
 
 .reset-btn {
-  background-color: #6b7280;
+  background-color: transparent;
+  color: #19599a;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  border: 2px solid #19599a;
 }
 
 .search-btn:hover {
-  background-color: #1d4ed8;
+  background-color: #009acb;
 }
 
 .reset-btn:hover {
@@ -311,18 +313,14 @@ export default {
 }
 
 .view-btn {
-  background: #2563eb;
+  background-color: #19599a;
   color: white;
-  border: none;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
 }
 
 .view-btn:hover {
-  background: #1d4ed8;
+  background-color: #009acb;
 }
 
 .no-results {
