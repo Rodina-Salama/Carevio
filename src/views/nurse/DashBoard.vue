@@ -48,9 +48,15 @@
       <div class="quick-actions">
         <h3>Quick Actions</h3>
         <div class="actions">
-          <router-link to="/nurseavailability" class="action-btn">Set Availability</router-link>
-          <router-link to="/nursebookings" class="action-btn">View Bookings</router-link>
-          <router-link to="/nurseedit" class="action-btn">Edit Profile</router-link>
+          <router-link to="/nurseavailability" class="action-btn"
+            >Set Availability</router-link
+          >
+          <router-link to="/nursebookings" class="action-btn"
+            >View Bookings</router-link
+          >
+          <router-link to="/nurseedit" class="action-btn"
+            >Edit Profile</router-link
+          >
         </div>
       </div>
     </div>

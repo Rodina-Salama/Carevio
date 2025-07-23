@@ -29,7 +29,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import NurseSidebar from "@/components/NurseSidebar.vue";
 import { db } from "@/firebase";

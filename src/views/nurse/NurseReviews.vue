@@ -7,7 +7,6 @@
         Average rating: {{ averageRating.toFixed(1) }} ({{ reviews.length }}
         reviews)
       </p>
-
       <div v-for="review in reviews" :key="review.id" class="review-card">
         <div class="review-header">
           <img :src="review.photo" class="avatar" />

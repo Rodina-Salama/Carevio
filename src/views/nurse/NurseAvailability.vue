@@ -2,7 +2,6 @@
   <div class="dashboard-container">
     <div class="content-wrapper">
       <NurseSidebar />
-
       <div class="main-content">
         <h1 class="title">Availability</h1>
         <p class="subtitle">

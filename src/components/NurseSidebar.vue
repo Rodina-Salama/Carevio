@@ -8,7 +8,11 @@
     <!-- Navigation -->
     <ul class="nav-links">
       <li v-for="item in navItems" :key="item.path">
-        <router-link :to="item.path" class="nav-link" :class="{ active: $route.path.startsWith(item.path) }">
+        <router-link
+          :to="item.path"
+          class="nav-link"
+          :class="{ active: $route.path.startsWith(item.path) }"
+        >
           {{ item.label }}
         </router-link>
       </li>
