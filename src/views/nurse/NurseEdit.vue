@@ -16,27 +16,17 @@
           </div>
         </div>
       </div>
-
       <!-- Bio -->
       <div class="form-group bio-group">
         <label class="form-label">Bio</label>
-        <textarea
-          v-model="nurse.bio"
-          placeholder="Enter here"
-          class="input bio"
-        ></textarea>
+        <textarea v-model="nurse.bio" placeholder="Enter here" class="input bio"></textarea>
       </div>
 
       <!-- Pricing -->
       <div class="form-group">
         <label class="form-label">Pricing</label>
         <div class="pricing-field">
-          <input
-            v-model.number="nurse.pricing"
-            type="number"
-            class="input small"
-            placeholder="10"
-          />
+          <input v-model.number="nurse.pricing" type="number" class="input small" placeholder="10" />
           <span class="unit">EGP /hour</span>
         </div>
       </div>

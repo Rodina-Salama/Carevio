@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-container">
     <NurseNavbar />
-
     <div class="content-wrapper">
       <nurse-sidebar />
 

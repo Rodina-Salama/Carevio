@@ -183,7 +183,6 @@ function sendChatbotMessage() {
   display: flex;
   border-top: 1px solid #ccc;
 }
-
 .chatbot-input input {
   flex: 1;
   border: none;

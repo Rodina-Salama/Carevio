@@ -5,15 +5,10 @@
       <img src="@/assets/icon.jpg" alt="Logo" class="logo-img" />
       <span class="site-name">Carevio</span>
     </div>
-
     <!-- Navigation -->
     <ul class="nav-links">
       <li v-for="item in navItems" :key="item.path">
-        <router-link
-          :to="item.path"
-          class="nav-link"
-          :class="{ active: $route.path.startsWith(item.path) }"
-        >
+        <router-link :to="item.path" class="nav-link" :class="{ active: $route.path.startsWith(item.path) }">
           {{ item.label }}
         </router-link>
       </li>
