@@ -20,6 +20,8 @@ import NurseBookings from "@/views/nurse/NurseBookings.vue";
 import NurseEdit from "@/views/nurse/NurseEdit.vue";
 import NurseReviews from "@/views/nurse/NurseReviews.vue";
 import NurseEarnings from "@/views/nurse/NurseEarnings.vue";
+import BookingConfirmation from "@/views/BookingConfirmation/BookingConfirmation.vue";
+import ForgotPassword from "@/views/guest/ForgotPassword.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -36,6 +38,16 @@ const routes = [
   { path: "/nurseprofile", name: "NurseProfile", component: NurseProfile },
   { path: "/userprofile", name: "UserProfile", component: UserProfile },
   { path: "/editprofile", name: "EditProfile", component: EditProfile },
+  {
+    path: "/forgotpassword",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+  },
+  {
+    path: "/bookingconfirmation",
+    name: "BookingConfirmation",
+    component: BookingConfirmation,
+  },
 
   {
     path: "/changepassword",

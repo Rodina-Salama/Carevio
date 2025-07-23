@@ -246,12 +246,12 @@ export default {
 }
 
 .price-section span {
-  color: #007bff;
+  color: #19599a;
   font-weight: bold;
 }
 
 .btn-book-now {
-  background: #007bff;
+  background: #19599a;
   color: white;
   padding: 10px 20px;
   border-radius: 5px;

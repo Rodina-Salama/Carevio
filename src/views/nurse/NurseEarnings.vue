@@ -162,7 +162,7 @@ export default {
 
 .card h2 {
   font-size: 24px;
-  color: #007bff;
+  color: #19599a;
 }
 
 .transaction-table {

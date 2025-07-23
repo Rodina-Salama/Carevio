@@ -252,7 +252,7 @@ export default {
 }
 
 .btn-save {
-  background-color: #2d8cf0;
+  background-color: #19599a;
   color: white;
   padding: 10px 20px;
   border: none;

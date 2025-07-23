@@ -211,7 +211,7 @@ export default {
 }
 
 .calendar-header button {
-  background-color: #007bff;
+  background-color: #19599a;
   color: white;
   border: none;
   border-radius: 50%;
@@ -223,7 +223,7 @@ export default {
 }
 
 .calendar-header button:hover {
-  background-color: #0056b3;
+  background-color: #19599a;
 }
 
 .calendar-grid {
@@ -254,7 +254,7 @@ export default {
 }
 
 .date.selected {
-  background: linear-gradient(to right, #007bff, #3399ff);
+  background: linear-gradient(to right, #19599a, #19599a);
   color: white;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
