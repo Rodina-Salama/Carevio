@@ -40,88 +40,185 @@
             />
           </div>
 
+          <!-- Shifts -->
+          <div class="input-group">
+            <label>Shifts</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="morning"
+                    v-model="formData.shifts"
+                  />
+                  Morning
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="evening"
+                    v-model="formData.shifts"
+                  />
+                  Evening
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="overnight"
+                    v-model="formData.shifts"
+                  />
+                  Overnight
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Languages -->
+          <div class="input-group">
+            <label>Languages</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="arabic"
+                    v-model="formData.languages"
+                  />
+                  Arabic
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="english"
+                    v-model="formData.languages"
+                  />
+                  English
+                </label>
+              </div>
+              <!-- لو حابة تضيفي لغات زيادة -->
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="french"
+                    v-model="formData.languages"
+                  />
+                  French
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="german"
+                    v-model="formData.languages"
+                  />
+                  German
+                </label>
+              </div>
+            </div>
+          </div>
           <!-- Specialization -->
           <div class="input-group">
             <label>Specialization</label>
             <div class="checkbox-group">
               <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="morning"
-                  v-model="formData.specialization.morning"
-                />
-                <label for="morning">Morning</label>
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Elderly Care"
+                    v-model="formData.specialization"
+                  />
+                  Elderly Care
+                </label>
               </div>
               <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="evening"
-                  v-model="formData.specialization.evening"
-                />
-                <label for="evening">Evening</label>
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Pediatric Support"
+                    v-model="formData.specialization"
+                  />
+                  Pediatric Support
+                </label>
               </div>
               <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="overnight"
-                  v-model="formData.specialization.overnight"
-                />
-                <label for="overnight">Overnight</label>
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Injections & IV Therapy"
+                    v-model="formData.specialization"
+                  />
+                  Injections & IV Therapy
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Bedridden Patient"
+                    v-model="formData.specialization"
+                  />
+                  Bedridden Patient
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Disability Care"
+                    v-model="formData.specialization"
+                  />
+                  Disability Care
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Vital Signs Monitoring"
+                    v-model="formData.specialization"
+                  />
+                  Vital Signs Monitoring
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Wound Dressing"
+                    v-model="formData.specialization"
+                  />
+                  Wound Dressing
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Catheter Care"
+                    v-model="formData.specialization"
+                  />
+                  Catheter Care
+                </label>
+              </div>
+              <div class="checkbox-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    value="Post-Surgical Care"
+                    v-model="formData.specialization"
+                  />
+                  Post-Surgical Care
+                </label>
               </div>
             </div>
-          </div>
-
-          <!-- Languages Spoken -->
-          <div class="input-group">
-            <label>Languages Spoken</label>
-            <div class="checkbox-group">
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="english"
-                  v-model="formData.languages.english"
-                />
-                <label for="english">English</label>
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="arabic"
-                  v-model="formData.languages.arabic"
-                />
-                <label for="arabic">Arabic</label>
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="french"
-                  v-model="formData.languages.french"
-                />
-                <label for="french">French</label>
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="german"
-                  v-model="formData.languages.german"
-                />
-                <label for="german">German</label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Upload Nursing License -->
-          <div class="input-group">
-            <label for="licenseUpload"
-              >Upload Nursing License (PDF or Image)</label
-            >
-            <input
-              type="file"
-              id="licenseUpload"
-              @change="handleFileUpload"
-              accept=".pdf,.jpg,.jpeg,.png"
-              required
-            />
           </div>
 
           <!-- Bio -->
@@ -155,31 +252,32 @@ const router = useRouter();
 // Form data
 const formData = ref({
   experience: "",
-  specialization: {
-    morning: false,
-    evening: false,
-    overnight: false,
-  },
-  languages: {
-    english: false,
-    arabic: false,
-    french: false,
-    german: false,
-  },
+  shifts: [],
+  languages: [],
+  specialization: [],
   licenseNumber: "",
-  licenseFile: null,
   bio: "",
 });
-
-const handleFileUpload = (event) => {
-  formData.value.licenseFile = event.target.files[0];
-};
 
 const goBack = () => {
   router.push("/join");
 };
 
 const handleSubmit = () => {
+  if (formData.value.specialization.length === 0) {
+    alert("Please select at least one specialization.");
+    return;
+  }
+
+  if (formData.value.languages.length === 0) {
+    alert("Please select at least one language.");
+    return;
+  }
+
+  if (formData.value.shifts.length === 0) {
+    alert("Please select at least one shift.");
+    return;
+  }
   // Store data in localStorage
   localStorage.setItem("professionalData", JSON.stringify(formData.value));
   router.push("/thirdjoin");

@@ -5,12 +5,9 @@
 
       <div class="profile-header">
         <div class="profile-picture">
-          <img
-            :src="require('@/assets/' + user.profileImage)"
-            alt="Profile Picture"
-          />
+          <img :src="validProfileImage" alt="Profile Picture" />
         </div>
-        <h2>{{ user.name }}</h2>
+        <h2>{{ user.fullName }}</h2>
       </div>
 
       <div class="account-section">
@@ -32,7 +29,6 @@
           <button @click="changePassword" class="action-btn">
             Change Password
           </button>
-          <button @click="logout" class="action-btn logout-btn">Logout</button>
         </div>
       </div>
     </div>
@@ -40,33 +36,64 @@
 </template>
 
 <script>
+import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { db, auth } from "@/firebase";
+
 export default {
   data() {
     return {
       user: {
-        name: "Sophia Carter",
-        phone: "+01 234 5678 9",
-        email: "sophia.carter@example.com",
-        profileImage: "sophia.jpg",
+        fullName: "",
+        phone: "",
+        email: "",
+        profileImage: "",
       },
+      defaultImage: require("@/assets/default.png"),
     };
   },
+  computed: {
+    validProfileImage() {
+      const img = this.user.profileImage?.trim();
+      return img && (img.startsWith("data:image/") || img.startsWith("http"))
+        ? img
+        : this.defaultImage;
+    },
+  },
+  mounted() {
+    this.loadUserData();
+  },
   methods: {
+    async loadUserData() {
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userRef = doc(db, "users", currentUser.uid);
+          const userSnap = await getDoc(userRef);
+
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            this.user = {
+              fullName: data.fullName || "",
+              phone: data.phone || "",
+              email: data.email || "",
+              profileImage: data.profileImage || "",
+            };
+          }
+        } else {
+          this.$router.push("/signin");
+        }
+      });
+    },
     editProfile() {
-      // Navigate to edit profile page
       this.$router.push("/editprofile");
     },
     changePassword() {
-      // Navigate to change password page
       this.$router.push("/changepassword");
-    },
-    logout() {
-      // Navigate to sign in page
-      this.$router.push("/signin");
     },
   },
 };
 </script>
+
 <style scoped>
 .profile-container {
   max-width: 500px;
@@ -96,8 +123,8 @@ h1 {
 }
 
 .profile-picture {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   margin: 0 auto 15px;
   border-radius: 50%;
   overflow: hidden;
@@ -146,7 +173,7 @@ label {
 }
 
 .actions-container {
-  max-width: 300px; /* Narrower buttons container */
+  max-width: 300px;
   margin: 0 auto;
 }
 
@@ -166,13 +193,5 @@ label {
 
 .action-btn:hover {
   background-color: #3a5a8a;
-}
-
-.logout-btn {
-  background-color: #e74c3c;
-}
-
-.logout-btn:hover {
-  background-color: #c0392b;
 }
 </style>
