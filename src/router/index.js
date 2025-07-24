@@ -22,6 +22,8 @@ import NurseReviews from "@/views/nurse/NurseReviews.vue";
 import NurseEarnings from "@/views/nurse/NurseEarnings.vue";
 import BookingConfirmation from "@/views/BookingConfirmation/BookingConfirmation.vue";
 import ForgotPassword from "@/views/guest/ForgotPassword.vue";
+import MyBookings from "@/views/user/MyBookings.vue";
+import bookingInformation from "@/views/BookingConfirmation/bookingInformation.vue";
 
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
@@ -65,10 +67,16 @@ const routes = [
     name: "NurseAvailability",
     component: NurseAvailability,
   },
+  {
+    path: "/bookinginformation",
+    name: "BookingInformation",
+    component: bookingInformation,
+  },
   { path: "/nursebookings", name: "NurseBookings", component: NurseBookings },
   { path: "/nurseedit", name: "NurseEdits", component: NurseEdit },
   { path: "/nursereviews", name: "NurseReviews", component: NurseReviews },
   { path: "/nurseearnings", name: "NurseEarnings", component: NurseEarnings },
+  { path: "/my-bookings", name: "MyBookings", component: MyBookings }, // ← NEW!
 ];
 /* eslint-disable */
 const router = createRouter({

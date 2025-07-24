@@ -26,7 +26,7 @@
               >{{ nurse?.professional?.price }} EGP</span
             >
           </div>
-          <button class="action-button">BOOK NOW</button>
+          <button class="action-button" @click="goToBooking">BOOK NOW</button>
         </div>
       </div>
       <div class="shift-section" v-if="nurse?.professional?.shifts?.length">
@@ -69,11 +69,22 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/userStore";
 
 const route = useRoute();
 const nurseId = route.params.id;
 const nurse = ref(null);
+const router = useRouter();
+const userStore = useUserStore();
 
+function goToBooking() {
+  if (userStore.firebaseUser) {
+    router.push({ path: "/bookingInformation", query: { nurseId } });
+  } else {
+    router.push("/signup");
+  }
+}
 onMounted(async () => {
   const docRef = doc(db, "applications", nurseId);
   const docSnap = await getDoc(docRef);
@@ -109,12 +120,14 @@ onMounted(async () => {
   align-items: center;
   gap: 32px;
   margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .nurse-profile-left {
   display: flex;
   align-items: center;
   gap: 24px;
+  flex: 1;
 }
 
 .nurse-image {
@@ -126,17 +139,21 @@ onMounted(async () => {
   border: 1px solid #e5e7eb;
 }
 
-.nurse-info h2 {
+.nurse-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.nurse-name {
   font-size: 24px;
   margin: 0 0 6px 0;
   font-weight: 600;
-  align-text: left;
 }
 
-.nurse-title {
-  color: #2563eb;
-  font-size: 16px;
-  margin-bottom: 4px;
+.nurse-subinfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .nurse-location {
@@ -149,12 +166,13 @@ onMounted(async () => {
   flex-direction: column;
   align-items: flex-end;
   gap: 16px;
+  flex: 1;
+  min-width: 200px;
 }
 
 .price-label {
   font-size: 18px;
   color: #222;
-  margin-bottom: 8px;
 }
 
 .price-value {
@@ -168,53 +186,43 @@ onMounted(async () => {
   background-color: #19599a;
   color: white;
   cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
   transition: background-color 0.3s;
 }
 .action-button:hover {
   background-color: #009acb;
 }
 
-.section-title {
+.shift-section,
+.experience-section,
+.bio-section,
+.services-section {
+  margin-bottom: 16px;
+}
+
+.section-title,
+.services-section h4 {
   font-size: 17px;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   text-align: left;
 }
 
 .section-text {
-  line-height: 1.6;
-  color: #444;
   font-size: 16px;
-  text-align: left;
-  margin-bottom: 16px;
-}
-
-.experience-section,
-.bio-section,
-.services-section,
-.shift-section {
-  margin-bottom: 24px;
-}
-
-.services-section h4 {
-  font-size: 17px;
+  color: #444;
+  line-height: 1.6;
   margin-bottom: 8px;
-  font-weight: 700;
   text-align: left;
-}
-
-.services-title {
-  font-weight: 700;
-  font-size: 17px;
-  margin-bottom: 8px;
-  display: block;
-  color: #111;
 }
 
 .services-list {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
 .service-chip {
@@ -224,5 +232,88 @@ onMounted(async () => {
   padding: 6px 16px;
   font-size: 15px;
   border: 1px solid #e5e7eb;
+}
+
+/* ========== Responsive ========== */
+
+/* Small screens (phones) */
+@media (max-width: 767px) {
+  .nurse-profile-page {
+    padding: 24px 16px;
+  }
+
+  .nurse-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .nurse-profile-left,
+  .nurse-profile-right {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .nurse-profile-right {
+    align-items: flex-start;
+  }
+
+  .nurse-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .nurse-name {
+    font-size: 20px;
+  }
+
+  .price-label {
+    font-size: 16px;
+  }
+
+  .price-value {
+    font-size: 18px;
+  }
+
+  .action-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .nurse-profile-page {
+    padding: 28px 32px;
+  }
+
+  .nurse-profile-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .nurse-profile-left,
+  .nurse-profile-right {
+    flex: 1;
+    min-width: 250px;
+  }
+
+  .nurse-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .nurse-name {
+    font-size: 22px;
+  }
+
+  .action-button {
+    padding: 10px 16px;
+  }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 1024px) {
 }
 </style>

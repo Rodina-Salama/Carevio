@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import paypalImg from "@/assets/paypal.png";
 import cashImg from "@/assets/cash.png";
@@ -60,12 +60,27 @@ import { addDoc, collection } from "firebase/firestore";
 const router = useRouter();
 
 const booking = ref({
-  date: "July 24, 2025",
-  time: "10:00 AM",
-  nurse: "Noha Ahmed",
-  service: "Home Nursing Care",
-  address: "14th El Madi street",
-  total: 200,
+  date: "",
+  time: "",
+  nurse: "",
+  service: "",
+  address: "",
+  total: "",
+});
+
+onMounted(() => {
+  const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+  if (storedBooking) {
+    booking.value = {
+      date: storedBooking.date,
+      time: `${storedBooking.from} - ${storedBooking.to}`,
+      nurse: storedBooking.nurseName,
+      service: storedBooking.service,
+      address: storedBooking.address,
+      total: storedBooking.price,
+      notes: storedBooking.notes || "",
+    };
+  }
 });
 
 const paymentMethod = ref("");
@@ -101,8 +116,10 @@ const handleConfirm = async () => {
 
 const saveBooking = async (method) => {
   try {
+    const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+
     await addDoc(collection(db, "bookings"), {
-      ...booking.value,
+      ...storedBooking,
       paymentMethod: method,
       createdAt: new Date(),
     });

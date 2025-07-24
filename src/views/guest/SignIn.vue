@@ -58,9 +58,11 @@
 </template>
 
 <script>
-import { auth } from "@/firebase";
+import { auth, db } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import router from "@/router";
+import { useUserStore } from "@/stores/userStore"; // ✅ استدعاء الستيت
 
 export default {
   data() {
@@ -73,17 +75,55 @@ export default {
     };
   },
   methods: {
-    loginUser() {
-      signInWithEmailAndPassword(auth, this.user.email, this.user.password)
-        .then(() => {
-          router.push({ name: "HomePage" });
-        })
-        .catch(() => {
-          this.messageError = "Invalid email or password";
+    async loginUser() {
+      const userStore = useUserStore();
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          this.user.email,
+          this.user.password
+        );
+        const currentUser = userCredential.user;
+
+        await currentUser.reload();
+
+        if (!currentUser.emailVerified) {
+          this.messageError = "Please verify your email before logging in.";
           setTimeout(() => {
             this.messageError = "";
-          }, 4000);
-        });
+          }, 5000);
+          return;
+        }
+
+        // ✅ Get additional user data from Firestore
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const type = userData.type;
+
+          // ✅ Save user data in Pinia
+          await userStore.setUser(currentUser, userData);
+
+          // ✅ Redirect based on user type
+          if (type === "nurse") {
+            router.push({ name: "DashBoard" });
+          } else if (type === "user") {
+            router.push({ name: "HomePage" });
+          } else {
+            this.messageError = "Unknown user type.";
+          }
+        } else {
+          this.messageError = "User data not found.";
+        }
+      } catch (error) {
+        this.messageError = "Invalid email or password";
+        setTimeout(() => {
+          this.messageError = "";
+        }, 4000);
+      }
     },
   },
 };

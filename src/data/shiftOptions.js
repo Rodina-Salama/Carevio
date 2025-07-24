@@ -1,1 +1,32 @@
-export const shiftOptions = ["morning", "evening", "overnight"];
+export const shiftOptions = {
+  morning: [
+    { from: "08:00 AM", to: "09:00 AM" },
+    { from: "09:00 AM", to: "10:00 AM" },
+    { from: "10:00 AM", to: "11:00 AM" },
+    { from: "11:00 AM", to: "12:00 PM" },
+    { from: "12:00 PM", to: "01:00 PM" },
+    { from: "01:00 PM", to: "02:00 PM" },
+    { from: "02:00 PM", to: "03:00 PM" },
+    { from: "03:00 PM", to: "04:00 PM" },
+  ],
+  evening: [
+    { from: "04:00 PM", to: "05:00 PM" },
+    { from: "05:00 PM", to: "06:00 PM" },
+    { from: "06:00 PM", to: "07:00 PM" },
+    { from: "07:00 PM", to: "08:00 PM" },
+    { from: "08:00 PM", to: "09:00 PM" },
+    { from: "09:00 PM", to: "10:00 PM" },
+  ],
+  overnight: [
+    { from: "10:00 PM", to: "11:00 PM" },
+    { from: "11:00 PM", to: "12:00 AM" },
+    { from: "12:00 AM", to: "01:00 AM" },
+    { from: "01:00 AM", to: "02:00 AM" },
+    { from: "02:00 AM", to: "03:00 AM" },
+    { from: "03:00 AM", to: "04:00 AM" },
+    { from: "04:00 AM", to: "05:00 AM" },
+    { from: "05:00 AM", to: "06:00 AM" },
+    { from: "06:00 AM", to: "07:00 AM" },
+    { from: "07:00 AM", to: "08:00 AM" },
+  ],
+};

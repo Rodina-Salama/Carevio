@@ -42,7 +42,7 @@
 
           <!-- Price-->
           <div class="input-group">
-            <label for="Price">Price</label>
+            <label for="Price">Price (per hour)</label>
             <input
               type="text"
               id="price"
@@ -51,15 +51,36 @@
               required
             />
           </div>
-
-          <!-- Shifts -->
+          <!-- Available Days -->
           <div class="input-group">
-            <label>available time</label>
+            <label>Available Days</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
-                v-for="(shift, index) in shiftOptions"
+                v-for="(day, index) in availableDays"
                 :key="index"
+              >
+                <label>
+                  <input
+                    type="checkbox"
+                    :value="day"
+                    v-model="formData.availableDays"
+                  />
+                  {{ day }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shifts -->
+          <!-- Shifts -->
+          <div class="input-group">
+            <label>Available Time</label>
+            <div class="checkbox-group">
+              <div
+                class="checkbox-item"
+                v-for="(times, shift) in shiftOptions"
+                :key="shift"
               >
                 <label>
                   <input
@@ -68,10 +89,12 @@
                     v-model="formData.shifts"
                   />
                   {{ shift.charAt(0).toUpperCase() + shift.slice(1) }}
+                  ({{ times[0].from }} - {{ times[times.length - 1].to }})
                 </label>
               </div>
             </div>
           </div>
+
           <!-- Languages -->
           <div class="input-group">
             <label>Languages</label>
@@ -94,7 +117,7 @@
           </div>
           <!-- Specialization -->
           <div class="input-group">
-            <label>Specialization</label>
+            <label>Services</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -141,11 +164,13 @@ import { useRouter } from "vue-router";
 import { shiftOptions } from "@/data/shiftOptions";
 import { languageOptions } from "@/data/languageOptions";
 import { specializationOptions } from "@/data/specializationOptions";
+import { availableDays } from "@/data/availableDays";
 const router = useRouter();
 
 // Form data
 const formData = ref({
   experience: "",
+  availableDays: [],
   shifts: [],
   languages: [],
   specialization: [],

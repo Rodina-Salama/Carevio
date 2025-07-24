@@ -267,6 +267,8 @@ const handleSubmit = async () => {
       email: email,
       password: password,
       type: "nurse",
+      profileImage: documentUrls.photo?.url || "",
+      fullName: `${personalData.firstNameEn} ${personalData.lastNameEn}`,
       createdAt: new Date().toISOString(),
     });
     localStorage.removeItem("personalData");
