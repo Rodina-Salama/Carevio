@@ -110,6 +110,7 @@ const handleConfirm = async () => {
   }
 
   await saveBooking(paymentMethod.value);
+  localStorage.removeItem("bookingData");
   alert("Booking confirmed!");
   router.push("/thank-you");
 };

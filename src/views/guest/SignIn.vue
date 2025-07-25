@@ -59,10 +59,10 @@
 
 <script>
 import { auth, db } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import router from "@/router";
-import { useUserStore } from "@/stores/userStore"; // ✅ استدعاء الستيت
+import { useUserStore } from "@/stores/userStore";
 
 export default {
   data() {
@@ -86,17 +86,20 @@ export default {
         );
         const currentUser = userCredential.user;
 
+        // ✅ تأكد من تحميل بيانات المستخدم
         await currentUser.reload();
 
+        // ✅ تحقق من التفعيل قبل أي حاجة تانية
         if (!currentUser.emailVerified) {
           this.messageError = "Please verify your email before logging in.";
+          await signOut(auth); // مهم علشان يوقف تسجيل الدخول فعليًا
           setTimeout(() => {
             this.messageError = "";
           }, 5000);
           return;
         }
 
-        // ✅ Get additional user data from Firestore
+        // ✅ حمل بيانات المستخدم من Firestore
         const userDocRef = doc(db, "users", currentUser.uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -104,10 +107,10 @@ export default {
           const userData = userDocSnap.data();
           const type = userData.type;
 
-          // ✅ Save user data in Pinia
+          // ✅ سجل بيانات المستخدم في Pinia
           await userStore.setUser(currentUser, userData);
 
-          // ✅ Redirect based on user type
+          // ✅ اعمل توجيه حسب نوع المستخدم
           if (type === "nurse") {
             router.push({ name: "DashBoard" });
           } else if (type === "user") {
@@ -119,7 +122,7 @@ export default {
           this.messageError = "User data not found.";
         }
       } catch (error) {
-        this.messageError = "Invalid email or password";
+        this.messageError = "Invalid email or password.";
         setTimeout(() => {
           this.messageError = "";
         }, 4000);
