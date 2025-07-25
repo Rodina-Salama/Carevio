@@ -83,7 +83,7 @@
 
       <!-- Shift Selection -->
       <div class="form-item">
-        <label for="shift">Select Shift</label>
+        <label for="shift">Select Time</label>
         <select id="shift" v-model="selectedShift">
           <option disabled value="">Select shift</option>
           <option
@@ -163,6 +163,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { shiftOptions } from "@/data/shiftOptions";
 import { useUserStore } from "@/stores/userStore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -192,7 +193,12 @@ const totalHours = computed(() => {
   const [toHour, toMin] = parseTimeTo24Hour(selectedTo.value);
 
   const fromTotalMinutes = fromHour * 60 + fromMin;
-  const toTotalMinutes = toHour * 60 + toMin;
+  let toTotalMinutes = toHour * 60 + toMin;
+
+  // overnight
+  if (toTotalMinutes <= fromTotalMinutes) {
+    toTotalMinutes += 24 * 60; // add 24 hours
+  }
 
   const diffInMinutes = toTotalMinutes - fromTotalMinutes;
 
@@ -324,9 +330,52 @@ const proceedToPayment = () => {
     price: calculatedPrice.value,
     notes: booking.value.notes,
   };
+  const checkForConflict = async () => {
+    const bookingsRef = collection(db, "bookings");
+    const q = query(
+      bookingsRef,
+      where("nurseId", "==", nurseId),
+      where("date", "==", booking.value.date),
+      where("shift", "==", selectedShift.value)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const newFrom = parseTimeTo24Hour(selectedFrom.value);
+    const newTo = parseTimeTo24Hour(selectedTo.value);
+    const newStart = newFrom[0] * 60 + newFrom[1];
+    const newEnd = newTo[0] * 60 + newTo[1];
+
+    let conflictFound = false;
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const existingFrom = parseTimeTo24Hour(data.from);
+      const existingTo = parseTimeTo24Hour(data.to);
+      const existingStart = existingFrom[0] * 60 + existingFrom[1];
+      const existingEnd = existingTo[0] * 60 + existingTo[1];
+
+      const overlap = Math.max(
+        0,
+        Math.min(newEnd, existingEnd) - Math.max(newStart, existingStart)
+      );
+      if (overlap > 0) {
+        conflictFound = true;
+      }
+    });
+
+    return conflictFound;
+  };
 
   localStorage.setItem("bookingData", JSON.stringify(bookingData));
-  router.push("/bookingconfirmation");
+  checkForConflict().then((conflict) => {
+    if (conflict) {
+      alert("This time slot is already booked. Please choose another time.");
+      return;
+    }
+
+    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+    router.push("/bookingconfirmation");
+  });
 };
 
 onMounted(fetchNurseData);
@@ -416,9 +465,17 @@ form-group {
 
 .form-group label {
   display: block;
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 8px;
   color: #333;
+  text-align: left;
+}
+label {
+  font-weight: 777;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
 }
 
 .form-group textarea {

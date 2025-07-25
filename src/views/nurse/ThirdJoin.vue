@@ -131,7 +131,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 
-const CLOUDINARY_UPLOAD_PRESET = "Nurse_information"; // لازم تعملي unsigned upload preset من Cloudinary Dashboard
+const CLOUDINARY_UPLOAD_PRESET = "Nurse_information";
 const getUploadUrl = () => {
   return "https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload";
 };

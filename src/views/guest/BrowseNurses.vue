@@ -32,7 +32,18 @@
         <option value="female">Female</option>
         <option value="male">Male</option>
       </select>
-
+      <select v-model="selectedDay">
+        <option value="">Available day</option>
+        <option v-for="day in availableDays" :key="day" :value="day">
+          {{ day }}
+        </option>
+      </select>
+      <select v-model="selectedShift">
+        <option value="">Available time</option>
+        <option value="morning">Morning</option>
+        <option value="evening">Evening</option>
+        <option value="overnight">overnight</option>
+      </select>
       <button class="search-btn" @click="handleSearch">Search</button>
       <button class="reset-btn" @click="resetFilters">Reset</button>
     </div>
@@ -43,12 +54,21 @@
         <div v-for="nurse in filteredNurses" :key="nurse.id" class="card">
           <div class="badge">Verified</div>
           <div class="header">
-            <div class="avatar"></div>
+            <img
+              :src="nurse?.documents?.photo?.url || defaultImage"
+              alt="Nurse photo"
+              class="avatar"
+            />
+
             <div>
               <h2 class="name">
                 {{ nurse.personal.firstNameEn }}
+                {{ nurse.personal.lastNameEn }}
               </h2>
-              <div class="rating">★ 4.8 <span class="votes">(89)</span></div>
+              <div class="rating">
+                ★ {{ nurse.rating ? nurse.rating.toFixed(1) : "No rating" }}
+                <span class="votes">({{ nurse.ratingCount || 0 }})</span>
+              </div>
             </div>
           </div>
           <div class="location">
@@ -93,6 +113,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 import { cities, areas } from "@/data/locationOptions";
 import { specializationOptions } from "@/data/specializationOptions";
+import { availableDays } from "@/data/availableDays";
 
 export default {
   name: "BrowseNurse",
@@ -103,10 +124,13 @@ export default {
       selectedArea: "",
       selectedService: "",
       selectedGender: "",
+      selectedDay: "",
+      selectedShift: "",
       cities,
       areas,
       specializationOptions,
       isFiltered: false,
+      availableDays,
     };
   },
   computed: {
@@ -121,17 +145,35 @@ export default {
       return this.acceptedNurses.filter((nurse) => {
         const cityMatch =
           !this.selectedCity || nurse.personal.city === this.selectedCity;
+
         const areaMatch =
           !this.selectedArea || nurse.personal.area === this.selectedArea;
+
         const serviceMatch =
           !this.selectedService ||
           nurse.professional.specialization?.includes(this.selectedService);
+
         const genderMatch =
           !this.selectedGender ||
           nurse.personal.gender?.toLowerCase() ===
             this.selectedGender.toLowerCase();
 
-        return cityMatch && areaMatch && serviceMatch && genderMatch;
+        const dayMatch =
+          !this.selectedDay ||
+          nurse.professional?.availableDays?.includes(this.selectedDay);
+
+        const shiftMatch =
+          !this.selectedShift ||
+          nurse.professional?.shifts?.includes(this.selectedShift);
+
+        return (
+          cityMatch &&
+          areaMatch &&
+          serviceMatch &&
+          genderMatch &&
+          dayMatch &&
+          shiftMatch
+        );
       });
     },
     filteredAreas() {
@@ -139,11 +181,41 @@ export default {
     },
   },
   async created() {
-    const querySnapshot = await getDocs(collection(db, "applications"));
-    this.nurses = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const nursesSnap = await getDocs(collection(db, "applications"));
+    const reviewsSnap = await getDocs(collection(db, "reviews"));
+
+    const reviews = reviewsSnap.docs.map((doc) => doc.data());
+
+    const nurses = nursesSnap.docs.map((doc) => {
+      const nurseId = doc.id;
+
+      // Get only reviews for this nurse
+      const nurseReviews = reviews.filter(
+        (review) => review.nurseId === nurseId
+      );
+
+      const ratingCount = nurseReviews.length;
+      const rating = ratingCount
+        ? nurseReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+          ratingCount
+        : null;
+
+      return {
+        id: nurseId,
+        ...doc.data(),
+        rating,
+        ratingCount,
+      };
+    });
+
+    this.nurses = nurses;
+    const query = this.$route.query;
+    if (query.city || query.area || query.service) {
+      this.selectedCity = query.city || "";
+      this.selectedArea = query.area || "";
+      this.selectedService = query.service || "";
+      this.isFiltered = true;
+    }
   },
   methods: {
     handleSearch() {
@@ -154,6 +226,8 @@ export default {
       this.selectedArea = "";
       this.selectedService = "";
       this.selectedGender = "";
+      this.selectedDay = "";
+      this.selectedShift = "";
       this.isFiltered = false;
     },
   },
@@ -338,15 +412,15 @@ export default {
 
 @media (min-width: 768px) {
   .card {
-    flex: 1 1 calc(50% - 24px);
-    max-width: calc(50% - 24px);
+    flex: 1 1 calc(45% - 24px);
+    max-width: calc(45% - 24px);
   }
 }
 
 @media (min-width: 1024px) {
   .card {
-    flex: 1 1 calc(33.333% - 24px);
-    max-width: calc(33.333% - 24px);
+    flex: 1 1 calc(30% - 16px);
+    max-width: calc(30% - 16px);
   }
 }
 </style>

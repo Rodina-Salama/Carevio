@@ -23,7 +23,7 @@ export const useUserStore = defineStore("user", {
 
         if (!user.emailVerified) {
           console.warn("User email not verified. Skipping data fetch.");
-          return; // ❌ ما نحملش حاجة لو مش مفعل
+          return;
         }
 
         const uid = user.uid;

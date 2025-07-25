@@ -47,10 +47,31 @@
       </div>
     </div>
   </div>
+  <h2 class="success-title">Booking Confirmed!</h2>
+  <div v-if="showSuccessMessage" class="success-message-container">
+    <div class="success-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="#2ecc71"
+        width="64px"
+        height="64px"
+      >
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+      </svg>
+    </div>
+    <p class="success-text">
+      We've sent your booking confirmation via email. Please check your inbox.
+    </p>
+    <p class="success-note">
+      Redirecting to your bookings in {{ countdown }} seconds...
+    </p>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import paypalImg from "@/assets/paypal.png";
 import cashImg from "@/assets/cash.png";
@@ -68,6 +89,11 @@ const booking = ref({
   total: "",
 });
 
+const paymentMethod = ref("");
+const showSuccessMessage = ref(false);
+const countdown = ref(5);
+let countdownInterval = null;
+
 onMounted(() => {
   const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
   if (storedBooking) {
@@ -83,24 +109,47 @@ onMounted(() => {
   }
 });
 
-const paymentMethod = ref("");
-
-const paypalLink =
-  "https://www.paypal.com/signin?returnUri=%2Fmyaccount%2Fsummary";
+onBeforeUnmount(() => {
+  if (countdownInterval) clearInterval(countdownInterval);
+});
 
 const handlePaypalClick = () => {
   paymentMethod.value = "paypal";
-
   const width = 500;
   const height = 700;
   const left = (window.innerWidth - width) / 2;
   const top = (window.innerHeight - height) / 2;
 
   window.open(
-    paypalLink,
+    "https://www.paypal.com/signin?returnUri=%2Fmyaccount%2Fsummary",
     "PayPalLogin",
     `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
   );
+};
+
+const saveBooking = async () => {
+  const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+  try {
+    await addDoc(collection(db, "bookings"), {
+      ...storedBooking,
+      paymentMethod: paymentMethod.value,
+      createdAt: new Date(),
+    });
+  } catch (err) {
+    console.error("Booking save error:", err);
+    alert("Failed to save booking.");
+  }
+};
+
+const startCountdown = () => {
+  countdownInterval = setInterval(() => {
+    if (countdown.value > 1) {
+      countdown.value--;
+    } else {
+      clearInterval(countdownInterval);
+      router.push("/my-bookings");
+    }
+  }, 1000);
 };
 
 const handleConfirm = async () => {
@@ -109,25 +158,10 @@ const handleConfirm = async () => {
     return;
   }
 
-  await saveBooking(paymentMethod.value);
+  await saveBooking();
   localStorage.removeItem("bookingData");
-  alert("Booking confirmed!");
-  router.push("/thank-you");
-};
-
-const saveBooking = async (method) => {
-  try {
-    const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
-
-    await addDoc(collection(db, "bookings"), {
-      ...storedBooking,
-      paymentMethod: method,
-      createdAt: new Date(),
-    });
-  } catch (err) {
-    console.error("Booking save error:", err);
-    alert("Failed to save booking.");
-  }
+  showSuccessMessage.value = true;
+  startCountdown();
 };
 </script>
 
