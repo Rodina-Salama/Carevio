@@ -743,4 +743,93 @@ nav a.router-link-exact-active {
     background-color: #1e1e1e;
   }
 }
+/* Dark Mode Bookings Page */
+:root.dark .my-bookings-page {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+:root.dark h1 {
+  color: #ffffff;
+}
+
+:root.dark h2 {
+  color: #d0d0d0;
+}
+
+:root.dark .booking-card {
+  background: #1e1e1e;
+  border-color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+:root.dark .booking-info p {
+  color: #b0b0b0;
+}
+
+:root.dark .booking-info .date {
+  color: #ffffff;
+}
+
+:root.dark button {
+  background-color: #1a4b8c;
+  color: #ffffff;
+}
+
+:root.dark button:hover {
+  background-color: #1565c0;
+}
+
+/* Dark Mode Modal Styles */
+:root.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+:root.dark .modal-box {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark .close-btn,
+:root.dark .custom-close-btn {
+  color: #a0a0a0;
+}
+
+:root.dark .modal-box h3,
+:root.dark .modal-box h2 {
+  color: #ffffff;
+}
+
+:root.dark .star {
+  color: #444;
+}
+
+:root.dark .star.active {
+  color: #ffc107;
+}
+
+:root.dark .modal-box textarea {
+  background-color: #2d2d2d;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+/* Additional dark mode enhancements */
+:root.dark .booking-card:hover {
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}
+
+:root.dark .modal-box button {
+  background-color: #1a4b8c;
+}
+
+:root.dark .modal-box button:hover {
+  background-color: #1565c0;
+}
+
+:root.dark .star-rating {
+  color: #ffd700;
+}
 </style>
