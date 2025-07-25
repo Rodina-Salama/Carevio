@@ -5,11 +5,16 @@
 
       <div class="form-group">
         <label>Profile Image</label>
-
         <div v-if="previewUrl" class="preview-img">
           <img :src="previewUrl" alt="Preview" />
         </div>
-        <input type="file" @change="handleImageUpload" accept="image/*" />
+        <input
+          type="file"
+          @change="handleImageUpload"
+          accept="image/*"
+          ref="fileInput"
+        />
+        <p v-if="imageError" class="error-message">{{ imageError }}</p>
       </div>
 
       <div class="form-group">
@@ -42,6 +47,8 @@ export default {
     const router = useRouter();
     const auth = getAuth();
     const userId = ref(null);
+    const fileInput = ref(null);
+    const imageError = ref("");
 
     const fullName = ref("");
     const phone = ref("");
@@ -68,19 +75,36 @@ export default {
     });
 
     const handleImageUpload = (e) => {
+      imageError.value = "";
       const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          profileImage.value = reader.result;
-          previewUrl.value = reader.result;
-        };
-        reader.readAsDataURL(file); // Convert to Base64
+
+      if (!file) return;
+
+      // Check file size (1MB limit)
+      if (file.size > 1024 * 1024) {
+        imageError.value = "Image size must be less than 1MB";
+        fileInput.value.value = ""; // Clear the file input
+        return;
       }
+
+      // Check file type
+      if (!file.type.match("image.*")) {
+        imageError.value = "Please select an image file";
+        fileInput.value.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        profileImage.value = reader.result;
+        previewUrl.value = reader.result;
+      };
+      reader.readAsDataURL(file);
     };
 
     const saveChanges = async () => {
       if (!userId.value) return;
+      if (imageError.value) return; // Don't save if there's an image error
 
       const userDoc = doc(db, "users", userId.value);
       await updateDoc(userDoc, {
@@ -100,6 +124,8 @@ export default {
       fullName,
       phone,
       previewUrl,
+      fileInput,
+      imageError,
       handleImageUpload,
       saveChanges,
       goBack,

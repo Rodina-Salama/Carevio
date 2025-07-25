@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar" v-if="!loading">
     <div class="navbar-brand">
-      <img src="@/assets/icon.jpg" alt="Logo" class="logo" />
+      <img src="@/assets/icon2.png" alt="Logo" class="logo" />
       <span class="site-name">Carevio</span>
       <button class="hamburger" @click="toggleMenu" aria-label="Menu">
         <span class="bar"></span>

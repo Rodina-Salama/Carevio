@@ -2,7 +2,7 @@
   <div class="sidebar-container">
     <!-- Logo -->
     <div class="logo">
-      <img src="@/assets/icon.jpg" alt="Logo" class="logo-img" />
+      <img src="@/assets/logo2.png" alt="Logo" class="logo-img" />
       <span class="site-name">Carevio</span>
     </div>
     <!-- Navigation -->
