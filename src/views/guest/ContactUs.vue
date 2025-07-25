@@ -15,7 +15,6 @@
             required
           />
         </div>
-
         <div class="form-group">
           <input
             type="email"
@@ -24,7 +23,6 @@
             required
           />
         </div>
-
         <div class="form-group">
           <textarea
             v-model="form.message"
@@ -33,23 +31,20 @@
             required
           ></textarea>
         </div>
-
         <button type="submit" class="submit-btn">Send Message</button>
       </form>
 
       <div class="contact-info">
         <div class="info-item">
-          <span>Email:</span>
-          <span>support@carevio.com</span>
+          <span>Email:</span><span>support@carevio.com</span>
         </div>
         <div class="info-item">
-          <span>Phone:</span>
-          <span>(555) 123-4567</span>
+          <span>Phone:</span><span>(555) 123-4567</span>
         </div>
       </div>
     </div>
 
-    <!-- Enhanced Success Popup -->
+    <!-- Success Popup -->
     <transition name="popup">
       <div v-if="showSuccess" class="success-popup">
         <div class="popup-content">
@@ -60,8 +55,8 @@
               />
             </svg>
           </div>
-          <h3>Message Sent Successfully!</h3>
-          <p>Thanks for contacting us! You’ll hear from us soon.</p>
+          <h3>Thank you!</h3>
+          <p>Your message has been submitted. You will hear from us soon.</p>
           <button @click="showSuccess = false" class="popup-btn">
             Got It!
           </button>
@@ -74,19 +69,50 @@
 
 <script setup>
 import { ref } from "vue";
+import { db } from "@/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+// ❌ Optional: remove if not using emailjs
+// import emailjs from "emailjs-com";
 
 const form = ref({
   name: "",
   email: "",
   message: "",
 });
-
 const showSuccess = ref(false);
 
-const handleSubmit = () => {
-  showSuccess.value = true;
-  form.value = { name: "", email: "", message: "" };
-  setTimeout(() => (showSuccess.value = false), 5000);
+const handleSubmit = async () => {
+  try {
+    // Save to Firestore
+    await addDoc(collection(db, "complains"), {
+      name: form.value.name,
+      email: form.value.email,
+      message: form.value.message,
+      createdAt: serverTimestamp(), // 🔄 timestamp
+    });
+
+    // ✅ Optional: EmailJS - Remove or configure properly if not used
+    /*
+    await emailjs.send(
+      "your_service_id",
+      "your_template_id",
+      {
+        to_name: form.value.name,
+        to_email: form.value.email,
+        message:
+          "Your message has been submitted successfully. We’ll contact you soon.",
+      },
+      "your_user_id"
+    );
+    */
+
+    // Reset and show popup
+    form.value = { name: "", email: "", message: "" };
+    showSuccess.value = true;
+    setTimeout(() => (showSuccess.value = false), 5000);
+  } catch (error) {
+    console.error("Submission failed:", error);
+  }
 };
 </script>
 
