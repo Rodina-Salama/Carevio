@@ -89,6 +89,7 @@ const handleSubmit = async () => {
       email: form.value.email,
       message: form.value.message,
       createdAt: serverTimestamp(), // 🔄 timestamp
+      status: "pending", // Default status
     });
 
     // ✅ Optional: EmailJS - Remove or configure properly if not used

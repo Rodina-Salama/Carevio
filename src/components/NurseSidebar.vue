@@ -16,11 +16,6 @@
           {{ item.label }}
         </router-link>
       </li>
-
-      <!-- Sign Out -->
-      <li>
-        <button class="nav-link signout-link" @click="signOut">Sign Out</button>
-      </li>
     </ul>
   </div>
 </template>

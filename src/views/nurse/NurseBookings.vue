@@ -40,25 +40,26 @@
           <thead>
             <tr>
               <th>Patient Name</th>
-              <th>Phone</th>
-              <th>Address</th>
-              <th>Service</th>
-              <th>Price</th>
               <th>Date</th>
               <th>Time</th>
-              <th>Payment method</th>
+              <th>Address</th>
+              <th>Details</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="booking in filteredBookings" :key="booking.id">
               <td>{{ booking.userName }}</td>
-              <td>{{ booking.userPhone }}</td>
-              <td>{{ booking.address }}</td>
-              <td>{{ booking.service }}</td>
-              <td>{{ booking.price }} EGP</td>
               <td>{{ booking.date }}</td>
               <td>{{ booking.from }} - {{ booking.to }}</td>
-              <td>{{ booking.paymentMethod }}</td>
+              <td>{{ booking.address }}</td>
+              <td>
+                <router-link
+                  :to="`/nursebookings/${booking.id}`"
+                  class="view-btn"
+                >
+                  View
+                </router-link>
+              </td>
             </tr>
           </tbody>
         </table>

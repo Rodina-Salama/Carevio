@@ -23,7 +23,7 @@ import BookingConfirmation from "@/views/BookingConfirmation/BookingConfirmation
 import ForgotPassword from "@/views/guest/ForgotPassword.vue";
 import MyBookings from "@/views/user/MyBookings.vue";
 import bookingInformation from "@/views/BookingConfirmation/bookingInformation.vue";
-
+import NurseBookingDetail from "@/views/nurse/NurseBookingDetail.vue";
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
   { path: "/about", name: "AboutPage", component: AboutPage },
@@ -71,7 +71,12 @@ const routes = [
   { path: "/nurseedit", name: "NurseEdits", component: NurseEdit },
   { path: "/nursereviews", name: "NurseReviews", component: NurseReviews },
   { path: "/nurseearnings", name: "NurseEarnings", component: NurseEarnings },
-  { path: "/my-bookings", name: "MyBookings", component: MyBookings }, // ← NEW!
+  { path: "/my-bookings", name: "MyBookings", component: MyBookings },
+  {
+    path: "/NurseBookings/:id",
+    name: "NurseBookingDetail",
+    component: NurseBookingDetail,
+  },
 ];
 /* eslint-disable */
 const router = createRouter({
