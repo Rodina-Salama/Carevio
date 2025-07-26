@@ -277,7 +277,6 @@ p {
 }
 
 button {
-  color: white;
   border: none;
   border-radius: 8px;
   padding: 0.6rem 1.2rem;

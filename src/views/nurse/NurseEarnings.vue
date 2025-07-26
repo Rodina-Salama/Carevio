@@ -31,6 +31,7 @@
                 <th>Client Name</th>
                 <th>Amount Paid</th>
                 <th>Status</th>
+                <th>Payment Method</th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                 <td>{{ item.client }}</td>
                 <td>EGP {{ item.amount }}</td>
                 <td><span class="paid-status">Paid</span></td>
+                <td>{{ item.paymentMethod }}</td>
               </tr>
             </tbody>
           </table>
@@ -49,11 +51,18 @@
 </template>
 
 <script>
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/firebase";
+import { getDocs, collection } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { db } from "@/firebase/config";
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import NurseSidebar from "@/components/NurseSidebar.vue";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
+
 export default {
-  name: "NurseEarnings",
   components: {
     NurseSidebar,
   },
@@ -67,50 +76,84 @@ export default {
   },
   methods: {
     async fetchEarnings() {
-      const querySnapshot = await getDocs(collection(db, "earning"));
-      const today = new Date();
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay());
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      try {
+        const querySnapshot = await getDocs(collection(db, "bookings"));
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (!user) return;
 
-      let total = 0;
-      let weekTotal = 0;
-      let monthTotal = 0;
+        const nurseId = user.uid;
+        const today = dayjs(); // current date
+        const startOfWeek =
+          today.day() >= 6
+            ? today.startOf("day").subtract(today.day() - 6, "day")
+            : today.startOf("day").subtract(today.day() + 1, "day");
+        const startOfMonth = today.startOf("month");
 
-      const data = [];
+        let total = 0;
+        let weekTotal = 0;
+        let monthTotal = 0;
 
-      querySnapshot.forEach((doc) => {
-        const item = doc.data();
-        const dateObj = item.date.toDate();
+        const data = [];
 
-        total += item.amount;
-        if (dateObj >= startOfWeek) weekTotal += item.amount;
-        if (dateObj >= startOfMonth) monthTotal += item.amount;
+        querySnapshot.forEach((doc) => {
+          const item = doc.data();
 
-        data.push({
-          ...item,
-          date: dateObj,
+          // Ensure the booking is for this nurse
+          if (item.nurseId !== nurseId) return;
+
+          // Parse the date string into a dayjs object
+          const bookingDate = item.date ? dayjs(item.date) : null;
+          if (!bookingDate || !bookingDate.isValid()) return;
+
+          // Mark as completed if past or has status 'completed'
+          const endTime = item.to || "11:59 PM"; // fallback if missing
+          const fullEndDateTime = dayjs(
+            `${item.date} ${endTime}`,
+            "YYYY-MM-DD hh:mm A"
+          );
+          const isCompleted = fullEndDateTime.isBefore(dayjs());
+          if (!isCompleted) return;
+
+          const amount = item.price || 0;
+
+          total += amount;
+          if (
+            bookingDate.isSameOrAfter(startOfWeek, "day") &&
+            bookingDate.isSameOrBefore(today, "day")
+          ) {
+            weekTotal += amount;
+          }
+          if (
+            bookingDate.isSameOrAfter(startOfMonth, "day") &&
+            bookingDate.isSameOrBefore(today, "day")
+          ) {
+            monthTotal += amount;
+          }
+
+          data.push({
+            ...item,
+            date: bookingDate.toDate(), // convert to JS Date for sorting/display
+            amount,
+            client: item.userName || "Client",
+          });
         });
-      });
 
-      this.transactions = data.sort((a, b) => b.date - a.date);
-      this.totalEarnings = total;
-      this.earningsThisWeek = weekTotal;
-      this.earningsThisMonth = monthTotal;
+        this.transactions = data.sort((a, b) => b.date - a.date);
+        this.totalEarnings = total;
+        this.earningsThisWeek = weekTotal;
+        this.earningsThisMonth = monthTotal;
+      } catch (error) {
+        console.error("Error fetching earnings:", error);
+      }
     },
+
     formatDate(date) {
-      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      return dayjs(date).format("DD/MM/YYYY");
     },
   },
   mounted() {
     this.fetchEarnings();
-
-    const footer = document.querySelector("footer");
-    if (footer) footer.style.display = "none";
-  },
-  beforeUnmount() {
-    const footer = document.querySelector("footer");
-    if (footer) footer.style.display = "block";
   },
 };
 </script>

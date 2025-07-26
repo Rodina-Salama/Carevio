@@ -4,73 +4,175 @@
     <div class="main-content">
       <h1 class="title">Nurse Bookings</h1>
 
-      <div v-if="loading" class="no-bookings">Loading...</div>
-      <div v-else-if="bookings.length === 0" class="no-bookings">
-        No bookings available.
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button
+          :class="{ active: activeTab === 'active' }"
+          @click="activeTab = 'active'"
+        >
+          Active Bookings
+        </button>
+        <button
+          :class="{ active: activeTab === 'past' }"
+          @click="activeTab = 'past'"
+        >
+          Past Bookings
+        </button>
       </div>
 
-      <div v-else class="bookings-grid">
-        <div v-for="booking in bookings" :key="booking.id" class="booking-card">
-          <div class="card-left">
-            <img
-              class="client-img"
-              :src="booking.image || 'https://via.placeholder.com/48'"
-              alt="client"
-            />
-            <div class="info">
-              <div class="client-name">{{ booking.clientname }}</div>
-              <div class="address">{{ booking.address }}</div>
-              <div class="service">{{ booking.service }}</div>
-            </div>
-          </div>
-          <button class="view-btn">View</button>
-        </div>
+      <!-- Time Filters -->
+      <div class="time-filters">
+        <select v-model="timeFilter">
+          <option value="all">All</option>
+          <option value="today">Today</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="thisWeek">This Week</option>
+        </select>
+      </div>
+
+      <div v-if="loading" class="no-bookings">Loading...</div>
+      <div v-else-if="filteredBookings.length === 0" class="no-bookings">
+        No bookings found.
+      </div>
+
+      <div v-else class="bookings-table-container">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Patient Name</th>
+              <th>Phone</th>
+              <th>Address</th>
+              <th>Service</th>
+              <th>Price</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Payment method</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="booking in filteredBookings" :key="booking.id">
+              <td>{{ booking.userName }}</td>
+              <td>{{ booking.userPhone }}</td>
+              <td>{{ booking.address }}</td>
+              <td>{{ booking.service }}</td>
+              <td>{{ booking.price }} EGP</td>
+              <td>{{ booking.date }}</td>
+              <td>{{ booking.from }} - {{ booking.to }}</td>
+              <td>{{ booking.paymentMethod }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import NurseSidebar from "@/components/NurseSidebar.vue";
-import { db } from "@/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { ref, computed, onMounted } from "vue";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import localeData from "dayjs/plugin/localeData";
+import updateLocale from "dayjs/plugin/updateLocale";
+import "dayjs/locale/ar";
+import "dayjs/locale/en";
 
+dayjs.extend(localeData);
+dayjs.extend(updateLocale);
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.updateLocale("en", {
+  weekStart: 6, // السبت
+});
+dayjs.updateLocale("ar", {
+  weekStart: 6, // السبت
+});
 export default {
   components: {
     NurseSidebar,
   },
-  data() {
-    return {
-      bookings: [],
-      loading: true,
-    };
-  },
-  mounted() {
-    this.loadBookings();
-    const footer = document.querySelector("footer");
-    if (footer) footer.style.display = "none";
-  },
-  beforeUnmount() {
-    const footer = document.querySelector("footer");
-    if (footer) footer.style.display = "block";
-  },
-  methods: {
-    async loadBookings() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "bookings"));
-        this.bookings = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
+  setup() {
+    const bookings = ref([]);
+    const loading = ref(true);
+    const activeTab = ref("active");
+    const timeFilter = ref("all");
 
-          return {
-            id: doc.id,
-            ...data,
-          };
-        });
+    onMounted(async () => {
+      try {
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+
+        if (!currentUser) {
+          console.error("No logged-in nurse");
+          return;
+        }
+
+        const db = getFirestore();
+        const q = query(
+          collection(db, "bookings"),
+          where("nurseId", "==", currentUser.uid)
+        );
+
+        const querySnapshot = await getDocs(q);
+        bookings.value = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
       } catch (error) {
         console.error("Error fetching bookings:", error);
       } finally {
-        this.loading = false;
+        loading.value = false;
       }
-    },
+    });
+
+    const filteredBookings = computed(() => {
+      const now = dayjs();
+      let filtered = bookings.value.filter((b) => {
+        const bookingDate = dayjs(b.date);
+        return activeTab.value === "active"
+          ? bookingDate.isSameOrAfter(now, "day")
+          : bookingDate.isBefore(now, "day");
+      });
+
+      if (timeFilter.value === "today") {
+        filtered = filtered.filter((b) => dayjs(b.date).isSame(now, "day"));
+      } else if (timeFilter.value === "tomorrow") {
+        const tomorrow = now.add(1, "day");
+        filtered = filtered.filter((b) =>
+          dayjs(b.date).isSame(tomorrow, "day")
+        );
+      } else if (timeFilter.value === "thisWeek") {
+        const startOfWeek = now.startOf("week");
+        const endOfWeek = now.endOf("week");
+        filtered = filtered.filter((b) => {
+          const bookingDate = dayjs(b.date);
+          return (
+            bookingDate.isSameOrAfter(startOfWeek, "day") &&
+            bookingDate.isSameOrBefore(endOfWeek, "day")
+          );
+        });
+      }
+
+      return filtered;
+    });
+
+    return {
+      bookings,
+      loading,
+      activeTab,
+      timeFilter,
+      filteredBookings,
+    };
   },
 };
 </script>
@@ -166,5 +268,49 @@ export default {
   cursor: pointer;
   font-size: 14px;
   transition: 0.3s ease;
+}
+.bookings-table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings-table th,
+.bookings-table td {
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.bookings-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.filter-tabs button {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.filter-tabs button.active {
+  background: #19599a;
+  color: #fff;
+  border-color: #19599a;
+}
+
+.time-filters {
+  margin-bottom: 20px;
 }
 </style>

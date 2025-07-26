@@ -6,57 +6,59 @@
 
       <div class="summary-cards">
         <div class="card">
-          <h3>This Month’s Earnings</h3>
-          <p class="value">EGP 4,250</p>
+          <h3>Total Earnings</h3>
+          <p class="value">EGP {{ totalEarnings }}</p>
         </div>
         <div class="card">
-          <h3>Sessions</h3>
-          <p class="value">12</p>
+          <h3>This Month’s Earnings</h3>
+          <p class="value">EGP {{ monthlyEarnings }}</p>
+        </div>
+        <div class="card">
+          <h3>Total Bookings</h3>
+          <p class="value">{{ sessionCount }}</p>
         </div>
         <div class="card highlight">
           <h3>Next Booking</h3>
-          <p class="value">July 23, 2025 - 8:00PM</p>
-        </div>
-      </div>
-
-      <div class="lower-section">
-        <div class="card full">
-          <h3>Latest Review</h3>
-          <div class="review-section">
-            <img src="" alt="User" class="review-avatar" />
-            <div class="review-details">
-              <div class="review-header">
-                <span class="review-name">Ahmed</span>
-                <span class="review-time">2 days ago</span>
-              </div>
-              <div class="review-stars">⭐⭐⭐⭐⭐</div>
-              <p class="review-comment">
-                The nurse was extremely professional and caring!
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card full blue-card">
-          <h3>Availability Reminder</h3>
-          <p class="availability-message">
-            Don’t forget to update your availability!
+          <p class="value">
+            {{
+              nextBooking
+                ? formatDate(nextBooking.date) +
+                  " - " +
+                  formatTime(nextBooking.from)
+                : "No upcoming booking"
+            }}
           </p>
         </div>
       </div>
 
-      <div class="quick-actions">
-        <h3>Quick Actions</h3>
-        <div class="actions">
-          <router-link to="/nurseavailability" class="action-btn"
-            >Set Availability</router-link
-          >
-          <router-link to="/nursebookings" class="action-btn"
-            >View Bookings</router-link
-          >
-          <router-link to="/nurseedit" class="action-btn"
-            >Edit Profile</router-link
-          >
+      <div class="lower-section" v-if="latestReview">
+        <div class="card full">
+          <h3>Latest Review</h3>
+          <div class="review-section">
+            <img
+              :src="latestReview.userImage || defaultAvatar"
+              alt="User"
+              class="review-avatar"
+            />
+            <div class="review-details">
+              <div class="review-header">
+                <span class="review-name">{{ latestReview.userName }}</span>
+                <span class="review-time">
+                  {{ timeAgo(latestReview.date) }}
+                </span>
+              </div>
+              <div class="review-stars">
+                <span
+                  v-for="n in 5"
+                  :key="n"
+                  class="star"
+                  :class="{ filled: n <= latestReview.rating }"
+                  >★</span
+                >
+              </div>
+              <p class="review-comment">{{ latestReview.comment }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -65,10 +67,140 @@
 
 <script>
 import NurseSidebar from "@/components/NurseSidebar.vue";
+import { ref, onMounted } from "vue";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import { useUserStore } from "@/stores/userStore";
 
 export default {
-  components: {
-    NurseSidebar,
+  components: { NurseSidebar },
+  setup() {
+    const userStore = useUserStore();
+    const nurseId = userStore.firebaseUser?.uid;
+
+    const totalEarnings = ref(0);
+    const monthlyEarnings = ref(0);
+    const sessionCount = ref(0);
+    const nextBooking = ref(null);
+    const latestReview = ref(null);
+    const defaultAvatar = "/default-avatar.png";
+
+    // Helpers
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    }
+    function formatTime(timeStr) {
+      return timeStr;
+    }
+    function timeAgo(dateStr) {
+      const now = new Date();
+      const date = new Date(dateStr);
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      if (diffMins < 60) return `${diffMins} minutes ago`;
+      const diffHours = Math.floor(diffMins / 60);
+      if (diffHours < 24) return `${diffHours} hours ago`;
+      const diffDays = Math.floor(diffHours / 24);
+      return `${diffDays} days ago`;
+    }
+
+    async function fetchBookings() {
+      if (!nurseId) return;
+
+      const bookingsRef = collection(db, "bookings");
+      const q = query(bookingsRef, where("nurseId", "==", nurseId));
+      const querySnapshot = await getDocs(q);
+
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      let totalEarn = 0;
+      let earnings = 0;
+      let sessions = 0;
+      let futureBookings = [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        sessions++;
+        const bookingStart = new Date(`${data.date} ${data.from}`);
+        const bookingEnd = new Date(`${data.date} ${data.to}`);
+
+        if (bookingEnd < now) {
+          totalEarn += data.price || 0;
+
+          if (
+            bookingEnd.getMonth() === currentMonth &&
+            bookingEnd.getFullYear() === currentYear
+          ) {
+            earnings += data.price || 0;
+          }
+        }
+
+        if (bookingStart > now) {
+          futureBookings.push(data);
+        }
+      });
+
+      sessionCount.value = sessions;
+      monthlyEarnings.value = earnings;
+      totalEarnings.value = totalEarn;
+
+      if (futureBookings.length) {
+        futureBookings.sort(
+          (a, b) =>
+            new Date(`${a.date} ${a.from}`) - new Date(`${b.date} ${b.from}`)
+        );
+        nextBooking.value = futureBookings[0];
+      }
+    }
+
+    async function fetchLatestReview() {
+      if (!nurseId) return;
+
+      const reviewsRef = collection(db, "reviews");
+      const q = query(
+        reviewsRef,
+        where("nurseId", "==", nurseId),
+        orderBy("createdAt", "desc")
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        const data = doc.data();
+
+        latestReview.value = {
+          userName: data.fullName || "Anonymous",
+          userImage: data.profileImage || defaultAvatar,
+          rating: data.rating || 0,
+          comment: data.comment || "",
+          date: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(),
+        };
+      }
+    }
+
+    onMounted(async () => {
+      await fetchBookings();
+      await fetchLatestReview();
+    });
+
+    return {
+      totalEarnings,
+      monthlyEarnings,
+      sessionCount,
+      nextBooking,
+      latestReview,
+      defaultAvatar,
+      formatDate,
+      timeAgo,
+      formatTime,
+    };
   },
 };
 </script>
@@ -212,5 +344,14 @@ export default {
 
 .action-btn:hover {
   background-color: #144a84;
+}
+
+.star {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
 }
 </style>

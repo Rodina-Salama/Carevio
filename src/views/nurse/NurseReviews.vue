@@ -4,10 +4,28 @@
     <div class="content">
       <h2 class="title">Patient reviews</h2>
       <p class="subtitle">
-        Average rating: {{ averageRating.toFixed(1) }} ({{ reviews.length }}
+        Average rating: {{ averageRating.toFixed(1) }} ({{
+          filteredReviews.length
+        }}
         reviews)
       </p>
-      <div v-for="review in reviews" :key="review.id" class="review-card">
+
+      <div class="filter-buttons">
+        <button
+          v-for="n in [0, 5, 4, 3, 2, 1]"
+          :key="n"
+          :class="{ active: ratingFilter === n }"
+          @click="ratingFilter = n"
+        >
+          {{ n === 0 ? "All" : `${n} Stars` }}
+        </button>
+      </div>
+
+      <div
+        v-for="review in filteredReviews"
+        :key="review.id"
+        class="review-card"
+      >
         <div class="review-header">
           <img :src="review.photo" class="avatar" />
           <div class="review-info">
@@ -33,7 +51,15 @@
 <script>
 import NurseSidebar from "../../components/NurseSidebar.vue";
 import { db } from "@/firebase";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  query,
+  where,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 export default {
   components: { NurseSidebar },
@@ -41,28 +67,42 @@ export default {
     return {
       reviews: [],
       averageRating: 0,
+      currentNurseId: null,
+      ratingFilter: 0,
     };
   },
+  computed: {
+    filteredReviews() {
+      if (this.ratingFilter === 0) return this.reviews;
+      return this.reviews.filter(
+        (review) => review.rating === this.ratingFilter
+      );
+    },
+  },
   async mounted() {
-    await this.loadReviews();
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      this.currentNurseId = user.uid;
+      await this.loadReviews();
+    }
   },
   methods: {
     async loadReviews() {
-      const snapshot = await getDocs(collection(db, "reviews"));
+      const reviewsRef = collection(db, "reviews");
+      const q = query(reviewsRef, where("nurseId", "==", this.currentNurseId));
+      const snapshot = await getDocs(q);
+
       let totalRating = 0;
 
       const reviewPromises = snapshot.docs.map(async (docSnap) => {
         const data = docSnap.data();
         totalRating += data.rating;
 
-        const userDoc = await getDoc(doc(db, "users", data.uid));
-        const user = userDoc.exists()
-          ? userDoc.data()
-          : { name: "Unknown", photo: "" };
-
-        const date = new Date(data.date);
+        const date = data.createdAt?.toDate?.() || new Date();
         const now = new Date();
         const diffMins = Math.floor((now - date) / (1000 * 60));
+
         let timeAgo =
           diffMins < 60
             ? `${diffMins} minutes ago`
@@ -70,13 +110,16 @@ export default {
             ? `${Math.floor(diffMins / 60)} hours ago`
             : `${Math.floor(diffMins / 1440)} days ago`;
 
+        const userDoc = await getDoc(doc(db, "users", data.userId));
+        const user = userDoc.exists() ? userDoc.data() : { photo: "" };
+
         return {
           id: docSnap.id,
-          name: user.name,
-          photo: user.photo || "/default-avatar.png",
+          name: data.fullName || "Unknown",
+          photo: user.profileImage || "/default-avatar.png",
           rating: data.rating,
           comment: data.comment,
-          timeAgo: timeAgo,
+          timeAgo,
         };
       });
 
@@ -114,6 +157,26 @@ export default {
   font-size: 14px;
   color: #555;
   margin-bottom: 20px;
+}
+
+.filter-buttons {
+  margin-bottom: 16px;
+}
+
+.filter-buttons button {
+  margin-right: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.filter-buttons button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 
 .review-card {
@@ -178,5 +241,18 @@ export default {
   text-align: left;
   margin-left: 56px;
   margin-top: 0;
+}
+.filter-buttons button {
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.filter-buttons button.active {
+  background: #19599a;
+  color: #fff;
+  border-color: #19599a;
 }
 </style>

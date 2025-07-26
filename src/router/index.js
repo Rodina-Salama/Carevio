@@ -15,7 +15,6 @@ import UserProfile from "@/views/user/UserProfile.vue";
 import EditProfile from "@/views/user/EditProfile.vue";
 import ChangePassword from "@/views/user/ChangePassword.vue";
 import DashBoard from "@/views/nurse/DashBoard.vue";
-import NurseAvailability from "@/views/nurse/NurseAvailability.vue";
 import NurseBookings from "@/views/nurse/NurseBookings.vue";
 import NurseEdit from "@/views/nurse/NurseEdit.vue";
 import NurseReviews from "@/views/nurse/NurseReviews.vue";
@@ -62,11 +61,7 @@ const routes = [
     component: ChangePassword,
   },
   { path: "/dashboard", name: "DashBoard", component: DashBoard },
-  {
-    path: "/nurseavailability",
-    name: "NurseAvailability",
-    component: NurseAvailability,
-  },
+
   {
     path: "/bookinginformation",
     name: "BookingInformation",

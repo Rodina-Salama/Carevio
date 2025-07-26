@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       navItems: [
-        { label: "Availability", path: "/nurseavailability" },
+        { label: "overview", path: "/dashboard" },
         { label: "Bookings", path: "/nursebookings" },
         { label: "Earnings", path: "/nurseearnings" },
         { label: "Reviews", path: "/nursereviews" },
@@ -73,7 +73,7 @@ export default {
     async signOut() {
       try {
         await signOut(getAuth());
-        this.$router.push("/login");
+        this.$router.push("/signin");
       } catch (error) {
         console.error("Sign out failed:", error);
       }

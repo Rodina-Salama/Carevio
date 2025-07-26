@@ -8,19 +8,21 @@
       <div class="form-group">
         <label class="form-label">Profile picture</label>
         <div class="profile-picture">
-          <img :src="nurse.photoURL || defaultAvatar" class="avatar" />
+          <img
+            :src="nurse.documents.photo.url || defaultAvatar"
+            class="avatar"
+          />
           <div class="btns">
             <input type="file" @change="uploadPhoto" />
-            <button class="btn-upload">Upload photo</button>
-            <button class="btn-delete" @click="deletePhoto">Delete</button>
           </div>
         </div>
       </div>
+
       <!-- Bio -->
       <div class="form-group bio-group">
         <label class="form-label">Bio</label>
         <textarea
-          v-model="nurse.bio"
+          v-model="nurse.professional.bio"
           placeholder="Enter here"
           class="input bio"
         ></textarea>
@@ -31,10 +33,10 @@
         <label class="form-label">Pricing</label>
         <div class="pricing-field">
           <input
-            v-model.number="nurse.pricing"
+            v-model.number="nurse.professional.price"
             type="number"
             class="input small"
-            placeholder="10"
+            placeholder="100"
           />
           <span class="unit">EGP /hour</span>
         </div>
@@ -44,20 +46,21 @@
       <div class="form-group row">
         <div class="col">
           <label class="form-label">Government</label>
-          <select v-model="nurse.government" class="input">
-            <option disabled value="">Enter here</option>
-            <option>Cairo</option>
-            <option>Giza</option>
-            <option>Alexandria</option>
+          <select v-model="nurse.personal.city" class="input">
+            <option disabled value="">Select City</option>
+            <option v-for="city in cities" :key="city">{{ city }}</option>
           </select>
         </div>
         <div class="col">
           <label class="form-label">Area</label>
-          <select v-model="nurse.area" class="input">
-            <option disabled value="">Enter here</option>
-            <option>Nasr City</option>
-            <option>Dokki</option>
-            <option>Maadi</option>
+          <select v-model="nurse.personal.area" class="input">
+            <option disabled value="">Select Area</option>
+            <option
+              v-for="area in areas[nurse.personal.city] || []"
+              :key="area"
+            >
+              {{ area }}
+            </option>
           </select>
         </div>
       </div>
@@ -66,10 +69,66 @@
       <div class="form-group">
         <label class="form-label">Services</label>
         <div class="services">
-          <label v-for="service in allServices" :key="service">
-            <input type="checkbox" :value="service" v-model="nurse.services" />
+          <label v-for="service in specializationOptions" :key="service">
+            <input
+              type="checkbox"
+              :value="service"
+              v-model="nurse.professional.specialization"
+            />
             {{ service }}
           </label>
+        </div>
+      </div>
+
+      <!-- Available Days -->
+      <div class="form-group">
+        <label class="form-label">Available Days</label>
+        <div class="services">
+          <label v-for="day in availableDays" :key="day">
+            <input
+              type="checkbox"
+              :value="day"
+              v-model="nurse.professional.availableDays"
+            />
+            {{ day }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Languages -->
+      <div class="form-group">
+        <label class="form-label">Languages</label>
+        <div class="services">
+          <label v-for="lang in languageOptions" :key="lang">
+            <input
+              type="checkbox"
+              :value="lang"
+              v-model="nurse.professional.languages"
+            />
+            {{ lang }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Available shifts -->
+      <div class="form-group">
+        <label class="form-label">Available Time</label>
+        <div class="services">
+          <div
+            class="checkbox-item"
+            v-for="(times, shift) in shiftOptions"
+            :key="shift"
+          >
+            <label>
+              <input
+                type="checkbox"
+                :value="shift"
+                v-model="nurse.professional.shifts"
+              />
+              {{ shift.charAt(0).toUpperCase() + shift.slice(1) }}
+              ({{ times[0].from }} - {{ times[times.length - 1].to }})
+            </label>
+          </div>
         </div>
       </div>
 
@@ -83,6 +142,12 @@
 import NurseSidebar from "@/components/NurseSidebar.vue";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { updateDoc } from "firebase/firestore";
+import { specializationOptions } from "@/data/specializationOptions";
+import { shiftOptions } from "@/data/shiftOptions";
+import { cities, areas } from "@/data/locationOptions";
+import { languageOptions } from "@/data/languageOptions";
+import { availableDays } from "@/data/availableDays";
 
 export default {
   components: {
@@ -91,21 +156,30 @@ export default {
   data() {
     return {
       nurse: {
-        photoURL: "",
-        bio: "",
-        pricing: "",
-        government: "",
-        area: "",
-        services: [],
+        personal: {
+          city: "",
+          area: "",
+        },
+        professional: {
+          bio: "",
+          price: "",
+          specialization: [],
+          shifts: [],
+          languages: [],
+          availableDays: [],
+        },
+        documents: {
+          photo: {
+            url: "",
+          },
+        },
       },
-      allServices: [
-        "Elderly Care",
-        "Post-Operative Care",
-        "Injections & IV Therapy",
-        "Pediatric Support",
-        "Bedridden Patient",
-        "Vital Signs Monitoring",
-      ],
+      specializationOptions,
+      shiftOptions,
+      cities,
+      areas,
+      languageOptions,
+      availableDays,
       defaultAvatar: "",
     };
   },
@@ -114,17 +188,61 @@ export default {
     const user = auth.currentUser;
     if (!user) return;
     const db = getFirestore();
-    const docRef = doc(db, "nurses", user.uid);
+    const docRef = doc(db, "applications", user.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       this.nurse = { ...this.nurse, ...docSnap.data() };
     }
   },
   methods: {
-    uploadPhoto() {},
-    deletePhoto() {
-      this.nurse.photoURL = "";
+    async uploadPhoto(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "Nurse_information");
+
+      try {
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+
+        this.nurse.documents.photo.url = data.secure_url;
+
+        const auth = getAuth();
+        const user = auth.currentUser;
+        const db = getFirestore();
+
+        if (user) {
+          // حفظ في users
+          const userRef = doc(db, "users", user.uid);
+          await updateDoc(userRef, {
+            profileImage: data.secure_url,
+          });
+
+          // حفظ في applications
+          const appRef = doc(db, "applications", user.uid);
+          await updateDoc(appRef, {
+            "documents.photo.url": data.secure_url,
+          });
+
+          alert("Photo uploaded and saved successfully!");
+        } else {
+          alert("User not authenticated.");
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+        alert("Failed to upload photo.");
+      }
     },
+
     async saveProfile() {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -133,9 +251,9 @@ export default {
         return;
       }
       const db = getFirestore();
-      const docRef = doc(db, "nurses", user.uid);
-      await setDoc(docRef, this.nurse);
-      alert("Profile saved!");
+      const docRef = doc(db, "applications", user.uid);
+      await setDoc(docRef, this.nurse, { merge: true });
+      alert("Profile saved successfully!");
     },
   },
 };
@@ -254,7 +372,7 @@ export default {
 .btn-save {
   background-color: #19599a;
   color: white;
-  padding: 10px 20px;
+  pding: 10px 20px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
