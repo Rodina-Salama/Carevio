@@ -1,5 +1,5 @@
 <template>
-  <div class="booking-confirmation">
+  <div class="booking-confirmation" v-if="!showSuccessMessage">
     <div class="back-button" @click="$router.back()">← Back</div>
 
     <h1 class="title">Booking Confirmation</h1>
@@ -42,31 +42,37 @@
       </div>
 
       <div class="actions">
-        <button class="cancel" @click="$router.back()">Cancel</button>
-        <button class="confirm" @click="handleConfirm">Confirm Booking</button>
+        <button class="confirm" @click="handleConfirm" :disabled="isSubmitting">
+          Confirm Booking
+        </button>
       </div>
     </div>
   </div>
-  <h2 class="success-title">Booking Confirmed!</h2>
-  <div v-if="showSuccessMessage" class="success-message-container">
-    <div class="success-icon">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="#2ecc71"
-        width="64px"
-        height="64px"
-      >
-        <path d="M0 0h24v24H0z" fill="none" />
-        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-      </svg>
+
+  <!-- Success Modal -->
+  <div v-if="showSuccessMessage" class="modal-overlay">
+    <div class="modal-content">
+      <h2 class="success-title">Booking Confirmed!</h2>
+      <div class="success-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="#2ecc71"
+          width="64px"
+          height="64px"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+        </svg>
+      </div>
+      <p class="success-text">
+        We've sent your booking confirmation via email. Please check your inbox.
+      </p>
+      <p class="success-note">
+        Redirecting to your bookings in {{ countdown }} seconds...
+        <button @click="router.push('/my-bookings')">Go Now</button>
+      </p>
     </div>
-    <p class="success-text">
-      We've sent your booking confirmation via email. Please check your inbox.
-    </p>
-    <p class="success-note">
-      Redirecting to your bookings in {{ countdown }} seconds...
-    </p>
   </div>
 </template>
 
@@ -77,6 +83,7 @@ import paypalImg from "@/assets/paypal.png";
 import cashImg from "@/assets/cash.png";
 import { db } from "@/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import emailjs from "@emailjs/browser";
 
 const router = useRouter();
 
@@ -92,6 +99,7 @@ const booking = ref({
 const paymentMethod = ref("");
 const showSuccessMessage = ref(false);
 const countdown = ref(5);
+const isSubmitting = ref(false);
 let countdownInterval = null;
 
 onMounted(() => {
@@ -128,16 +136,16 @@ const handlePaypalClick = () => {
 };
 
 const saveBooking = async () => {
-  const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
   try {
     await addDoc(collection(db, "bookings"), {
-      ...storedBooking,
+      ...booking.value,
       paymentMethod: paymentMethod.value,
       createdAt: new Date(),
     });
   } catch (err) {
     console.error("Booking save error:", err);
     alert("Failed to save booking.");
+    throw err;
   }
 };
 
@@ -151,17 +159,65 @@ const startCountdown = () => {
     }
   }, 1000);
 };
+const sendEmail = async () => {
+  const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+  if (!storedBooking) return;
 
+  const emailParams = {
+    userName: storedBooking.userName,
+    userEmail: storedBooking.userEmail,
+    nurseName: storedBooking.nurseName,
+    nurseEmail: storedBooking.nurseEmail,
+    service: storedBooking.service,
+    address: storedBooking.address,
+    date: storedBooking.date,
+    from: storedBooking.from,
+    to: storedBooking.to,
+    totalHours: storedBooking.totalHours,
+    price: storedBooking.price,
+  };
+
+  try {
+    // Send to patient
+    await emailjs.send(
+      "service_7ygjhfdg",
+      "template_nk47o7p",
+      emailParams,
+      "uWb2O5GjqIxPlA6LZ"
+    );
+
+    // Send to nurse
+    await emailjs.send(
+      "service_7ygjhfdg",
+      "template_p5cl8ou",
+      emailParams,
+      "uWb2O5GjqIxPlA6LZ"
+    );
+
+    console.log("Both emails sent successfully");
+  } catch (error) {
+    console.error("Email sending failed", error);
+  }
+};
 const handleConfirm = async () => {
+  if (isSubmitting.value) return;
+
   if (!paymentMethod.value) {
     alert("Please choose a payment method.");
     return;
   }
 
-  await saveBooking();
-  localStorage.removeItem("bookingData");
-  showSuccessMessage.value = true;
-  startCountdown();
+  isSubmitting.value = true;
+
+  try {
+    await saveBooking();
+    await sendEmail();
+    localStorage.removeItem("bookingData");
+    showSuccessMessage.value = true;
+    startCountdown();
+  } catch {
+    isSubmitting.value = false;
+  }
 };
 </script>
 
@@ -205,6 +261,7 @@ const handleConfirm = async () => {
 
 .payment-methods {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-top: 20px;
 }
@@ -248,8 +305,72 @@ const handleConfirm = async () => {
 .confirm {
   background-color: #19599a;
   color: white;
-  padding: 10px 25px;
+  padding: 14px 30px;
+  font-size: 18px;
   border: none;
   cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+  display: block;
+  margin: 0 auto;
+}
+
+.confirm[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content .success-title {
+  font-size: 24px;
+  color: #2ecc71;
+  margin-bottom: 16px;
+}
+
+.modal-content .success-icon {
+  margin: 20px auto;
+}
+
+.modal-content .success-text {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.modal-content .success-note {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.modal-content .success-note button {
+  margin-left: 10px;
+  background-color: #19599a;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 6px;
 }
 </style>
