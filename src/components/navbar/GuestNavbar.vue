@@ -58,14 +58,14 @@
         >
         <router-link
           to="/signin"
-          class="btn"
+          class="btn btn1"
           @click="closeMenu"
           active-class="active-btn"
           >Sign In</router-link
         >
         <router-link
           to="/signup"
-          class="btn"
+          class="btn btn1"
           @click="closeMenu"
           active-class="active-btn"
           >Sign Up</router-link
@@ -135,7 +135,7 @@ const closeMenu = () => {
 .nav-links a {
   text-decoration: none;
   color: #444;
-  font-weight: 500;
+  font-weight: 800;
   transition: all 0.2s;
   white-space: nowrap;
   position: relative;
@@ -168,7 +168,7 @@ const closeMenu = () => {
 
 .btn {
   background-color: #19599a;
-  color: white;
+  color: #f1e7e7ff;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
@@ -192,7 +192,7 @@ const closeMenu = () => {
 
 .btn.outline:hover {
   background-color: #19599a;
-  color: white;
+  color: #ffffff;
 }
 
 .active-btn {

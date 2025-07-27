@@ -90,14 +90,12 @@
             {{ nurse.professional.bio || "No bio available." }}
           </p>
           <div class="actions">
-            <button>
-              <router-link
-                :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
-                class="view-btn"
-              >
-                View
-              </router-link>
-            </button>
+            <router-link
+              :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
+              class="view-btn"
+            >
+              View
+            </router-link>
           </div>
         </div>
       </template>
@@ -236,16 +234,65 @@ export default {
 
 <style scoped>
 .browse-nurses {
-  padding-left: 120px;
-  padding-right: 120px;
-  padding-top: 48px;
+  padding: 1rem;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+.search-bar {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 10px 14px;
 }
 
+/* Mobile (default) - 2 columns */
 .search-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Tablet - 3 columns */
+@media (min-width: 768px) {
+  .search-bar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop - 6 columns */
+@media (min-width: 1024px) {
+  .search-bar {
+    grid-template-columns: repeat(8, 1fr);
+    max-width: 1200px;
+  }
+}
+
+/* Button group adjustments */
+.button-group {
+  grid-column: span 2; /* Makes buttons span 2 columns on mobile */
+}
+
+@media (min-width: 768px) {
+  .button-group {
+    grid-column: span 3; /* Span 3 columns on tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .button-group {
+    grid-column: auto; /* Normal flow on desktop */
+  }
+}
+@media (max-width: 768px) {
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
 .search-bar select,
@@ -275,7 +322,8 @@ export default {
 }
 
 .reset-btn:hover {
-  background-color: #4b5563;
+  background-color: #19599a;
+  color: white;
 }
 
 .container {
@@ -289,13 +337,62 @@ export default {
 .card {
   position: relative;
   background: #fff;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 1rem;
+  border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 300px;
-  width: 100%;
-  flex: 1 1 100%;
-  max-width: 100%;
+  min-width: 220px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Responsive height control */
+.card {
+  min-height: 280px;
+  height: auto;
+}
+
+/* Tablet and above */
+@media (min-width: 768px) {
+  .card {
+    min-height: 320px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .card {
+    min-height: 300px; /* Fixed height for desktop */
+  }
+}
+
+/* Card hover effect */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive width control */
+@media (min-width: 640px) {
+  .card {
+    flex: 1 1 calc(50% - 1rem); /* 2 cards per row */
+    max-width: calc(50% - 1rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    flex: 1 1 calc(33.333% - 1rem); /* 3 cards per row */
+    max-width: calc(33.333% - 1rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    flex: 1 1 calc(25% - 1rem); /* 4 cards per row */
+    max-width: calc(25% - 1rem);
+  }
 }
 
 .badge {
@@ -387,16 +484,31 @@ export default {
 }
 
 .view-btn {
+  /* Base Styling */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background-color: #19599a;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-.view-btn:hover {
-  background-color: #009acb;
+  &:hover {
+    background-color: #1a75d5ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
 }
-
 .no-results {
   grid-column: 1 / -1;
   text-align: center;

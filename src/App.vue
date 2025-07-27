@@ -154,11 +154,6 @@ nav {
   transition: background-color 0.3s;
 }
 
-nav a {
-  color: var(--nav-text-color) !important;
-  transition: color 0.3s;
-}
-
 nav a.router-link-exact-active {
   color: var(--secondary-color) !important;
 }
@@ -831,5 +826,80 @@ nav a.router-link-exact-active {
 
 :root.dark .star-rating {
   color: #ffd700;
+}
+:root.dark .edit-profile-container {
+  background-color: #121212;
+}
+
+:root.dark .form-card {
+  background-color: #1e1e1e;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+}
+:root.dark .bookings-table th,
+:root.dark .bookings-table td {
+  border-color: #444;
+}
+
+:root.dark .bookings-table th {
+  background-color: #252525;
+  color: #e0e0e0;
+}
+
+:root.dark .bookings-table {
+  color: #e0e0e0;
+}
+
+:root.dark .filter-tabs button {
+  background: #2d2d2d;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+:root.dark .filter-tabs button:hover {
+  background: #333;
+}
+
+:root.dark .filter-tabs button.active {
+  background: #1a4b8c;
+  color: #fff;
+  border-color: #1a4b8c;
+}
+:root.dark .comment {
+  color: #d0d0d0;
+}
+
+:root.dark .filter-buttons button {
+  background: #2d2d2d;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+:root.dark .filter-buttons button:hover {
+  background: #333;
+}
+
+:root.dark .filter-buttons button.active {
+  background: #1a4b8c;
+  color: #fff;
+  border-color: #1a4b8c;
+}
+/* Dark Mode Styles */
+:root.dark .booking-details {
+  background: #1e1e1e;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  color: #e0e0e0;
+  border: 1px solid #333; /* Optional subtle border */
+}
+
+:root.dark .booking-details li {
+  color: #d0d0d0;
+}
+
+:root.dark .booking-details strong {
+  color: #ffffff; /* Make labels stand out more */
+}
+:root.dark .booking-details li:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 </style>
