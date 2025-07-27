@@ -26,7 +26,11 @@
       <div class="detail">
         <strong>Total Cost</strong><span>{{ booking.total }} EGP</span>
       </div>
-
+      <div>
+        Note: Service fee does not include the cost of medical supplies. The
+        nurse will provide or request the necessary items and charge for them
+        separately based on the case.
+      </div>
       <div class="payment-methods">
         <label @click="handlePaypalClick">
           <input type="radio" value="paypal" v-model="paymentMethod" />

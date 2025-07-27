@@ -144,7 +144,11 @@
           class="form-control"
         ></textarea>
       </div>
-
+      <div>
+        Note: Service fee does not include the cost of medical supplies. The
+        nurse will provide or request the necessary items and charge for them
+        separately based on the case.
+      </div>
       <!-- Buttons -->
       <div class="actions">
         <button class="cancel" @click="$router.back()">Back</button>
