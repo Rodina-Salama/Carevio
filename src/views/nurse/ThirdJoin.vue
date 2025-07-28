@@ -261,6 +261,7 @@ const handleSubmit = async () => {
       documents: documentUrls,
       status: "Pending",
       createdAt: new Date().toISOString(),
+      isVisible: true,
     });
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,

@@ -34,79 +34,123 @@ const chatbotInput = ref("");
 const chatbotMessages = ref([
   {
     sender: "bot",
-    text: "Hi! 👋 How can I help you with our nursing services today?",
+    text: "أهلًا بيك 👋 ازاي أقدر أساعدك في خدمات Carevio التمريضية؟",
   },
 ]);
 
-const chatbotQA = [
+const chatbotHistory = ref([
   {
-    q: ["elderly care", "old people", "senior", "aged"],
-    a: "We offer Elderly Care services to support seniors at home with comfort and safety.",
+    role: "system",
+    content: `
+You are a smart assistant for Carevio, a home nursing services platform.
+
+- Always respond in the same language the user uses (English or Arabic).
+- Your job is to help users understand Carevio's home nursing services and answer related questions.
+- Do NOT provide medical advice, diagnosis, or treatment.
+- our services is Elderly Care,Pediatric Support,Injections & IV Therapy,Bedridden Patient,Disability Care,Vital Signs Monitoring,Wound Dressing,Catheter Care and Post-Surgical Care.
+-You are a professional assistant for Carevio, a platform for home nursing services in Egypt. You ONLY answer questions related to nursing services, nursing careers, and anything related to the Carevio website or services. You MUST avoid giving answers outside your domain (like engineering or unrelated medical fields) and politely decline by saying: "Sorry, I can only assist with nursing-related topics on Carevio."
+- In case the user mentions life-threatening emergencies (e.g., stroke, heart attack), immediately advise them to seek urgent medical help and do NOT delay the response.
+- Carevio does NOT provide direct chat with nurses. Contact with nurses happens only after booking.
+- Nurses set their hourly rates. Additional medical supplies are arranged separately between nurse and patient and paid outside the platform. Carevio takes a 15% commission on each booking.
+- Booking steps:
+  1. Browse nurses on 'Browse Nurses' page.
+  2. View nurse profiles.
+  3. Click 'Book Now'.
+  4. Select appointment date/time and payment method (PayPal or cash).
+  5. You can view your bookings via "my bookings page" and you can sumbit a review after the appointment.
+
+- Patients can rate nurses once after each visit.
+- Nurses can pause their profile visibility via dashboard and set their availability , price, and services offered.
+- Nurses can view their bookings , earnings and reviews via dashboard.
+- Cancellations or modifications must be made at least two hours before the appointment by contacting customer service.
+- Provide short, professional, friendly, and clear answers only related to home nursing services.
+- If asked about anything outside Carevio's scope, politely decline and refer to available services.
+- For emergencies or medical advice, always direct users to seek immediate professional help.
+- Support contact:
+  Phone: 1 (555) 123-4567
+  Email: contact@Carevio.com
+  contact us page
+  
+Be polite, concise, and specific in your responses.
+`,
   },
-  {
-    q: ["pediatric", "children", "kids", "child"],
-    a: "Our Pediatric Support provides specialized care for children in a familiar setting.",
-  },
-  {
-    q: ["injection", "iv", "therapy", "fluids"],
-    a: "We provide professional Injections & IV Therapy at home, ensuring safety and efficacy.",
-  },
-  {
-    q: ["bedridden", "bed", "patient", "immobile"],
-    a: "Our nurses assist Bedridden Patients with comprehensive and compassionate care.",
-  },
-  {
-    q: ["price", "cost", "how much", "fee", "egp", "pricing"],
-    a: "Our services start from 150 EGP. Pricing depends on your needs.",
-  },
-  {
-    q: ["book", "booking", "reserve", "how to book", "appointment"],
-    a: "You can book a nurse by using our website's search and booking form, or contacting us directly.",
-  },
-  {
-    q: [
-      "working hours",
-      "open",
-      "close",
-      "when",
-      "time",
-      "hours",
-      "home visit",
-      "visit",
-    ],
-    a: "We offer home visits every day, with flexible hours to suit your needs.",
-  },
-  {
-    q: ["service", "what services", "nursing", "care"],
-    a: "Our main services: Elderly Care, Pediatric Support, Injections & IV Therapy, Bedridden Patient.",
-  },
-];
+]);
 
 function toggleChatbot() {
   chatbotOpen.value = !chatbotOpen.value;
 }
 
-function sendChatbotMessage() {
+function checkUserInput(text) {
+  const emergencyKeywords = ["جلطة", "ألم صدر", "ضيق تنفس", "إغماء", "نزيف"];
+  const outOfScopeKeywords = ["هندسة", "طب", "دواء", "علاج", "مستشفى", "تشخيص"];
+
+  // تحقق من الطوارئ أولًا
+  if (emergencyKeywords.some((word) => text.includes(word))) {
+    return {
+      allowed: false,
+      reply:
+        "لو الحالة طارئة، الرجاء التوجه فورًا للمستشفى أو الاتصال بالإسعاف.",
+    };
+  }
+
+  // تحقق من الأسئلة خارج نطاق Carevio
+  if (outOfScopeKeywords.some((word) => text.includes(word))) {
+    return {
+      allowed: false,
+      reply:
+        "آسف، هذا خارج نطاق خدمات Carevio للتمريض المنزلي. كيف أقدر أساعدك في خدمات التمريض؟",
+    };
+  }
+
+  return { allowed: true };
+}
+
+async function sendChatbotMessage() {
   const userMsg = chatbotInput.value.trim();
   if (!userMsg) return;
+
+  // فلترة قبل الإرسال
+  const check = checkUserInput(userMsg);
+  if (!check.allowed) {
+    chatbotMessages.value.push({ sender: "user", text: userMsg });
+    chatbotMessages.value.push({ sender: "bot", text: check.reply });
+    chatbotInput.value = "";
+    return;
+  }
+
   chatbotMessages.value.push({ sender: "user", text: userMsg });
   chatbotInput.value = "";
 
-  const lowerMsg = userMsg.toLowerCase();
-  let found = false;
+  chatbotHistory.value.push({ role: "user", content: userMsg });
 
-  for (const qa of chatbotQA) {
-    if (qa.q.some((q) => lowerMsg.includes(q))) {
-      chatbotMessages.value.push({ sender: "bot", text: qa.a });
-      found = true;
-      break;
-    }
-  }
+  try {
+    const response = await fetch(
+      "https://api.fireworks.ai/inference/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer fw_3ZHmkqeckWZzrkoDvCT4Ytn7",
+        },
+        body: JSON.stringify({
+          model: "accounts/fireworks/models/llama4-scout-instruct-basic",
+          messages: chatbotHistory.value,
+          temperature: 0.7,
+        }),
+      }
+    );
 
-  if (!found) {
+    const data = await response.json();
+    const reply =
+      data.choices?.[0]?.message?.content || "المساعد غير متاح حاليًا.";
+
+    chatbotMessages.value.push({ sender: "bot", text: reply });
+    chatbotHistory.value.push({ role: "assistant", content: reply });
+  } catch (error) {
+    console.error("AI Error:", error);
     chatbotMessages.value.push({
       sender: "bot",
-      text: "I'm here to help with our nursing services only 😊",
+      text: " حصل خطأ أثناء محاولة الرد. حاول مرة تانية.",
     });
   }
 }

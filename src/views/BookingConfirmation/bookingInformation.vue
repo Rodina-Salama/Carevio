@@ -259,6 +259,17 @@ const fetchNurseData = async () => {
   }
   loading.value = false;
 };
+function convertTo24HourFormat(timeStr) {
+  const [time, modifier] = timeStr.split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+
+  if (modifier === "PM" && hours !== 12) hours += 12;
+  if (modifier === "AM" && hours === 12) hours = 0;
+
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:00`;
+}
 
 const handleDateChange = () => {
   const selectedDate = new Date(booking.value.date);
@@ -308,7 +319,22 @@ const proceedToPayment = () => {
     alert("Please fill in all fields before proceeding.");
     return;
   }
+  const selectedDateTime = new Date(
+    `${booking.value.date}T${convertTo24HourFormat(selectedFrom.value)}`
+  );
+  const now = new Date();
 
+  const diffInMs = selectedDateTime - now;
+  const diffInHours = diffInMs / (1000 * 60 * 60);
+
+  if (selectedDateTime < now) {
+    alert("You can't book a time that has already passed.");
+    return;
+  }
+  if (diffInHours < 2) {
+    alert("Please book at least 2 hours in advance.");
+    return;
+  }
   const nurseFullName = `${nurseData.value?.personal?.firstNameEn || ""} ${
     nurseData.value?.personal?.lastNameEn || ""
   }`.trim();

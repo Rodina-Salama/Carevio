@@ -134,9 +134,13 @@ export default {
   computed: {
     acceptedNurses() {
       return this.nurses.filter(
-        (nurse) => nurse.status?.toLowerCase() === "accepted"
+        (nurse) =>
+          nurse.status?.toLowerCase() === "accepted" &&
+          nurse.isVisible === true &&
+          nurse.isBanned !== true
       );
     },
+
     filteredNurses() {
       if (!this.isFiltered) return this.acceptedNurses;
 

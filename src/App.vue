@@ -1186,4 +1186,8 @@ nav a.router-link-exact-active {
     font-size: 22px;
   }
 }
+:root.dark .chatbot-container {
+  background: #3f3f3fff !important;
+  color: #e0e0e0 !important;
+}
 </style>

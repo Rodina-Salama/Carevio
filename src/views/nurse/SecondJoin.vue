@@ -43,7 +43,7 @@
           <!-- Price-->
           <div class="input-group">
             <label for="Price"
-              >Your hourly rate (EGP) — Patients will see this +15% website
+              >Your hourly rate (EGP) — Carevio takes a 15% commission
               fee</label
             >
             <input

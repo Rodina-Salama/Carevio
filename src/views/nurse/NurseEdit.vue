@@ -30,7 +30,9 @@
 
       <!-- Pricing -->
       <div class="form-group">
-        <label class="form-label">Pricing</label>
+        <label class="form-label"
+          >Pricing (Carevio takes a 15% commission)</label
+        >
         <div class="pricing-field">
           <input
             v-model.number="nurse.professional.price"
@@ -130,6 +132,14 @@
             </label>
           </div>
         </div>
+      </div>
+      <!-- Profile Visibility -->
+      <div class="form-group switch-group">
+        <label class="form-label">Show my profile on the site</label>
+        <label class="switch">
+          <input type="checkbox" v-model="nurse.isVisible" />
+          <span class="slider"></span>
+        </label>
       </div>
 
       <!-- Save Button -->
@@ -246,6 +256,44 @@ export default {
     async saveProfile() {
       const auth = getAuth();
       const user = auth.currentUser;
+      const { bio, price, specialization, availableDays, languages, shifts } =
+        this.nurse.professional;
+      const { city, area } = this.nurse.personal;
+
+      if (!bio || bio.length < 20) {
+        alert("Please provide a detailed bio (at least 20 characters).");
+        return;
+      }
+
+      if (isNaN(price) || price < 50 || price > 500) {
+        alert("Please enter a valid price.");
+        return;
+      }
+
+      if (!city || !area) {
+        alert("Please select both city and area.");
+        return;
+      }
+
+      if (specialization.length === 0) {
+        alert("Please select at least one specialization.");
+        return;
+      }
+
+      if (availableDays.length === 0) {
+        alert("Please select your available days.");
+        return;
+      }
+
+      if (languages.length === 0) {
+        alert("Please select at least one language.");
+        return;
+      }
+
+      if (shifts.length === 0) {
+        alert("Please select at least one available time.");
+        return;
+      }
       if (!user) {
         alert("You must be logged in to save your profile.");
         return;
@@ -378,5 +426,55 @@ export default {
   cursor: pointer;
   font-size: 14px;
   margin-top: 30px;
+}
+.switch-group {
+  display: flex;
+  align-items: left;
+  gap: 16px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #19599a;
+}
+
+input:checked + .slider::before {
+  transform: translateX(26px);
 }
 </style>

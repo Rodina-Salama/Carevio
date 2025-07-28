@@ -47,13 +47,6 @@
           <button @click="openModal(booking)" class="add-review">
             Add Review
           </button>
-
-          <button
-            @click="bookSameNurse(booking.nurseId)"
-            class="book-again-btn"
-          >
-            Book the Same Nurse
-          </button>
         </div>
 
         <div v-else class="submitted-review">
@@ -113,9 +106,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useUserStore } from "@/stores/userStore";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
 const bookings = ref([]);
 const activeBookings = ref([]);
 const pastBookings = ref([]);
@@ -123,11 +114,6 @@ const loading = ref(true);
 const userStore = useUserStore();
 const userId = userStore.firebaseUser?.uid;
 const today = new Date().toISOString().split("T")[0];
-
-// Navigate to booking with the same nurse
-const bookSameNurse = (nurseId) => {
-  router.push({ path: "/bookingInformation", query: { nurseId } });
-};
 
 // Fetch all bookings of the user
 const fetchBookings = async () => {
