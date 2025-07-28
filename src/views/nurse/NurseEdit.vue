@@ -372,7 +372,7 @@ export default {
 .btn-save {
   background-color: #19599a;
   color: white;
-  pding: 10px 20px;
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
   cursor: pointer;

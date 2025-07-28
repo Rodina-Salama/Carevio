@@ -204,17 +204,23 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .dashboard-container {
   display: flex;
   min-height: 100vh;
   background-color: #f4f6f8;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  flex-wrap: wrap;
 }
 
 .main-content {
   flex: 1;
   padding: 24px 32px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .page-title {
@@ -225,8 +231,11 @@ export default {
 
 .summary-cards {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 32px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card {
@@ -234,7 +243,9 @@ export default {
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  flex: 1;
+  flex: 1 1 calc(33.333% - 13.33px); /* 3 in a row with gap */
+  min-width: 240px;
+  box-sizing: border-box;
 }
 
 .card.highlight {
@@ -255,13 +266,15 @@ export default {
 
 .lower-section {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 32px;
-  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card.full {
-  flex: 1;
+  flex: 1 1 100%;
 }
 
 .blue-card {
@@ -284,6 +297,7 @@ export default {
 
 .review-details {
   flex: 1;
+  min-width: 0;
 }
 
 .review-header {
@@ -353,5 +367,38 @@ export default {
 
 .star.filled {
   color: gold;
+}
+
+/* Mobile only (below 768px) */
+@media (max-width: 767px) {
+  .card {
+    flex: 1 1 100%;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+  }
+
+  .value {
+    font-size: 18px;
+  }
+
+  .action-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .review-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 </style>

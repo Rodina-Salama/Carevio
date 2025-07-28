@@ -902,4 +902,288 @@ nav a.router-link-exact-active {
 :root.dark .booking-details li:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
+:root.dark .dashboard-container {
+  background-color: #121212;
+}
+
+:root.dark .main-content {
+  background-color: #1e1e1e;
+}
+
+:root.dark .title {
+  color: #ffffff;
+}
+
+:root.dark .no-bookings {
+  color: #9e9e9e;
+}
+
+/* Booking Cards */
+:root.dark .booking-card {
+  background: #2d2d2d;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+}
+
+:root.dark .booking-card:hover {
+  background-color: #333;
+}
+
+:root.dark .client-name {
+  color: #e0e0e0;
+}
+
+:root.dark .address,
+:root.dark .service {
+  color: #b0b0b0;
+}
+
+:root.dark .view-btn {
+  background-color: #1a4b8c;
+  color: #ffffff;
+}
+
+:root.dark .booking-card:hover .view-btn {
+  background-color: #1565c0;
+  color: #ffffff;
+  border: 1px solid #1565c0;
+}
+
+/* Tables */
+:root.dark .bookings-table {
+  border-color: #444;
+}
+
+:root.dark .bookings-table th,
+:root.dark .bookings-table td {
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+:root.dark .bookings-table th {
+  background-color: #252525;
+  color: #ffffff;
+}
+
+:root.dark .bookings-table tr {
+  background-color: #2d2d2d;
+}
+
+:root.dark .bookings-table tr:hover {
+  background-color: #333;
+}
+
+/* Filter Tabs */
+:root.dark .filter-tabs button {
+  background: #2d2d2d;
+  border-color: #444;
+  color: #e0e0e0;
+}
+
+:root.dark .filter-tabs button:hover {
+  background: #333;
+}
+
+:root.dark .filter-tabs button.active {
+  background: #1a4b8c;
+  color: #ffffff;
+  border-color: #1a4b8c;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  :root.dark .bookings-table tr {
+    background: #2d2d2d;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  :root.dark .bookings-table td {
+    border-bottom-color: #444;
+  }
+}
+
+/* Additional Dark Mode Enhancements */
+:root.dark .time-filters {
+  color: #e0e0e0;
+}
+
+:root.dark ::placeholder {
+  color: #9e9e9e;
+}
+
+:root.dark input,
+:root.dark select {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #444;
+}
+:root.dark .contact-info {
+  background: #49494aff; /* Dark slate blue background */
+  border: 1px solid #49494aff; /* Subtle border */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+/* Dark mode styles for info-item labels */
+:root.dark .info-item span:first-child {
+  font-weight: 600;
+  color: #a0aec0; /* Light gray-blue for better readability */
+  margin-right: 0.5rem; /* Added spacing between label and value */
+}
+
+/* Dark mode styles for info-item values */
+:root.dark .info-item span:last-child {
+  color: #e2e8f0; /* Bright white for values */
+}
+:root.dark .review-text {
+  color: #e0e0e0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  margin-bottom: 0;
+  margin-left: 4px;
+  opacity: 0.9;
+}
+/* Dark Mode Popup Styles */
+:root.dark .success-popup {
+  background: rgba(0, 0, 0, 0.8); /* Darker overlay for better contrast */
+}
+
+:root.dark .popup-content {
+  background: #404346ff; /* Dark slate background */
+  border: 1px solid #4a5568; /* Subtle border */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+}
+
+:root.dark .popup-content h3 {
+  color: #f8fafc; /* Bright white for headings */
+}
+
+:root.dark .popup-content p {
+  color: #cbd5e0; /* Light gray for body text */
+}
+
+:root.dark .popup-icon {
+  background: #38a169; /* Slightly different green for better dark mode visibility */
+  box-shadow: 0 0 0 8px rgba(56, 161, 105, 0.2); /* Glow effect */
+}
+
+:root.dark .popup-btn {
+  background: #38a169;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+}
+
+:root.dark .popup-btn:hover {
+  background: #2f855a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 161, 105, 0.5);
+}
+
+:root.dark .popup-progress {
+  background: #404346ff;
+}
+
+:root.dark .popup-progress::after {
+  background: #38a169;
+}
+
+@keyframes progressBar {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+/* Optional: Add close button styling */
+:root.dark .popup-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+:root.dark .popup-close:hover {
+  color: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  :root.dark .popup-content {
+    padding: 1.8rem;
+    border-radius: 12px;
+  }
+
+  :root.dark .popup-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1.2rem;
+  }
+}
+/* Dark Mode Modal Styles */
+:root.dark .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7); /* Darker overlay for better focus */
+  backdrop-filter: blur(4px); /* Adds subtle blur effect */
+}
+
+:root.dark .modal-content {
+  background-color: #2d3748; /* Dark slate background */
+  border: 1px solid #4a5568; /* Subtle border */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+}
+
+:root.dark .modal-content .success-title {
+  color: #48bb78; /* Softer green for dark mode */
+  text-shadow: 0 0 8px rgba(72, 187, 120, 0.2); /* Glow effect */
+}
+
+:root.dark .modal-content .success-text,
+:root.dark .modal-content .success-note {
+  color: #e2e8f0; /* Light gray for readability */
+}
+
+:root.dark .modal-content .success-note {
+  opacity: 0.9; /* Slightly muted */
+}
+
+:root.dark .modal-content .success-note button {
+  background-color: #3182ce; /* Brighter blue */
+  color: white;
+  transition: all 0.2s ease;
+}
+
+:root.dark .modal-content .success-note button:hover {
+  background-color: #2c5282; /* Darker blue on hover */
+  transform: translateY(-1px);
+}
+
+/* Success icon styling */
+:root.dark .modal-content .success-icon svg {
+  filter: drop-shadow(0 0 6px rgba(72, 187, 120, 0.4));
+}
+
+/* Close button styling */
+:root.dark .modal-close {
+  color: #a0aec0; /* Muted color */
+  transition: color 0.2s ease;
+}
+
+:root.dark .modal-close:hover {
+  color: #ffffff; /* Bright on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  :root.dark .modal-content {
+    padding: 25px;
+    border-radius: 10px;
+  }
+
+  :root.dark .modal-content .success-title {
+    font-size: 22px;
+  }
+}
 </style>

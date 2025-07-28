@@ -171,6 +171,7 @@ export default {
   background-color: #f1f1f1;
   cursor: pointer;
   border-radius: 4px;
+  margin-top: 8px;
 }
 
 .filter-buttons button.active {

@@ -177,7 +177,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .dashboard-container {
   display: flex;
@@ -244,7 +243,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   line-height: 1.2;
-  /* Tight spacing */
 }
 
 .client-name {
@@ -270,8 +268,8 @@ export default {
   font-size: 14px;
   transition: 0.3s ease;
 }
+
 .bookings-table-container {
-  overflow-x: auto;
   margin-top: 20px;
 }
 
@@ -291,6 +289,7 @@ export default {
   background-color: #f4f4f4;
   font-weight: bold;
 }
+
 .filter-tabs {
   display: flex;
   gap: 10px;
@@ -313,5 +312,35 @@ export default {
 
 .time-filters {
   margin-bottom: 20px;
+}
+
+/* ✅ Responsive Table Without Horizontal Scroll */
+@media (max-width: 768px) {
+  .bookings-table thead {
+    display: none;
+  }
+
+  .bookings-table,
+  .bookings-table tbody,
+  .bookings-table tr,
+  .bookings-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .bookings-table tr {
+    margin-bottom: 16px;
+    background: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .bookings-table td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    font-size: 14px;
+  }
 }
 </style>

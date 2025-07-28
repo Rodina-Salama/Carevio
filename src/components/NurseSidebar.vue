@@ -1,22 +1,35 @@
 <template>
-  <div class="sidebar-container">
-    <!-- Logo -->
-    <div class="logo">
-      <img src="@/assets/logo2.png" alt="Logo" class="logo-img" />
-      <span class="site-name">Carevio</span>
+  <div>
+    <!-- Toggle Button (only shows on mobile) -->
+    <button class="sidebar-toggle" @click="toggleSidebar">
+      <img src="@/assets/logo2.png" alt="Toggle Sidebar" />
+    </button>
+
+    <div
+      :class="[
+        'sidebar-container',
+        { 'sidebar-hidden': isMobile && !sidebarVisible },
+      ]"
+    >
+      <!-- Logo -->
+      <div class="logo">
+        <img src="@/assets/logo2.png" alt="Logo" class="logo-img" />
+        <span class="site-name">Carevio</span>
+      </div>
+
+      <!-- Navigation -->
+      <ul class="nav-links">
+        <li v-for="item in navItems" :key="item.path">
+          <router-link
+            :to="item.path"
+            class="nav-link"
+            :class="{ active: $route.path.startsWith(item.path) }"
+          >
+            {{ item.label }}
+          </router-link>
+        </li>
+      </ul>
     </div>
-    <!-- Navigation -->
-    <ul class="nav-links">
-      <li v-for="item in navItems" :key="item.path">
-        <router-link
-          :to="item.path"
-          class="nav-link"
-          :class="{ active: $route.path.startsWith(item.path) }"
-        >
-          {{ item.label }}
-        </router-link>
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -36,12 +49,16 @@ export default {
       ],
       userName: "",
       userPhotoURL: "",
-      defaultAvatar: "https://via.placeholder.com/60", // صورة افتراضية
+      defaultAvatar: "https://via.placeholder.com/60",
+      sidebarVisible: true,
+      isMobile: false,
     };
   },
   mounted() {
-    this.$emit("nurse-layout", true);
+    this.checkIsMobile();
+    window.addEventListener("resize", this.checkIsMobile);
 
+    this.$emit("nurse-layout", true);
     const guestNavbar = document.querySelector(".guest-navbar");
     if (guestNavbar) guestNavbar.style.display = "none";
 
@@ -56,6 +73,8 @@ export default {
     }
   },
   beforeUnmount() {
+    window.removeEventListener("resize", this.checkIsMobile);
+
     const guestNavbar = document.querySelector(".guest-navbar");
     if (guestNavbar) guestNavbar.style.display = "block";
 
@@ -65,6 +84,17 @@ export default {
     this.$emit("nurse-layout", false);
   },
   methods: {
+    toggleSidebar() {
+      this.sidebarVisible = !this.sidebarVisible;
+    },
+    checkIsMobile() {
+      this.isMobile = window.innerWidth <= 768;
+      if (this.isMobile) {
+        this.sidebarVisible = false;
+      } else {
+        this.sidebarVisible = true;
+      }
+    },
     async signOut() {
       try {
         await signOut(getAuth());
@@ -78,6 +108,41 @@ export default {
 </script>
 
 <style scoped>
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  background-color: #19599a;
+  color: white;
+  border: none;
+  font-size: 24px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-container.sidebar-hidden {
+    transform: translateX(-100%);
+  }
+}
+
 .sidebar-container {
   width: 250px;
   background-color: #19599a;

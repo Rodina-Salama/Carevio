@@ -157,24 +157,34 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .dashboard-container {
   display: flex;
   flex-direction: column;
   background: #f4f6f8;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .content-wrapper {
   display: flex;
   flex: 1;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .main-content {
   flex: 1;
   padding: 40px;
   background: #f4f6f8;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .title {
@@ -185,8 +195,10 @@ export default {
 
 .summary-cards {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 40px;
+  width: 100%;
 }
 
 .card {
@@ -194,7 +206,8 @@ export default {
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
-  flex: 1;
+  flex: 1 1 calc(33.33% - 13.33px);
+  min-width: 260px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -211,8 +224,8 @@ export default {
 .transaction-table {
   background: white;
   border-radius: 10px;
-  padding: 20px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
 .transaction-table h3 {
@@ -220,9 +233,12 @@ export default {
   font-weight: bold;
 }
 
+/* Table setup without horizontal scroll */
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* prevents overflow */
+  word-wrap: break-word;
 }
 
 thead {
@@ -234,13 +250,54 @@ td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #eee;
+  word-break: break-word;
+  font-size: 14px;
 }
 
+/* Badge styling */
 .paid-status {
   background-color: #e1f7e9;
   color: #28a745;
   padding: 6px 12px;
   border-radius: 20px;
   font-weight: bold;
+  font-size: 13px;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .main-content {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .summary-cards {
+    flex-direction: column;
+  }
+
+  .card {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  th,
+  td {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .card {
+    flex: 1 1 calc(50% - 10px);
+  }
+
+  .main-content {
+    padding: 30px;
+  }
 }
 </style>

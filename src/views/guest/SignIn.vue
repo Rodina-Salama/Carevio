@@ -47,7 +47,7 @@
         </div>
         <div class="login-right">
           <img
-            src="@/assets/nurseman.png"
+            src="@/assets/nurseman2.png"
             alt="Login illustration"
             class="login-image"
           />
