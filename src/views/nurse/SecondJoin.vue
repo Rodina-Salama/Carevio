@@ -42,7 +42,10 @@
 
           <!-- Price-->
           <div class="input-group">
-            <label for="Price">Price (per hour)</label>
+            <label for="Price"
+              >Your hourly rate (EGP) — Patients will see this +15% website
+              fee</label
+            >
             <input
               type="text"
               id="price"
@@ -199,8 +202,8 @@ const handleSubmit = () => {
     return;
   }
   const price = parseFloat(formData.value.price);
-  if (isNaN(price) || price < 100 || price > 1000) {
-    alert("Price must be a number between 100 and 1000.");
+  if (isNaN(price) || price < 50 || price > 500) {
+    alert("Price must be a number between 50 and 500.");
     return;
   }
   // Store data in localStorage

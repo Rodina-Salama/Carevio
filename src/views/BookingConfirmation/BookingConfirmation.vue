@@ -141,8 +141,11 @@ const handlePaypalClick = () => {
 
 const saveBooking = async () => {
   try {
+    const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+    if (!storedBooking) throw new Error("No booking data in localStorage");
+
     await addDoc(collection(db, "bookings"), {
-      ...booking.value,
+      ...storedBooking,
       paymentMethod: paymentMethod.value,
       createdAt: new Date(),
     });
