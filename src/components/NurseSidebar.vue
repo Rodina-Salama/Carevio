@@ -18,7 +18,7 @@
       </div>
 
       <!-- Navigation -->
-      <ul class="nav-links">
+      <ul class="nav-linkss">
         <li v-for="item in navItems" :key="item.path">
           <router-link
             :to="item.path"
@@ -195,7 +195,7 @@ export default {
 }
 
 /* Navigation */
-.nav-links {
+.nav-linkss {
   list-style: none;
   padding: 0;
   display: flex;

@@ -1,6 +1,7 @@
 <!-- src/views/nurse/NurseBookingDetails.vue -->
 <template>
   <div class="booking-details">
+    <button class="back-btn" @click="goBack">← Back</button>
     <h1>Booking Details</h1>
 
     <div v-if="loading">Loading...</div>
@@ -30,12 +31,14 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 export default {
   setup() {
+    const router = useRouter();
     const route = useRoute();
     const bookingId = route.params.id;
+
     const booking = ref(null);
     const loading = ref(true);
 
@@ -60,12 +63,17 @@ export default {
       loading.value = false;
     };
 
+    const goBack = () => {
+      router.push(`/NurseBookings`);
+    };
+
     onMounted(fetchBooking);
 
     return {
       booking,
       loading,
       formatTimestamp,
+      goBack,
     };
   },
 };
@@ -80,6 +88,22 @@ export default {
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.back-btn {
+  background-color: transparent;
+  border: none;
+  color: #19599a;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  padding: 0;
+  font-weight: 600;
+  text-align: left;
+}
+.back-btn:hover {
+  text-decoration: underline;
+}
+
 .booking-details ul {
   list-style: none;
   padding: 0;

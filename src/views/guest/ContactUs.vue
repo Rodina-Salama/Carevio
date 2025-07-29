@@ -34,7 +34,7 @@
         <button type="submit" class="submit-btn">Send Message</button>
       </form>
 
-      <div class="contact-info">
+      <div class="contact-infos">
         <div class="info-item">
           <span>Email:</span><span>support@carevio.com</span>
         </div>
@@ -202,7 +202,7 @@ textarea {
   box-shadow: 0 6px 10px rgba(52, 152, 219, 0.3);
 }
 
-.contact-info {
+.contact-infos {
   margin-top: 2.5rem;
   display: flex;
   flex-direction: column;

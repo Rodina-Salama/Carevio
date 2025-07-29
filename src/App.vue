@@ -1017,7 +1017,7 @@ nav a.router-link-exact-active {
   color: #e0e0e0;
   border-color: #444;
 }
-:root.dark .contact-info {
+:root.dark .contact-infos {
   background: #49494aff; /* Dark slate blue background */
   border: 1px solid #49494aff; /* Subtle border */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -1189,5 +1189,17 @@ nav a.router-link-exact-active {
 :root.dark .chatbot-container {
   background: #3f3f3fff !important;
   color: #e0e0e0 !important;
+}
+:root.dark .back-btn {
+  color: #1a4b8c;
+  background-color: transparent;
+}
+
+:root.dark .back-btn:hover {
+  color: #8bb8eb;
+  background-color: transparent;
+}
+:root.dark .nav-links a {
+  color: #ffffff;
 }
 </style>
