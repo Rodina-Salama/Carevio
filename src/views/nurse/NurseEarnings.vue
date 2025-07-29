@@ -29,7 +29,7 @@
               <tr>
                 <th>Booking Date</th>
                 <th>Client Name</th>
-                <th>Amount Paid</th>
+                <th>Your Earnings</th>
                 <th>Status</th>
                 <th>Payment Method</th>
               </tr>
@@ -115,7 +115,7 @@ export default {
           const isCompleted = fullEndDateTime.isBefore(dayjs());
           if (!isCompleted) return;
 
-          const amount = item.price || 0;
+          const amount = (item.price || 0) * 0.85;
 
           total += amount;
           if (

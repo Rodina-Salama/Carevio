@@ -262,6 +262,7 @@ const handleSubmit = async () => {
       status: "Pending",
       createdAt: new Date().toISOString(),
       isVisible: true,
+      isBanned: false,
     });
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,

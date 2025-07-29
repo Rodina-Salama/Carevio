@@ -43,15 +43,14 @@
           <p><strong>Price:</strong> EGP {{ booking.price }}</p>
         </div>
 
-        <div v-if="!booking.review" class="buttons-row">
-          <button @click="openModal(booking)" class="add-review">
+        <div class="buttons-row">
+          <button
+            v-if="!booking.review"
+            @click="openModal(booking)"
+            class="add-review"
+          >
             Add Review
           </button>
-        </div>
-
-        <div v-else class="submitted-review">
-          <p><strong>Your Review:</strong> {{ booking.review }}</p>
-          <p><strong>Rating:</strong> {{ booking.rating }} ★</p>
 
           <button
             @click="bookSameNurse(booking.nurseId)"
@@ -59,6 +58,11 @@
           >
             Book the Same Nurse
           </button>
+        </div>
+
+        <div v-if="booking.review" class="submitted-review">
+          <p><strong>Your Review:</strong> {{ booking.review }}</p>
+          <p><strong>Rating:</strong> {{ booking.rating }} ★</p>
         </div>
       </div>
     </div>
@@ -106,14 +110,20 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useUserStore } from "@/stores/userStore";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const bookings = ref([]);
 const activeBookings = ref([]);
 const pastBookings = ref([]);
 const loading = ref(true);
 const userStore = useUserStore();
 const userId = userStore.firebaseUser?.uid;
-const today = new Date().toISOString().split("T")[0];
+
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+const now = dayjs();
 
 // Fetch all bookings of the user
 const fetchBookings = async () => {
@@ -127,9 +137,15 @@ const fetchBookings = async () => {
     ...doc.data(),
   }));
 
-  activeBookings.value = bookings.value.filter((b) => b.date >= today);
-  pastBookings.value = bookings.value.filter((b) => b.date < today);
+  activeBookings.value = bookings.value.filter((b) => {
+    const end = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
+    return end.isAfter(now);
+  });
 
+  pastBookings.value = bookings.value.filter((b) => {
+    const end = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
+    return end.isBefore(now);
+  });
   loading.value = false;
 };
 
@@ -154,7 +170,9 @@ const showModal = ref(false);
 const selectedBooking = ref(null);
 const rating = ref(0);
 const comment = ref("");
-
+const bookSameNurse = (nurseId) => {
+  router.push({ path: "/bookingInformation", query: { nurseId } });
+};
 // Open modal to add review
 const openModal = (booking) => {
   selectedBooking.value = booking;

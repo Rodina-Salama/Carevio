@@ -1,6 +1,12 @@
 <template>
   <div class="booking-information" v-if="!loading">
     <h1 class="title">Book a Nurse</h1>
+    <p
+      v-if="!nurseData?.isVisible || nurseData?.isBanned"
+      class="nurse-warning"
+    >
+      This nurse is currently not available for booking.
+    </p>
     <p class="subtitle">
       You're booking with
       <strong>
@@ -307,6 +313,10 @@ const generateAvailableTimes = () => {
 };
 
 const proceedToPayment = () => {
+  if (!nurseData.value?.isVisible || nurseData.value?.isBanned) {
+    alert("Sorry, this nurse cannot be booked at the moment.");
+    return;
+  }
   if (
     !booking.value.userName ||
     !booking.value.service ||
@@ -523,5 +533,10 @@ label {
   outline: none;
   border-color: #4a90e2;
   box-shadow: 0 0 4px rgba(74, 144, 226, 0.3);
+}
+.nurse-warning {
+  color: red;
+  font-size: 14px;
+  margin-top: 8px;
 }
 </style>

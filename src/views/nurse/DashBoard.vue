@@ -3,7 +3,10 @@
     <NurseSidebar />
     <div class="main-content">
       <h1 class="page-title">Dashboard</h1>
-
+      <div v-if="isBanned" class="banned-alert">
+        Your account has been <strong>banned</strong>. You cannot accept new
+        bookings at the moment.
+      </div>
       <div class="summary-cards">
         <div class="card">
           <h3>Total Earnings</h3>
@@ -68,7 +71,15 @@
 <script>
 import NurseSidebar from "@/components/NurseSidebar.vue";
 import { ref, onMounted } from "vue";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useUserStore } from "@/stores/userStore";
 
@@ -84,6 +95,21 @@ export default {
     const nextBooking = ref(null);
     const latestReview = ref(null);
     const defaultAvatar = "/default-avatar.png";
+    const isBanned = ref(false);
+
+    async function fetchBannedStatus() {
+      if (!nurseId) return;
+
+      try {
+        const docRef = doc(db, "applications", nurseId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          isBanned.value = docSnap.data().isBanned || false;
+        }
+      } catch (error) {
+        console.error("Error fetching banned status:", error);
+      }
+    }
 
     // Helpers
     function formatDate(dateStr) {
@@ -132,13 +158,13 @@ export default {
         const bookingEnd = new Date(`${data.date} ${data.to}`);
 
         if (bookingEnd < now) {
-          totalEarn += data.price || 0;
+          totalEarn += (data.price || 0) * 0.85;
 
           if (
             bookingEnd.getMonth() === currentMonth &&
             bookingEnd.getFullYear() === currentYear
           ) {
-            earnings += data.price || 0;
+            earnings += (data.price || 0) * 0.85;
           }
         }
 
@@ -188,6 +214,7 @@ export default {
     onMounted(async () => {
       await fetchBookings();
       await fetchLatestReview();
+      await fetchBannedStatus();
     });
 
     return {
@@ -200,6 +227,7 @@ export default {
       formatDate,
       timeAgo,
       formatTime,
+      isBanned,
     };
   },
 };
@@ -227,6 +255,15 @@ export default {
   font-size: 26px;
   font-weight: bold;
   margin-bottom: 24px;
+}
+.banned-alert {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 16px;
+  border-radius: 10px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  border: 1px solid #f44336;
 }
 
 .summary-cards {

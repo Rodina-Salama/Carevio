@@ -138,11 +138,12 @@ export default {
 
     const filteredBookings = computed(() => {
       const now = dayjs();
+
       let filtered = bookings.value.filter((b) => {
-        const bookingDate = dayjs(b.date);
+        const endTime = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
         return activeTab.value === "active"
-          ? bookingDate.isSameOrAfter(now, "day")
-          : bookingDate.isBefore(now, "day");
+          ? endTime.isAfter(now)
+          : endTime.isBefore(now);
       });
 
       if (timeFilter.value === "today") {
