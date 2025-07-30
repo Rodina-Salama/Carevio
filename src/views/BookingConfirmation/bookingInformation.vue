@@ -488,7 +488,7 @@ onMounted(fetchNurseData);
 }
 
 .cancel:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 

@@ -8,7 +8,7 @@
       <div class="services-grid">
         <div class="service-card">
           <div class="service-icon">
-            <img src="@/assets/service1.png" alt="Elderly Care" />
+            <img src="@/assets/service1.jpg" alt="Elderly Care" />
           </div>
           <h3>Elderly Care</h3>
           <p>
@@ -69,6 +69,36 @@
           <p>
             Track heart rate, temperature, blood pressure, and oxygen using
             devices
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <img src="@/assets/service7.png" alt="Wound Dressing" />
+          </div>
+          <h3>Wound Dressing</h3>
+          <p>
+            Cleaning and dressing wounds to promote healing and prevent
+            infections
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <img src="@/assets/service8.jpg" alt="Catheter Care" />
+          </div>
+          <h3>Catheter Care</h3>
+          <p>
+            Managing and maintaining urinary catheters to ensure hygiene and
+            prevent complications.
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <img src="@/assets/service9.jpg" alt="Vital Signs Monitoring" />
+          </div>
+          <h3>Vital Signs Monitoring</h3>
+          <p>
+            Assiting with wound care, medication management, vital signs
+            monitoring, and assisting with mobility and daily tasks.
           </p>
         </div>
       </div>

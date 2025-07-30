@@ -211,7 +211,9 @@ input[type="file"] {
   background-color: #4a6fa5;
   color: white;
 }
-
+.btn.save:hover {
+  background-color: #67aef5ff;
+}
 .btn.back {
   background-color: #ccc;
   color: #333;

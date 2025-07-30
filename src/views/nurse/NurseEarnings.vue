@@ -1,10 +1,10 @@
 <template>
   <div class="dashboard-container">
-    <NurseNavbar />
     <div class="content-wrapper">
-      <nurse-sidebar />
+      <NurseSidebar />
+      <LoadingSpinner v-if="loading" class="loading-wrapper" />
 
-      <div class="main-content">
+      <div v-else class="main-content">
         <h1 class="title">Earnings</h1>
 
         <div class="summary-cards">
@@ -50,113 +50,111 @@
   </div>
 </template>
 
-<script>
-import { getDocs, collection } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { db } from "@/firebase/config";
+<script setup>
+import { ref, onMounted } from "vue";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import NurseSidebar from "@/components/NurseSidebar.vue";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { db } from "@/firebase/config";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
-export default {
-  components: {
-    NurseSidebar,
-  },
-  data() {
-    return {
-      transactions: [],
-      totalEarnings: 0,
-      earningsThisWeek: 0,
-      earningsThisMonth: 0,
-    };
-  },
-  methods: {
-    async fetchEarnings() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "bookings"));
-        const auth = getAuth();
-        const user = auth.currentUser;
-        if (!user) return;
+//  State
+const loading = ref(true);
+const transactions = ref([]);
+const totalEarnings = ref(0);
+const earningsThisWeek = ref(0);
+const earningsThisMonth = ref(0);
 
-        const nurseId = user.uid;
-        const today = dayjs(); // current date
-        const startOfWeek =
-          today.day() >= 6
-            ? today.startOf("day").subtract(today.day() - 6, "day")
-            : today.startOf("day").subtract(today.day() + 1, "day");
-        const startOfMonth = today.startOf("month");
+//  Format function
+function formatDate(date) {
+  return dayjs(date).format("DD/MM/YYYY");
+}
 
-        let total = 0;
-        let weekTotal = 0;
-        let monthTotal = 0;
+//  Fetch data
+const fetchEarnings = async (userId) => {
+  try {
+    const bookingsRef = collection(db, "bookings");
+    const q = query(bookingsRef, where("nurseId", "==", userId));
+    const querySnapshot = await getDocs(q);
 
-        const data = [];
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
 
-        querySnapshot.forEach((doc) => {
-          const item = doc.data();
+    let total = 0;
+    let weekTotal = 0;
+    let monthTotal = 0;
+    const data = [];
 
-          // Ensure the booking is for this nurse
-          if (item.nurseId !== nurseId) return;
+    const today = dayjs();
+    const startOfWeek =
+      today.day() >= 6
+        ? today.startOf("day").subtract(today.day() - 6, "day")
+        : today.startOf("day").subtract(today.day() + 1, "day");
 
-          // Parse the date string into a dayjs object
-          const bookingDate = item.date ? dayjs(item.date) : null;
-          if (!bookingDate || !bookingDate.isValid()) return;
+    querySnapshot.forEach((doc) => {
+      const item = doc.data();
+      const bookingEnd = new Date(`${item.date} ${item.to || "23:59"}`);
 
-          // Mark as completed if past or has status 'completed'
-          const endTime = item.to || "11:59 PM"; // fallback if missing
-          const fullEndDateTime = dayjs(
-            `${item.date} ${endTime}`,
-            "YYYY-MM-DD hh:mm A"
-          );
-          const isCompleted = fullEndDateTime.isBefore(dayjs());
-          if (!isCompleted) return;
+      if (bookingEnd < now) {
+        const amount = (item.price || 0) * 0.85;
+        total += amount;
 
-          const amount = (item.price || 0) * 0.85;
+        const bookingDate = new Date(item.date);
 
-          total += amount;
-          if (
-            bookingDate.isSameOrAfter(startOfWeek, "day") &&
-            bookingDate.isSameOrBefore(today, "day")
-          ) {
-            weekTotal += amount;
-          }
-          if (
-            bookingDate.isSameOrAfter(startOfMonth, "day") &&
-            bookingDate.isSameOrBefore(today, "day")
-          ) {
-            monthTotal += amount;
-          }
+        if (
+          bookingDate.getMonth() === currentMonth &&
+          bookingDate.getFullYear() === currentYear
+        ) {
+          monthTotal += amount;
+        }
 
-          data.push({
-            ...item,
-            date: bookingDate.toDate(), // convert to JS Date for sorting/display
-            amount,
-            client: item.userName || "Client",
-          });
+        if (
+          dayjs(item.date).isSameOrAfter(startOfWeek, "day") &&
+          dayjs(item.date).isSameOrBefore(today, "day")
+        ) {
+          weekTotal += amount;
+        }
+
+        data.push({
+          ...item,
+          date: bookingDate,
+          amount,
+          client: item.userName || "Client",
         });
-
-        this.transactions = data.sort((a, b) => b.date - a.date);
-        this.totalEarnings = total;
-        this.earningsThisWeek = weekTotal;
-        this.earningsThisMonth = monthTotal;
-      } catch (error) {
-        console.error("Error fetching earnings:", error);
       }
-    },
+    });
 
-    formatDate(date) {
-      return dayjs(date).format("DD/MM/YYYY");
-    },
-  },
-  mounted() {
-    this.fetchEarnings();
-  },
+    transactions.value = data.sort((a, b) => b.date - a.date);
+    totalEarnings.value = total;
+    earningsThisWeek.value = weekTotal;
+    earningsThisMonth.value = monthTotal;
+  } catch (error) {
+    console.error("Error fetching earnings:", error);
+  } finally {
+    loading.value = false;
+  }
 };
+
+//  Lifecycle
+onMounted(() => {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      fetchEarnings(user.uid);
+    } else {
+      loading.value = false;
+    }
+  });
+});
 </script>
+
 <style scoped>
 *,
 *::before,
@@ -171,7 +169,12 @@ export default {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .content-wrapper {
   display: flex;
   flex: 1;
@@ -229,8 +232,9 @@ export default {
 }
 
 .transaction-table h3 {
-  margin-bottom: 20px;
   font-weight: bold;
+  padding: 16px;
+  padding-bottom: 0;
 }
 
 /* Table setup without horizontal scroll */

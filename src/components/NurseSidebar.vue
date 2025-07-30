@@ -1,8 +1,7 @@
 <template>
   <div>
-    <!-- Toggle Button (only shows on mobile) -->
     <button class="sidebar-toggle" @click="toggleSidebar">
-      <img src="@/assets/logo2.png" alt="Toggle Sidebar" />
+      <span class="toggle-label">Dashboard</span>
     </button>
 
     <div
@@ -111,23 +110,25 @@ export default {
 .sidebar-toggle {
   display: none;
   position: fixed;
-  top: 16px;
-  left: 16px;
+  top: 24px;
+  left: 24px;
   z-index: 1000;
   background-color: #19599a;
   color: white;
   border: none;
   font-size: 24px;
-  padding: 8px 12px;
+  padding: 8px 8px;
   border-radius: 4px;
   cursor: pointer;
 }
-
+.toggle-label {
+  font-size: 16px;
+  color: white;
+}
 @media (max-width: 768px) {
   .sidebar-toggle {
     display: block;
   }
-
   .sidebar-container {
     position: fixed;
     top: 0;
@@ -150,6 +151,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height: 100%;
   box-sizing: border-box;
   color: white;
 }

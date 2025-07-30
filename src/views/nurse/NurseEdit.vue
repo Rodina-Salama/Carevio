@@ -1,7 +1,9 @@
 <template>
   <div class="edit-profile">
     <NurseSidebar />
-    <div class="form-container">
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+
+    <div v-else class="form-container">
       <h2 class="title">Edit Profile</h2>
 
       <!-- Profile Picture -->
@@ -141,7 +143,11 @@
           <span class="slider"></span>
         </label>
       </div>
-
+      <div class="actions-container">
+        <button @click="changePassword" class="changePassword">
+          Change Password
+        </button>
+      </div>
       <!-- Save Button -->
       <button class="btn-save" @click="saveProfile">Save</button>
     </div>
@@ -158,13 +164,16 @@ import { shiftOptions } from "@/data/shiftOptions";
 import { cities, areas } from "@/data/locationOptions";
 import { languageOptions } from "@/data/languageOptions";
 import { availableDays } from "@/data/availableDays";
-
+import { onAuthStateChanged } from "firebase/auth";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
     NurseSidebar,
+    LoadingSpinner,
   },
   data() {
     return {
+      loading: true,
       nurse: {
         personal: {
           city: "",
@@ -193,22 +202,28 @@ export default {
       defaultAvatar: "",
     };
   },
-  async mounted() {
+  mounted() {
     const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) return;
-    const db = getFirestore();
-    const docRef = doc(db, "applications", user.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      this.nurse = { ...this.nurse, ...docSnap.data() };
-    }
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        this.$router.push("/login");
+        return;
+      }
+
+      const db = getFirestore();
+      const docRef = doc(db, "applications", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        this.nurse = { ...this.nurse, ...docSnap.data() };
+      }
+
+      this.loading = false;
+    });
   },
   methods: {
     async uploadPhoto(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "Nurse_information");
@@ -252,7 +267,9 @@ export default {
         alert("Failed to upload photo.");
       }
     },
-
+    changePassword() {
+      this.$router.push("/changepasswordnurse");
+    },
     async saveProfile() {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -311,7 +328,12 @@ export default {
 .edit-profile {
   display: flex;
 }
-
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .form-container {
   padding: 40px 60px;
   flex: 1;
@@ -426,6 +448,9 @@ export default {
   cursor: pointer;
   font-size: 14px;
   margin-top: 30px;
+}
+.btn-save:hover {
+  background-color: #67aef5ff;
 }
 .switch-group {
   display: flex;

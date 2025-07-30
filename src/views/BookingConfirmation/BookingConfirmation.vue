@@ -108,6 +108,10 @@ let countdownInterval = null;
 
 onMounted(() => {
   const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+  if (!storedBooking) {
+    router.push("browse");
+    return;
+  }
   if (storedBooking) {
     booking.value = {
       date: storedBooking.date,
@@ -305,7 +309,7 @@ const handleConfirm = async () => {
 }
 
 .cancel:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 

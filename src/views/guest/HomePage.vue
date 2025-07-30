@@ -159,7 +159,7 @@
         <div class="services-grid">
           <div class="service-card">
             <div class="service-icon">
-              <img src="@/assets/service1.png" alt="Elderly Care" />
+              <img src="@/assets/service1.jpg" alt="Elderly Care" />
             </div>
             <h3>Elderly Care</h3>
             <p>
@@ -227,7 +227,7 @@ const testimonials = [
   },
   {
     name: "Ahmed Samir",
-    text: "The caregiver was professional and compassionate. She took excellent care of my elderly mother and followed all medical instructions perfectly.",
+    text: "The nurse was professional and compassionate. She took excellent care of my elderly mother and followed all medical instructions perfectly.",
     rating: 4,
   },
   {
@@ -358,7 +358,7 @@ select {
 }
 
 .search-btn:hover {
-  background-color: #009acb;
+  background-color: #67aef5ff;
 }
 
 /* WHY CHOOSE SECTION  */
@@ -648,18 +648,18 @@ select {
 }
 
 .explore-btn {
-  background-color: transparent;
-  color: #19599a;
+  background-color: #19599a;
+  color: #ffffff;
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: 2px solid #19599a;
+  border: 1px solid #19599a;
 }
 
 .explore-btn:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
   transform: translateY(-2px);
 }

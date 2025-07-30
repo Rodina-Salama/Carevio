@@ -183,7 +183,7 @@ p {
 }
 
 .btn-primary:hover {
-  background-color: #1877f2;
+  background-color: #67aef5ff;
   transform: translateY(-2px);
 }
 

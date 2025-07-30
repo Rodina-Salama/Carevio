@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard-container">
     <NurseSidebar />
-    <div class="main-content">
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+
+    <div v-else class="main-content">
       <h1 class="title">Nurse Bookings</h1>
 
       <!-- Filter Tabs -->
@@ -30,8 +32,7 @@
         </select>
       </div>
 
-      <div v-if="loading" class="no-bookings">Loading...</div>
-      <div v-else-if="filteredBookings.length === 0" class="no-bookings">
+      <div v-if="filteredBookings.length === 0" class="no-bookings">
         No bookings found.
       </div>
 
@@ -86,6 +87,8 @@ import localeData from "dayjs/plugin/localeData";
 import updateLocale from "dayjs/plugin/updateLocale";
 import "dayjs/locale/ar";
 import "dayjs/locale/en";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { onAuthStateChanged } from "firebase/auth";
 
 dayjs.extend(localeData);
 dayjs.extend(updateLocale);
@@ -101,6 +104,7 @@ dayjs.updateLocale("ar", {
 export default {
   components: {
     NurseSidebar,
+    LoadingSpinner,
   },
   setup() {
     const bookings = ref([]);
@@ -108,32 +112,34 @@ export default {
     const activeTab = ref("active");
     const timeFilter = ref("all");
 
-    onMounted(async () => {
-      try {
-        const auth = getAuth();
-        const currentUser = auth.currentUser;
+    onMounted(() => {
+      const auth = getAuth();
 
-        if (!currentUser) {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
           console.error("No logged-in nurse");
+          loading.value = false;
           return;
         }
 
-        const db = getFirestore();
-        const q = query(
-          collection(db, "bookings"),
-          where("nurseId", "==", currentUser.uid)
-        );
+        try {
+          const db = getFirestore();
+          const q = query(
+            collection(db, "bookings"),
+            where("nurseId", "==", user.uid)
+          );
 
-        const querySnapshot = await getDocs(q);
-        bookings.value = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        loading.value = false;
-      }
+          const querySnapshot = await getDocs(q);
+          bookings.value = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+        } catch (error) {
+          console.error("Error fetching bookings:", error);
+        } finally {
+          loading.value = false;
+        }
+      });
     });
 
     const filteredBookings = computed(() => {
@@ -222,7 +228,7 @@ export default {
 
 .booking-card:hover .view-btn {
   background-color: #fff;
-  color: #19599a;
+  color: #67aef5ff;
   border: 1px solid #19599a;
 }
 
@@ -269,7 +275,10 @@ export default {
   font-size: 14px;
   transition: 0.3s ease;
 }
-
+.view-btn:hover {
+  background-color: #67aef5ff;
+  color: #fff;
+}
 .bookings-table-container {
   margin-top: 20px;
 }
@@ -313,6 +322,12 @@ export default {
 
 .time-filters {
   margin-bottom: 20px;
+}
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ✅ Responsive Table Without Horizontal Scroll */

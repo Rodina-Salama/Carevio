@@ -42,10 +42,7 @@
 
           <!-- Price-->
           <div class="input-group">
-            <label for="Price"
-              >Your hourly rate (EGP) — Carevio takes a 15% commission
-              fee</label
-            >
+            <label for="Price">Pricing (Carevio takes a 15% commission)</label>
             <input
               type="text"
               id="price"
@@ -211,6 +208,10 @@ const handleSubmit = () => {
   router.push("/thirdjoin");
 };
 onMounted(() => {
+  const personalData = localStorage.getItem("personalData");
+  if (!personalData) {
+    router.push("/join");
+  }
   const saved = localStorage.getItem("professionalData");
   if (saved) {
     Object.assign(formData.value, JSON.parse(saved));
@@ -283,8 +284,8 @@ onMounted(() => {
   display: block;
   margin-bottom: 0.5rem;
   color: #19599a;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .input-group input,
@@ -356,16 +357,14 @@ onMounted(() => {
 }
 
 .back-btn {
-  display: inline-flex;
-  align-items: center;
-  background-color: #e9ecef;
-  color: #495057;
+  background-color: transparent;
+  color: #19599a;
+  border: 1px solid #19599a;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
-  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-size: 0.9rem;
 }
 
 .back-btn:hover {

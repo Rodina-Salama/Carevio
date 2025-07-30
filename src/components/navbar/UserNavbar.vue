@@ -65,14 +65,10 @@
           />
           <span class="user-name">{{ userStore.profileData.fullName }}</span>
         </div>
-
         <div v-if="isDropdownOpen" class="dropdown-menu">
-          <router-link
-            to="/userprofile"
-            class="dropdown-item"
-            @click="closeDropdown"
-            >Profile</router-link
-          >
+          <button @click="handleProfileClick" class="dropdown-item">
+            Profile
+          </button>
           <button class="dropdown-item" @click="logout">Log Out</button>
         </div>
       </div>
@@ -117,11 +113,14 @@ const logout = async () => {
   router.push("/");
 };
 
-// إغلاق الـ dropdown لو ضغطت بره
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isDropdownOpen.value = false;
   }
+};
+const handleProfileClick = () => {
+  router.push("/userprofile");
+  closeDropdown();
 };
 
 onMounted(() => {
@@ -144,7 +143,10 @@ onBeforeUnmount(() => {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   font-family: "Cairo", sans-serif;
 }
-
+.dropdown-router {
+  text-decoration: none;
+  color: inherit;
+}
 .navbar-brand {
   display: flex;
   align-items: center;
@@ -249,7 +251,32 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   object-fit: cover;
 }
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 10;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 150px;
+}
 
+.dropdown-item {
+  padding: 10px 16px;
+  text-align: left;
+  background: white;
+  border: none;
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  color: black;
+}
 .user-info {
   display: flex;
   align-items: center;
@@ -258,7 +285,8 @@ onBeforeUnmount(() => {
 
 .hamburger {
   display: none;
-  background: none;
+  background-color: #19599a;
+  color: white;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -268,7 +296,7 @@ onBeforeUnmount(() => {
   display: block;
   width: 1.5rem;
   height: 2px;
-  background-color: #007bff;
+  background-color: #ffffffff;
   margin: 0.3rem 0;
   transition: all 0.3s ease;
 }
@@ -352,6 +380,32 @@ onBeforeUnmount(() => {
   .hamburger.active .bar:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
   }
+  .dropdown-menu {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .dropdown-item {
+    all: unset;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #19599a;
+    border-radius: 6px;
+    text-align: center;
+    color: #19599a;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -391,33 +445,6 @@ onBeforeUnmount(() => {
 .user-menu {
   position: relative;
 }
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  margin-top: 8px;
-  z-index: 10;
-  border-radius: 6px;
-  overflow: hidden;
-  min-width: 150px;
-}
-
-.dropdown-item {
-  padding: 10px 16px;
-  text-align: left;
-  background: white;
-  border: none;
-  width: 100%;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s;
-  text-decoration: none;
-  color: black;
-}
-
 .dropdown-item:hover {
   background: #f0f0f0;
 }

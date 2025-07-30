@@ -24,6 +24,8 @@ import ForgotPassword from "@/views/guest/ForgotPassword.vue";
 import MyBookings from "@/views/user/MyBookings.vue";
 import bookingInformation from "@/views/BookingConfirmation/bookingInformation.vue";
 import NurseBookingDetail from "@/views/nurse/NurseBookingDetail.vue";
+import NotAuthorized from "@/views/NotAuthorized.vue";
+import ChangePasswordnurse from "@/views/nurse/ChangePasswordnurse.vue";
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
   { path: "/about", name: "AboutPage", component: AboutPage },
@@ -45,6 +47,11 @@ const routes = [
   { path: "/userprofile", name: "UserProfile", component: UserProfile },
   { path: "/editprofile", name: "EditProfile", component: EditProfile },
   {
+    path: "/changepassword",
+    name: "ChangePassword",
+    component: ChangePassword,
+  },
+  {
     path: "/forgotpassword",
     name: "ForgotPassword",
     component: ForgotPassword,
@@ -54,21 +61,14 @@ const routes = [
     name: "BookingConfirmation",
     component: BookingConfirmation,
   },
-
-  {
-    path: "/changepassword",
-    name: "ChangePassword",
-    component: ChangePassword,
-  },
-  { path: "/dashboard", name: "DashBoard", component: DashBoard },
-
   {
     path: "/bookinginformation",
     name: "BookingInformation",
     component: bookingInformation,
   },
+  { path: "/dashboard", name: "DashBoard", component: DashBoard },
   { path: "/nursebookings", name: "NurseBookings", component: NurseBookings },
-  { path: "/nurseedit", name: "NurseEdits", component: NurseEdit },
+  { path: "/nurseedit", name: "NurseEdit", component: NurseEdit },
   { path: "/nursereviews", name: "NurseReviews", component: NurseReviews },
   { path: "/nurseearnings", name: "NurseEarnings", component: NurseEarnings },
   { path: "/my-bookings", name: "MyBookings", component: MyBookings },
@@ -77,11 +77,77 @@ const routes = [
     name: "NurseBookingDetail",
     component: NurseBookingDetail,
   },
+  { path: "/unauthorized", name: "NotAuthorized", component: NotAuthorized },
+  {
+    path: "/changepasswordnurse",
+    name: "ChangePasswordnurse",
+    component: ChangePasswordnurse,
+  },
 ];
-/* eslint-disable */
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+import { useUserStore } from "@/stores/userStore";
+
+// Route Guard: Protect routes for nurses only
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+
+  const protectedNurseRoutes = [
+    "/dashboard",
+    "/nursebookings",
+    "/nurseedit",
+    "/nursereviews",
+    "/nurseearnings",
+    "/changepasswordnurse",
+  ];
+
+  const isProtectedStatic = protectedNurseRoutes.includes(to.path);
+  const isProtectedDynamic =
+    to.path.startsWith("/NurseBookings/") || to.name === "NurseBookingDetail";
+
+  const isLoggedIn = !!userStore.firebaseUser;
+  const isNurse = isLoggedIn && userStore.type === "nurse";
+
+  //  Block access to guest-only routes for logged-in users (nurse or patient)
+  const guestOnlyRoutes = [
+    "/signup",
+    "/signin",
+    "/join",
+    "/secondjoin",
+    "/thirdjoin",
+    "/confirm",
+  ];
+  const protectedUserRoutes = [
+    "/userprofile",
+    "/editprofile",
+    "/changepassword",
+    "/my-bookings",
+    "/bookingconfirmation",
+    "/bookinginformation",
+  ];
+  const isUser = isLoggedIn && userStore.type === "user";
+
+  const isGuestOnly = guestOnlyRoutes.includes(to.path);
+
+  if (isGuestOnly && isLoggedIn) {
+    return next("/unauthorized");
+  }
+
+  //  Block nurse-only routes if user is not a nurse
+  if (isProtectedStatic || isProtectedDynamic) {
+    if (!isNurse) {
+      return next("/unauthorized");
+    }
+  }
+  if (protectedUserRoutes.includes(to.path) && !isUser) {
+    return next("/unauthorized");
+  }
+  // Allow route
+  next();
 });
 
 export default router;

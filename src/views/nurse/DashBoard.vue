@@ -1,7 +1,8 @@
 <template>
   <div class="dashboard-container">
     <NurseSidebar />
-    <div class="main-content">
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+    <div v-else class="main-content">
       <h1 class="page-title">Dashboard</h1>
       <div v-if="isBanned" class="banned-alert">
         Your account has been <strong>banned</strong>. You cannot accept new
@@ -82,12 +83,15 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useUserStore } from "@/stores/userStore";
-
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase/config";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
-  components: { NurseSidebar },
+  components: { NurseSidebar, LoadingSpinner },
   setup() {
     const userStore = useUserStore();
     const nurseId = userStore.firebaseUser?.uid;
+    const loading = ref(true);
 
     const totalEarnings = ref(0);
     const monthlyEarnings = ref(0);
@@ -211,10 +215,15 @@ export default {
       }
     }
 
-    onMounted(async () => {
-      await fetchBookings();
-      await fetchLatestReview();
-      await fetchBannedStatus();
+    onMounted(() => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          await fetchBookings();
+          await fetchLatestReview();
+          await fetchBannedStatus();
+        }
+        loading.value = false;
+      });
     });
 
     return {
@@ -228,6 +237,7 @@ export default {
       timeAgo,
       formatTime,
       isBanned,
+      loading,
     };
   },
 };
@@ -242,7 +252,12 @@ export default {
   overflow-x: hidden;
   flex-wrap: wrap;
 }
-
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .main-content {
   flex: 1;
   padding: 24px 32px;
@@ -382,7 +397,6 @@ export default {
   gap: 14px;
   flex-wrap: wrap;
 }
-
 .action-btn {
   background-color: #19599a;
   color: white;

@@ -50,7 +50,10 @@
 
     <!-- Cards -->
     <div class="container">
-      <template v-if="filteredNurses.length">
+      <div v-if="loading" class="loading-wrapper">
+        <LoadingSpinner />
+      </div>
+      <template v-else-if="filteredNurses.length">
         <div v-for="nurse in filteredNurses" :key="nurse.id" class="card">
           <div class="badge">Verified</div>
           <div class="header">
@@ -72,7 +75,9 @@
             </div>
           </div>
           <div class="location">
-            <span class="icon">📍</span>
+            <span class="contact-icon"
+              ><i class="fas fa-location-dot"></i>&nbsp;</span
+            >
             {{
               nurse.personal.city + ", " + (nurse.personal.area || "Unknown")
             }}
@@ -112,6 +117,7 @@ import { db } from "@/firebase";
 import { cities, areas } from "@/data/locationOptions";
 import { specializationOptions } from "@/data/specializationOptions";
 import { availableDays } from "@/data/availableDays";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 export default {
   name: "BrowseNurse",
@@ -129,6 +135,7 @@ export default {
       specializationOptions,
       isFiltered: false,
       availableDays,
+      loading: true,
     };
   },
   computed: {
@@ -183,42 +190,51 @@ export default {
     },
   },
   async created() {
-    const nursesSnap = await getDocs(collection(db, "applications"));
-    const reviewsSnap = await getDocs(collection(db, "reviews"));
+    this.loading = true;
+    try {
+      const nursesSnap = await getDocs(collection(db, "applications"));
+      const reviewsSnap = await getDocs(collection(db, "reviews"));
 
-    const reviews = reviewsSnap.docs.map((doc) => doc.data());
+      const reviews = reviewsSnap.docs.map((doc) => doc.data());
 
-    const nurses = nursesSnap.docs.map((doc) => {
-      const nurseId = doc.id;
+      const nurses = nursesSnap.docs.map((doc) => {
+        const nurseId = doc.id;
 
-      // Get only reviews for this nurse
-      const nurseReviews = reviews.filter(
-        (review) => review.nurseId === nurseId
-      );
+        const nurseReviews = reviews.filter(
+          (review) => review.nurseId === nurseId
+        );
 
-      const ratingCount = nurseReviews.length;
-      const rating = ratingCount
-        ? nurseReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
-          ratingCount
-        : null;
+        const ratingCount = nurseReviews.length;
+        const rating = ratingCount
+          ? nurseReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+            ratingCount
+          : null;
 
-      return {
-        id: nurseId,
-        ...doc.data(),
-        rating,
-        ratingCount,
-      };
-    });
+        return {
+          id: nurseId,
+          ...doc.data(),
+          rating,
+          ratingCount,
+        };
+      });
 
-    this.nurses = nurses;
-    const query = this.$route.query;
-    if (query.city || query.area || query.service) {
-      this.selectedCity = query.city || "";
-      this.selectedArea = query.area || "";
-      this.selectedService = query.service || "";
-      this.isFiltered = true;
+      this.nurses = nurses;
+
+      const query = this.$route.query;
+      if (query.city || query.area || query.service) {
+        this.selectedCity = query.city || "";
+        this.selectedArea = query.area || "";
+        this.selectedService = query.service || "";
+        this.isFiltered = true;
+      }
+    } finally {
+      this.loading = false;
     }
   },
+  components: {
+    LoadingSpinner,
+  },
+
   methods: {
     handleSearch() {
       this.isFiltered = true;
@@ -237,6 +253,12 @@ export default {
 </script>
 
 <style scoped>
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .browse-nurses {
   padding: 1rem;
   max-width: 1800px;
@@ -305,8 +327,7 @@ export default {
   font-size: 14px;
 }
 
-.search-btn,
-.reset-btn {
+.search-btn {
   background-color: #19599a;
   color: white;
   cursor: pointer;
@@ -319,14 +340,14 @@ export default {
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
   border: 2px solid #19599a;
+  transition: background-color 0.3s;
 }
-
 .search-btn:hover {
-  background-color: #009acb;
+  background-color: #67aef5ff;
 }
 
 .reset-btn:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 
@@ -508,7 +529,7 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background-color: #1a75d5ff;
+    background-color: #67aef5ff;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }

@@ -353,8 +353,8 @@ const handleSubmit = () => {
   display: block;
   margin-bottom: 0.5rem;
   color: #19599a;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .input-group input,

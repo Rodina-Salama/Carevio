@@ -50,18 +50,18 @@
 
       <div class="navbar-actions">
         <router-link
-          to="/join"
+          to="/signin"
           class="btn outline"
           @click="closeMenu"
           active-class="active-btn"
-          >Join as Nurse</router-link
+          >Log in</router-link
         >
         <router-link
-          to="/signin"
+          to="/join"
           class="btn btn1"
           @click="closeMenu"
           active-class="active-btn"
-          >Sign In</router-link
+          >Join as a nurse</router-link
         >
         <router-link
           to="/signup"
@@ -181,7 +181,7 @@ const closeMenu = () => {
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #67aef5ff;
 }
 
 .btn.outline {
@@ -191,13 +191,8 @@ const closeMenu = () => {
 }
 
 .btn.outline:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: #ffffff;
-}
-
-.active-btn {
-  background-color: #0d3c6e;
-  color: white;
 }
 
 .profile-img {
@@ -215,7 +210,8 @@ const closeMenu = () => {
 
 .hamburger {
   display: none;
-  background: none;
+  background-color: #19599a;
+  color: white;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -225,7 +221,7 @@ const closeMenu = () => {
   display: block;
   width: 1.5rem;
   height: 2px;
-  background-color: #007bff;
+  background-color: #ffffffff;
   margin: 0.3rem 0;
   transition: all 0.3s ease;
 }

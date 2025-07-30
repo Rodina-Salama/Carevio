@@ -1,7 +1,9 @@
 <template>
   <div class="reviews-page">
     <NurseSidebar />
-    <div class="content">
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+
+    <div v-else class="content">
       <h2 class="title">Patient reviews</h2>
       <p class="subtitle">
         Average rating: {{ averageRating.toFixed(1) }} ({{
@@ -60,15 +62,18 @@ import {
   where,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default {
-  components: { NurseSidebar },
+  components: { NurseSidebar, LoadingSpinner },
   data() {
     return {
       reviews: [],
       averageRating: 0,
       currentNurseId: null,
       ratingFilter: 0,
+      loading: true,
     };
   },
   computed: {
@@ -81,11 +86,13 @@ export default {
   },
   async mounted() {
     const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      this.currentNurseId = user.uid;
-      await this.loadReviews();
-    }
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        this.currentNurseId = user.uid;
+        await this.loadReviews();
+      }
+      this.loading = false;
+    });
   },
   methods: {
     async loadReviews() {
@@ -139,7 +146,12 @@ export default {
   font-family: "Cairo", sans-serif;
   background: #ffffff;
 }
-
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .content {
   flex-grow: 1;
   padding: 2rem;
@@ -245,7 +257,7 @@ export default {
 }
 .filter-buttons button {
   padding: 6px 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #19599a;
   background: #fff;
   cursor: pointer;
   border-radius: 6px;

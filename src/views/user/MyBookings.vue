@@ -2,7 +2,7 @@
   <div class="my-bookings-page">
     <h1>My Bookings</h1>
 
-    <div v-if="loading">Loading bookings...</div>
+    <LoadingSpinner v-if="loading" />
 
     <div v-else>
       <!-- Active Bookings -->
@@ -111,6 +111,7 @@ import {
 import { db } from "@/firebase";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const router = useRouter();
 const bookings = ref([]);
@@ -290,7 +291,7 @@ button {
 }
 
 button:hover {
-  background-color: #1565c0;
+  background-color: #67aef5ff;
 }
 
 /* Modal Styles */
@@ -427,6 +428,11 @@ button:hover {
 }
 .add-review {
   margin-right: 1rem;
+}
+.add-review,
+.book-again-btn {
+  color: #ffffff;
+  background-color: #19599a;
 }
 .booking-info p {
   font-size: 1.15rem;
