@@ -4,7 +4,6 @@
     <div class="main-content">
       <h1 class="title">{{ $t("nurseBookings.title") }}</h1>
 
-<<<<<<< HEAD
       <!-- Filter Tabs -->
       <div class="filter-tabs">
         <button
@@ -64,31 +63,6 @@
             </tr>
           </tbody>
         </table>
-=======
-      <div v-if="loading" class="no-bookings">
-        {{ $t("nurseBookings.loading") }}
-      </div>
-      <div v-else-if="bookings.length === 0" class="no-bookings">
-        {{ $t("nurseBookings.empty") }}
-      </div>
-
-      <div v-else class="bookings-grid">
-        <div v-for="booking in bookings" :key="booking.id" class="booking-card">
-          <div class="card-left">
-            <img
-              class="client-img"
-              :src="booking.image || 'https://via.placeholder.com/48'"
-              alt="client"
-            />
-            <div class="info">
-              <div class="client-name">{{ booking.clientname }}</div>
-              <div class="address">{{ booking.address }}</div>
-              <div class="service">{{ booking.service }}</div>
-            </div>
-          </div>
-          <button class="view-btn">{{ $t("nurseBookings.viewBtn") }}</button>
-        </div>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
       </div>
     </div>
   </div>

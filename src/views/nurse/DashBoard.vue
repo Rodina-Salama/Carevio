@@ -2,7 +2,6 @@
   <div class="dashboard-container">
     <NurseSidebar />
     <div class="main-content">
-<<<<<<< HEAD
       <h1 class="page-title">Dashboard</h1>
       <div v-if="isBanned" class="banned-alert">
         Your account has been <strong>banned</strong>. You cannot accept new
@@ -31,56 +30,10 @@
                   formatTime(nextBooking.from)
                 : "No upcoming booking"
             }}
-=======
-      <h1 class="page-title">{{ $t("nurseDashboard.title") }}</h1>
-
-      <div class="summary-cards">
-        <div class="card">
-          <h3>{{ $t("nurseDashboard.thisMonthEarnings") }}</h3>
-          <p class="value">EGP 4,250</p>
-        </div>
-        <div class="card">
-          <h3>{{ $t("nurseDashboard.sessions") }}</h3>
-          <p class="value">12</p>
-        </div>
-        <div class="card highlight">
-          <h3>{{ $t("nurseDashboard.nextBooking") }}</h3>
-          <p class="value">July 23, 2025 - 8:00PM</p>
-        </div>
-      </div>
-
-      <div class="lower-section">
-        <div class="card full">
-          <h3>{{ $t("nurseDashboard.latestReview") }}</h3>
-          <div class="review-section">
-            <img src="" alt="User" class="review-avatar" />
-            <div class="review-details">
-              <div class="review-header">
-                <span class="review-name">{{
-                  $t("nurseDashboard.reviewUserName")
-                }}</span>
-                <span class="review-time">{{
-                  $t("nurseDashboard.reviewTimeAgo")
-                }}</span>
-              </div>
-              <div class="review-stars">⭐⭐⭐⭐⭐</div>
-              <p class="review-comment">
-                {{ $t("nurseDashboard.reviewComment") }}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card full blue-card">
-          <h3>{{ $t("nurseDashboard.availabilityReminderTitle") }}</h3>
-          <p class="availability-message">
-            {{ $t("nurseDashboard.availabilityReminderMessage") }}
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
           </p>
         </div>
       </div>
 
-<<<<<<< HEAD
       <div class="lower-section" v-if="latestReview">
         <div class="card full">
           <h3>Latest Review</h3>
@@ -109,20 +62,6 @@
               <p class="review-comment">{{ latestReview.comment }}</p>
             </div>
           </div>
-=======
-      <div class="quick-actions">
-        <h3>{{ $t("nurseDashboard.quickActions") }}</h3>
-        <div class="actions">
-          <router-link to="/nurseavailability" class="action-btn">{{
-            $t("nurseDashboard.setAvailability")
-          }}</router-link>
-          <router-link to="/nursebookings" class="action-btn">
-            {{ $t("nurseDashboard.viewBookings") }}</router-link
-          >
-          <router-link to="/nurseedit" class="action-btn">{{
-            $t("nurseDashboard.editProfile")
-          }}</router-link>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         </div>
       </div>
     </div>

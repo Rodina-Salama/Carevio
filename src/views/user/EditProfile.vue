@@ -4,12 +4,9 @@
       <h2>{{ $t("editProfile.title") }}</h2>
 
       <div class="form-group">
-<<<<<<< HEAD
         <label>Profile Image</label>
-=======
         <label>{{ $t("editProfile.profileImageLabel") }}</label>
 
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         <div v-if="previewUrl" class="preview-img">
           <img :src="previewUrl" alt="Preview" />
         </div>

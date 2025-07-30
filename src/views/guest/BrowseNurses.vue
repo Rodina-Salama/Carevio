@@ -32,7 +32,6 @@
         <option value="female">{{ $t("browse.female") }}</option>
         <option value="male">{{ $t("browse.male") }}</option>
       </select>
-<<<<<<< HEAD
       <select v-model="selectedDay">
         <option value="">Available day</option>
         <option v-for="day in availableDays" :key="day" :value="day">
@@ -47,7 +46,6 @@
       </select>
       <button class="search-btn" @click="handleSearch">Search</button>
       <button class="reset-btn" @click="resetFilters">Reset</button>
-=======
 
       <button class="search-btn" @click="handleSearch">
         {{ $t("browse.searchButton") }}
@@ -55,7 +53,6 @@
       <button class="reset-btn" @click="resetFilters">
         {{ $t("browse.resetButton") }}
       </button>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
     </div>
 
     <!-- Cards -->
@@ -100,14 +97,12 @@
             {{ nurse.professional.bio || "No bio available." }}
           </p>
           <div class="actions">
-<<<<<<< HEAD
             <router-link
               :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
               class="view-btn"
             >
               View
             </router-link>
-=======
             <button>
               <router-link
                 :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
@@ -116,7 +111,6 @@
                 {{ $t("browse.viewButton") }}
               </router-link>
             </button>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
           </div>
         </div>
       </template>
@@ -527,12 +521,12 @@ export default {
   white-space: nowrap;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  &:hover {
-    background-color: #1a75d5ff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
+.view-btn:hover {
+  background-color: #1a75d5ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .no-results {
   grid-column: 1 / -1;

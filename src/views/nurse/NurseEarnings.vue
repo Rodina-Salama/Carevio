@@ -27,18 +27,15 @@
           <table>
             <thead>
               <tr>
-<<<<<<< HEAD
                 <th>Booking Date</th>
                 <th>Client Name</th>
                 <th>Your Earnings</th>
                 <th>Status</th>
                 <th>Payment Method</th>
-=======
                 <th>{{ $t("earnings.date") }}</th>
                 <th>{{ $t("earnings.client") }}</th>
                 <th>{{ $t("earnings.amount") }}</th>
                 <th>{{ $t("earnings.status") }}</th>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
               </tr>
             </thead>
             <tbody>
@@ -46,14 +43,11 @@
                 <td>{{ formatDate(item.date) }}</td>
                 <td>{{ item.client }}</td>
                 <td>EGP {{ item.amount }}</td>
-<<<<<<< HEAD
                 <td><span class="paid-status">Paid</span></td>
                 <td>{{ item.paymentMethod }}</td>
-=======
                 <td>
                   <span class="paid-status">{{ $t("earnings.paid") }}</span>
                 </td>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
               </tr>
             </tbody>
           </table>

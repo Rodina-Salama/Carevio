@@ -21,12 +21,10 @@
             {{ $t("myBookings.to") }}
             {{ booking.to }}
           </p>
-<<<<<<< HEAD
           <p><strong>Nurse:</strong> {{ booking.nurseName }}</p>
           <p><strong>Service:</strong> {{ booking.service }}</p>
 
           <p><strong>Price:</strong> EGP {{ booking.price }}</p>
-=======
           <p>
             <strong> {{ $t("myBookings.service") }}:</strong>
             {{ booking.service }}
@@ -39,7 +37,6 @@
             <strong>{{ $t("myBookings.price") }}:</strong> EGP
             {{ booking.price }}
           </p>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         </div>
       </div>
 
@@ -57,7 +54,6 @@
             {{ $t("myBookings.to") }}
             {{ booking.to }}
           </p>
-<<<<<<< HEAD
           <p><strong>Nurse:</strong> {{ booking.nurseName }}</p>
           <p><strong>Service:</strong> {{ booking.service }}</p>
           <p><strong>Price:</strong> EGP {{ booking.price }}</p>
@@ -83,7 +79,6 @@
         <div v-if="booking.review" class="submitted-review">
           <p><strong>Your Review:</strong> {{ booking.review }}</p>
           <p><strong>Rating:</strong> {{ booking.rating }} ★</p>
-=======
           <p>
             <strong>{{ $t("myBookings.service") }}:</strong>
             {{ booking.service }}
@@ -112,7 +107,6 @@
             <strong>{{ $t("myBookings.rating") }}:</strong>
             {{ booking.rating }} ★
           </p>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         </div>
       </div>
     </div>
@@ -120,13 +114,10 @@
     <!-- Review Modal -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-box">
-<<<<<<< HEAD
         <button class="close-btn" @click="closeModal">×</button>
         <h3>Rate your experience</h3>
-=======
         <button class="custom-close-btn" @click="closeModal">×</button>
         <h3>{{ $t("myBookings.modalTitle") }}</h3>
->>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
 
         <div class="stars">
           <span
