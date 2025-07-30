@@ -1,0 +1,12 @@
+{
+  "title": "Earnings",
+  "total": "Total Earnings",
+  "week": "Earnings This Week",
+  "month": "Earnings This Month",
+  "recent": "Recent Transactions",
+  "date": "Booking Date",
+  "client": "Client Name",
+  "amount": "Amount Paid",
+  "status": "Status",
+  "paid": "Paid"
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="find-account-container">
-    <h2>Find Your Account</h2>
-    <p>Please enter your email address to search for your account.</p>
+    <h2>{{ $t("forgetPassword.title") }}</h2>
+    <p>{{ $t("forgetPassword.instruction") }}</p>
 
     <form @submit.prevent="searchAccount" class="account-search-form">
       <div class="input-group">
@@ -9,31 +9,33 @@
           type="email"
           id="search-input"
           v-model="searchText"
-          placeholder="Email address"
+          :placeholder="$t('emailPlaceholder')"
           required
         />
       </div>
 
       <div class="button-group">
         <router-link to="/signin" class="btn btn-secondary">
-          Cancel
+          {{ $t("forgetPassword.cancelButton") }}
         </router-link>
         <button
           type="submit"
           class="btn btn-primary"
           :disabled="!searchText.trim()"
         >
-          Send
+          {{ $t("forgetPassword.sendButton") }}
         </button>
       </div>
     </form>
 
     <div v-if="loading" class="loading-indicator">
-      Searching for your account...
+      {{ $t("forgetPassword.loading") }}
     </div>
-    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div v-if="errorMessage" class="error-message">
+      {{ $t("forgetPassword.errorMessage") }}
+    </div>
     <div v-if="successMessage" class="success-message">
-      {{ successMessage }}
+      {{ $t("forgetPassword.successMessage") }}
     </div>
   </div>
 </template>

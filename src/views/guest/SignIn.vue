@@ -4,44 +4,48 @@
       <div class="login-container">
         <div class="login-left">
           <form @submit.prevent="loginUser" class="auth-form">
-            <h2 class="form-title">Welcome Back</h2>
+            <h2 class="form-title">{{ $t("signIn.title") }}</h2>
 
             <div class="form-group">
-              <label for="email">Email</label>
+              <label for="email">{{ $t("signIn.email") }}</label>
               <input
                 type="email"
                 id="email"
                 v-model="user.email"
-                placeholder="Enter your email"
+                :placeholder="$t('signIn.emailPlaceholder')"
                 required
               />
             </div>
 
             <div class="form-group">
-              <label for="password">Password</label>
+              <label for="password">{{ $t("signIn.password") }}</label>
               <input
                 type="password"
                 id="password"
                 v-model="user.password"
-                placeholder="Enter your Password"
+                :placeholder="$t('signIn.passwordPlaceholder')"
                 required
               />
             </div>
             <p class="forgot-password">
-              <router-link to="/forgotpassword">Forgot password?</router-link>
+              <router-link to="/forgotpassword">{{
+                $t("signIn.forgotPassword")
+              }}</router-link>
             </p>
 
             <div class="error-message" v-if="messageError">
               {{ messageError }}
             </div>
 
-            <button type="submit" class="btn btn-primary">Log In</button>
+            <button type="submit" class="btn btn-primary">
+              {{ $t("signIn.login") }}
+            </button>
 
             <p class="signup-link">
-              Don't Have Account?
-              <router-link to="/signup" class="signup-link-text"
-                >Sign Up</router-link
-              >
+              {{ $t("signIn.dontHaveAccount") }}
+              <router-link to="/signup" class="signup-link-text">{{
+                $t("signIn.signUp")
+              }}</router-link>
             </p>
           </form>
         </div>

@@ -1,0 +1,16 @@
+{
+  "chooseCity": "Choose city",
+  "chooseArea": "Choose area",
+  "searchService": "Search service",
+  "chooseGender": "Choose gender",
+  "female": "Female",
+  "male": "Male",
+  "searchButton": "Search",
+  "resetButton": "Reset",
+  "verifiedBadge": "Verified",
+  "votesCount": "(%{count})",
+  "unknownArea": "Unknown",
+  "noBioAvailable": "No bio available.",
+  "viewButton": "View",
+  "noNursesFound": "No nurses found matching the selected filters."
+}

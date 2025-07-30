@@ -10,15 +10,15 @@
           class="auth-form"
           v-if="!showSuccessMessage"
         >
-          <h2 class="form-title">Create your account</h2>
+          <h2 class="form-title">{{ $t("signUp.title") }}</h2>
 
           <div class="form-group">
-            <label for="fullName">Full Name</label>
+            <label for="fullName">{{ $t("signUp.name") }}</label>
             <input
               type="text"
               id="fullName"
               v-model.trim="user.fullName"
-              placeholder="Enter Your Full Name"
+              :placeholder="$t('signUp.namePlaceholder')"
               required
               @blur="validateName"
               :class="{ 'input-error': errors.name }"
@@ -27,12 +27,12 @@
           </div>
 
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">{{ $t("signUp.email") }}</label>
             <input
               type="email"
               id="email"
               v-model.trim="user.email"
-              placeholder="Enter Your Email"
+              :placeholder="$t('signUp.emailPlaceholder')"
               required
               @blur="validateEmail"
               :class="{ 'input-error': errors.email }"
@@ -43,7 +43,7 @@
           </div>
 
           <div class="form-group">
-            <label for="phone">Phone</label>
+            <label for="phone">{{ $t("signUp.phone") }}</label>
             <input
               type="tel"
               id="phone"
@@ -59,12 +59,12 @@
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">{{ $t("signUp.password") }}</label>
             <input
               type="password"
               id="password"
               v-model.trim="user.password"
-              placeholder="Enter Your Password"
+              :placeholder="$t('signUp.passwordPlaceholder')"
               required
               @blur="validatePassword"
               :class="{ 'input-error': errors.password }"
@@ -75,12 +75,14 @@
           </div>
 
           <div class="form-group">
-            <label for="passwordConfirmation">Password Confirmation</label>
+            <label for="passwordConfirmation">
+              {{ $t("signUp.confirmPassword") }}
+            </label>
             <input
               type="password"
               id="passwordConfirmation"
               v-model.trim="user.passwordConfirmation"
-              placeholder="Confirm Your Password"
+              :placeholder="$t('signUp.confirmPasswordPlaceholder')"
               required
               @blur="validatePasswordConfirmation"
               :class="{ 'input-error': errors.passwordConfirmation }"
@@ -90,13 +92,15 @@
             }}</span>
           </div>
 
-          <button type="submit" class="btn btn-primary">Create Account</button>
+          <button type="submit" class="btn btn-primary">
+            {{ $t("signUp.submit") }}
+          </button>
 
           <p class="login-link">
-            Already have an account?
-            <router-link to="/signIn" class="login-link-text"
-              >Sign In</router-link
-            >
+            {{ $t("signUp.aleardyHaveAccount") }}
+            <router-link to="/signIn" class="login-link-text">{{
+              $t("signUp.signIn")
+            }}</router-link>
           </p>
         </form>
 

@@ -13,13 +13,17 @@
     <div class="navbar-menu" :class="{ active: isMenuOpen }">
       <ul class="nav-links">
         <li>
-          <router-link to="/" @click="closeMenu" active-class="active-link"
-            >Home</router-link
+          <router-link to="/" @click="closeMenu" active-class="active-link">
+            {{ $t("navbar.home") }}</router-link
           >
         </li>
         <li>
-          <router-link to="/about" @click="closeMenu" active-class="active-link"
-            >About</router-link
+          <router-link
+            to="/about"
+            @click="closeMenu"
+            active-class="active-link"
+          >
+            {{ $t("navbar.about") }}</router-link
           >
         </li>
         <li>
@@ -27,7 +31,8 @@
             to="/browse"
             @click="closeMenu"
             active-class="active-link"
-            >Browse Nurses</router-link
+          >
+            {{ $t("navbar.browse") }}</router-link
           >
         </li>
         <li>
@@ -35,7 +40,8 @@
             to="/services"
             @click="closeMenu"
             active-class="active-link"
-            >Services</router-link
+          >
+            {{ $t("navbar.services") }}</router-link
           >
         </li>
         <li>
@@ -43,7 +49,8 @@
             to="/my-bookings"
             @click="closeMenu"
             active-class="active-link"
-            >My Bookings</router-link
+          >
+            {{ $t("navbar.bookings") }}</router-link
           >
         </li>
         <li>
@@ -51,7 +58,8 @@
             to="/contact"
             @click="closeMenu"
             active-class="active-link"
-            >Contact Us</router-link
+          >
+            {{ $t("navbar.contact") }}</router-link
           >
         </li>
       </ul>
@@ -71,11 +79,17 @@
             to="/userprofile"
             class="dropdown-item"
             @click="closeDropdown"
-            >Profile</router-link
           >
-          <button class="dropdown-item" @click="logout">Log Out</button>
+            {{ $t("navbar.profile") }}</router-link
+          >
+          <button class="dropdown-item" @click="logout">
+            {{ $t("navbar.logout") }}
+          </button>
         </div>
       </div>
+      <button @click="toggleLanguage" class="btn">
+        {{ currentLang === "en" ? "العربية" : "English" }}
+      </button>
     </div>
   </nav>
 </template>
@@ -87,10 +101,22 @@ import avatarPlaceholder from "@/assets/avatar.jpg";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
+const { locale } = useI18n();
+const currentLang = ref(locale.value);
 const isMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
+
+function toggleLanguage() {
+  currentLang.value = currentLang.value === "en" ? "ar" : "en";
+  locale.value = currentLang.value;
+  const html = document.documentElement;
+  html.setAttribute("dir", currentLang.value === "ar" ? "rtl" : "ltr");
+  html.setAttribute("lang", currentLang.value);
+  localStorage.setItem("language", currentLang.value);
+}
 
 const userStore = useUserStore();
 const router = useRouter();

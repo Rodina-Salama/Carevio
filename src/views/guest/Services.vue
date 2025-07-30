@@ -2,7 +2,7 @@
   <section class="services-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Our Services</h2>
+        <h2 class="section-title">{{ $t("services.title") }}</h2>
       </div>
 
       <div class="services-grid">
@@ -10,66 +10,48 @@
           <div class="service-icon">
             <img src="@/assets/service1.png" alt="Elderly Care" />
           </div>
-          <h3>Elderly Care</h3>
-          <p>
-            Compassionate care for seniors, ensuring comfort and well-being at
-            home.
-          </p>
+          <h3>{{ $t("services.elderlyCareTitle") }}</h3>
+          <p>{{ $t("services.elderlyCareDesc") }}</p>
         </div>
 
         <div class="service-card">
           <div class="service-icon">
             <img src="@/assets/service2.png" alt="Pediatric Support" />
           </div>
-          <h3>Pediatric Support</h3>
-          <p>
-            Specialized care for children, providing comfort and support in a
-            familiar setting.
-          </p>
+          <h3>{{ $t("services.pediatricTitle") }}</h3>
+          <p>{{ $t("services.pediatricDesc") }}</p>
         </div>
 
         <div class="service-card">
           <div class="service-icon">
             <img src="@/assets/service3.png" alt="Injections & IV Therapy" />
           </div>
-          <h3>Injections & IV Therapy</h3>
-          <p>
-            Professional administration of injections and IV fluids, ensuring
-            safety and efficacy.
-          </p>
+          <h3>{{ $t("services.injectionsTitle") }}</h3>
+          <p>{{ $t("services.injectionsDesc") }}</p>
         </div>
 
         <div class="service-card">
           <div class="service-icon">
             <img src="@/assets/service4.png" alt="Bedridden Patient" />
           </div>
-          <h3>Bedridden Patient</h3>
-          <p>
-            Dedicated assistance for bedridden patients, focusing on comfort and
-            comprehensive care.
-          </p>
+          <h3>{{ $t("services.bedriddenTitle") }}</h3>
+          <p>{{ $t("services.bedriddenDesc") }}</p>
         </div>
 
         <div class="service-card">
           <div class="service-icon">
             <img src="@/assets/service5.png" alt="Disability Care" />
           </div>
-          <h3>Disability Care</h3>
-          <p>
-            Support for patients with disability, Helping with Hygiene, feeding,
-            mobility, medication
-          </p>
+          <h3>{{ $t("services.disabilityTitle") }}</h3>
+          <p>{{ $t("services.disabilityDesc") }}</p>
         </div>
 
         <div class="service-card">
           <div class="service-icon">
             <img src="@/assets/service6.png" alt="Vital Signs Monitoring" />
           </div>
-          <h3>Vital Signs Monitoring</h3>
-          <p>
-            Track heart rate, temperature, blood pressure, and oxygen using
-            devices
-          </p>
+          <h3>{{ $t("services.vitalSignsTitle") }}</h3>
+          <p>{{ $t("services.vitalSignsDesc") }}</p>
         </div>
       </div>
     </div>

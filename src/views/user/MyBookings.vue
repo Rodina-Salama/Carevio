@@ -1,13 +1,15 @@
 <template>
   <div class="my-bookings-page">
-    <h1>My Bookings</h1>
+    <h1>{{ $t("myBookings.title") }}</h1>
 
-    <div v-if="loading">Loading bookings...</div>
+    <div v-if="loading">{{ $t("myBookings.loading") }}</div>
 
     <div v-else>
       <!-- Active Bookings -->
-      <h2>Active Bookings</h2>
-      <div v-if="activeBookings.length === 0">No active bookings</div>
+      <h2>{{ $t("myBookings.activeTitle") }}</h2>
+      <div v-if="activeBookings.length === 0">
+        {{ $t("myBookings.noActive") }}
+      </div>
       <div
         v-for="booking in activeBookings"
         :key="booking.id"
@@ -15,19 +17,35 @@
       >
         <div class="booking-info">
           <p class="date">
-            <strong>{{ booking.date }}</strong> — {{ booking.from }} to
+            <strong>{{ booking.date }}</strong> — {{ booking.from }}
+            {{ $t("myBookings.to") }}
             {{ booking.to }}
           </p>
+<<<<<<< HEAD
           <p><strong>Nurse:</strong> {{ booking.nurseName }}</p>
           <p><strong>Service:</strong> {{ booking.service }}</p>
 
           <p><strong>Price:</strong> EGP {{ booking.price }}</p>
+=======
+          <p>
+            <strong> {{ $t("myBookings.service") }}:</strong>
+            {{ booking.service }}
+          </p>
+          <p>
+            <strong>{{ $t("myBookings.nurse") }}:</strong>
+            {{ booking.nurseName }}
+          </p>
+          <p>
+            <strong>{{ $t("myBookings.price") }}:</strong> EGP
+            {{ booking.price }}
+          </p>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         </div>
       </div>
 
       <!-- Past Bookings -->
-      <h2>Past Bookings</h2>
-      <div v-if="pastBookings.length === 0">No past bookings</div>
+      <h2>{{ $t("myBookings.pastTitle") }}</h2>
+      <div v-if="pastBookings.length === 0">{{ $t("myBookings.noPast") }}</div>
       <div
         v-for="booking in pastBookings"
         :key="booking.id"
@@ -35,9 +53,11 @@
       >
         <div class="booking-info">
           <p class="date">
-            <strong>{{ booking.date }}</strong> — {{ booking.from }} to
+            <strong>{{ booking.date }}</strong> — {{ booking.from }}
+            {{ $t("myBookings.to") }}
             {{ booking.to }}
           </p>
+<<<<<<< HEAD
           <p><strong>Nurse:</strong> {{ booking.nurseName }}</p>
           <p><strong>Service:</strong> {{ booking.service }}</p>
           <p><strong>Price:</strong> EGP {{ booking.price }}</p>
@@ -63,6 +83,36 @@
         <div v-if="booking.review" class="submitted-review">
           <p><strong>Your Review:</strong> {{ booking.review }}</p>
           <p><strong>Rating:</strong> {{ booking.rating }} ★</p>
+=======
+          <p>
+            <strong>{{ $t("myBookings.service") }}:</strong>
+            {{ booking.service }}
+          </p>
+          <p>
+            <strong>{{ $t("myBookings.nurse") }}:</strong>
+            {{ booking.nurseName }}
+          </p>
+          <p>
+            <strong>{{ $t("myBookings.price") }}:</strong> EGP
+            {{ booking.price }}
+          </p>
+        </div>
+
+        <div v-if="!booking.review" class="review-box">
+          <button @click="openModal(booking)">
+            {{ $t("myBookings.addReview") }}
+          </button>
+        </div>
+        <div v-else class="submitted-review">
+          <p>
+            <strong>{{ $t("myBookings.yourReview") }}:</strong>
+            {{ booking.review }}
+          </p>
+          <p>
+            <strong>{{ $t("myBookings.rating") }}:</strong>
+            {{ booking.rating }} ★
+          </p>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         </div>
       </div>
     </div>
@@ -70,8 +120,13 @@
     <!-- Review Modal -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-box">
+<<<<<<< HEAD
         <button class="close-btn" @click="closeModal">×</button>
         <h3>Rate your experience</h3>
+=======
+        <button class="custom-close-btn" @click="closeModal">×</button>
+        <h3>{{ $t("myBookings.modalTitle") }}</h3>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
 
         <div class="stars">
           <span
@@ -86,10 +141,10 @@
 
         <textarea
           v-model="comment"
-          placeholder="Write your review..."
+          :placeholder="$t('myBookings.reviewPlaceholder')"
         ></textarea>
 
-        <button @click="submitReview">Submit</button>
+        <button @click="submitReview">{{ $t("myBookings.submit") }}</button>
       </div>
     </div>
   </div>

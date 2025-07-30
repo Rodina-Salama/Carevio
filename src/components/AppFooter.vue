@@ -11,24 +11,35 @@
           <h2 class="footer-title">Carevio</h2>
         </div>
         <p class="footer-description">
-          A digital platform that connects families in need of home nursing
-          services with certified and trusted nurses.
+          {{ $t("footer.description") }}
         </p>
       </div>
 
       <div class="footer-column">
-        <h3 class="footer-heading">Pages</h3>
+        <h3 class="footer-heading">{{ $t("footer.pages") }}</h3>
         <ul class="footer-links">
-          <li><router-link to="/">Home</router-link></li>
-          <li><router-link to="/about">About Us</router-link></li>
-          <li><router-link to="/browse">Browse Our Nurses</router-link></li>
-          <li><router-link to="/services">Services</router-link></li>
-          <li><router-link to="/contact">Contact Us</router-link></li>
+          <li>
+            <router-link to="/">{{ $t("footer.home") }}</router-link>
+          </li>
+          <li>
+            <router-link to="/about">{{ $t("footer.about") }}</router-link>
+          </li>
+          <li>
+            <router-link to="/browse">{{ $t("footer.browse") }}</router-link>
+          </li>
+          <li>
+            <router-link to="/services">{{
+              $t("footer.services")
+            }}</router-link>
+          </li>
+          <li>
+            <router-link to="/contact">{{ $t("footer.contact") }}</router-link>
+          </li>
         </ul>
       </div>
 
       <div class="footer-column contact-column">
-        <h3 class="footer-heading">Contact Info</h3>
+        <h3 class="footer-heading">{{ $t("footer.contactInfo") }}</h3>
         <ul class="contact-info">
           <li>
             <span class="contact-icon">📞</span>
@@ -40,13 +51,13 @@
           </li>
           <li>
             <span class="contact-icon">📍</span>
-            <span>123 Healthcare Ave, Medical City, MC 12345</span>
+            <span>{{ $t("footer.address") }}</span>
           </li>
         </ul>
       </div>
     </div>
 
-    <div class="copyright">&copy; 2025 Carevio. All rights reserved.</div>
+    <div class="copyright">{{ $t("footer.copyright") }}</div>
   </footer>
 </template>
 

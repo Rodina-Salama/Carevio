@@ -1,0 +1,20 @@
+{
+  "title": "Edit Profile",
+  "profilePicture": "Profile picture",
+  "upload": "Upload photo",
+  "delete": "Delete",
+  "bio": "Bio",
+  "enterHere": "Enter here",
+  "pricing": "Pricing",
+  "unit": "EGP /hour",
+  "government": "Government",
+  "cairo": "Cairo",
+  "giza": "Giza",
+  "alexandria": "Alexandria",
+  "area": "Area",
+  "nasrcity": "Nasr City",
+  "dokki": "Dokki",
+  "maadi": "Maddi",
+  "services": "Services",
+  "save": "Save"
+}

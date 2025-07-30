@@ -1,0 +1,15 @@
+{
+  "title": "Create an Account",
+  "name": "Full Name",
+  "email": "Email",
+  "phone": "Phone",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "submit": "Sign Up",
+  "aleardyHaveAccount": "Already have an account?",
+  "signIn": "Sign In",
+  "namePlaceholder": "Enter your name",
+  "emailPlaceholder": "Enter your email",
+  "passwordPlaceholder": "Enter your password",
+  "confirmPasswordPlaceholder": "Confirm your password"
+}

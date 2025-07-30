@@ -1,0 +1,16 @@
+{
+  "title": "لوحة التحكم",
+  "thisMonthEarnings": "أرباح هذا الشهر",
+  "sessions": "الجلسات",
+  "nextBooking": "الحجز القادم",
+  "latestReview": "أحدث تقييم",
+  "availabilityReminderTitle": "تذكير بالتوافر",
+  "availabilityReminderMessage": "لا تنسَ تحديث جدول التوافر الخاص بك!",
+  "quickActions": "إجراءات سريعة",
+  "setAvailability": "تعيين التوافر",
+  "viewBookings": "عرض الحجوزات",
+  "editProfile": "تعديل الملف الشخصي",
+  "reviewTimeAgo": "منذ يومين",
+  "reviewUserName": "أحمد",
+  "reviewComment": "كانت الممرضة محترفة للغاية ومهتمة!"
+}

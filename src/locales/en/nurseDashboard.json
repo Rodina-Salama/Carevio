@@ -1,0 +1,16 @@
+{
+  "title": "Dashboard",
+  "thisMonthEarnings": "This Month’s Earnings",
+  "sessions": "Sessions",
+  "nextBooking": "Next Booking",
+  "latestReview": "Latest Review",
+  "availabilityReminderTitle": "Availability Reminder",
+  "availabilityReminderMessage": "Don’t forget to update your availability!",
+  "quickActions": "Quick Actions",
+  "setAvailability": "Set Availability",
+  "viewBookings": "View Bookings",
+  "editProfile": "Edit Profile",
+  "reviewTimeAgo": "2 days ago",
+  "reviewUserName": "Ahmed",
+  "reviewComment": "The nurse was extremely professional and caring!"
+}

@@ -1,0 +1,16 @@
+{
+  "chooseCity": "اختر المدينة",
+  "chooseArea": "اختر المنطقة",
+  "searchService": "ابحث عن خدمة",
+  "chooseGender": "اختر الجنس",
+  "female": "أنثى",
+  "male": "ذكر",
+  "searchButton": "بحث",
+  "resetButton": "إعادة تعيين",
+  "verifiedBadge": "تم التحقق",
+  "votesCount": "(%{count})",
+  "unknownArea": "غير معروف",
+  "noBioAvailable": "لا توجد سيرة ذاتية متاحة.",
+  "viewButton": "عرض",
+  "noNursesFound": "لم يتم العثور على ممرضين مطابقين للمرشحات المحددة."
+}

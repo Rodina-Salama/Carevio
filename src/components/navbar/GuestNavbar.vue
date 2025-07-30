@@ -13,13 +13,16 @@
     <div class="navbar-menu" :class="{ active: isMenuOpen }">
       <ul class="nav-links">
         <li>
-          <router-link to="/" @click="closeMenu" active-class="active-link"
-            >Home</router-link
-          >
+          <router-link to="/" @click="closeMenu" active-class="active-link">{{
+            $t("navbar.home")
+          }}</router-link>
         </li>
         <li>
-          <router-link to="/about" @click="closeMenu" active-class="active-link"
-            >About Us</router-link
+          <router-link
+            to="/about"
+            @click="closeMenu"
+            active-class="active-link"
+            >{{ $t("navbar.about") }}</router-link
           >
         </li>
         <li>
@@ -27,7 +30,7 @@
             to="/browse"
             @click="closeMenu"
             active-class="active-link"
-            >Browse Nurses</router-link
+            >{{ $t("navbar.browse") }}</router-link
           >
         </li>
         <li>
@@ -35,7 +38,8 @@
             to="/services"
             @click="closeMenu"
             active-class="active-link"
-            >Services</router-link
+          >
+            {{ $t("navbar.services") }}</router-link
           >
         </li>
         <li>
@@ -43,7 +47,8 @@
             to="/contact"
             @click="closeMenu"
             active-class="active-link"
-            >Contact Us</router-link
+          >
+            {{ $t("navbar.contact") }}</router-link
           >
         </li>
       </ul>
@@ -54,22 +59,25 @@
           class="btn outline"
           @click="closeMenu"
           active-class="active-btn"
-          >Join as Nurse</router-link
+          >{{ $t("navbar.joinAsNurse") }}</router-link
         >
         <router-link
           to="/signin"
           class="btn btn1"
           @click="closeMenu"
           active-class="active-btn"
-          >Sign In</router-link
+          >{{ $t("navbar.signIn") }}</router-link
         >
         <router-link
           to="/signup"
           class="btn btn1"
           @click="closeMenu"
           active-class="active-btn"
-          >Sign Up</router-link
+          >{{ $t("navbar.signUp") }}</router-link
         >
+        <button @click="toggleLanguage" class="btn">
+          {{ currentLang === "en" ? "العربية" : "English" }}
+        </button>
       </div>
     </div>
   </nav>
@@ -77,6 +85,19 @@
 
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { locale } = useI18n();
+const currentLang = ref(locale.value);
+
+function toggleLanguage() {
+  currentLang.value = currentLang.value === "en" ? "ar" : "en";
+  locale.value = currentLang.value;
+  const html = document.documentElement;
+  html.setAttribute("dir", currentLang.value === "ar" ? "rtl" : "ltr");
+  html.setAttribute("lang", currentLang.value);
+  localStorage.setItem("language", currentLang.value);
+}
 
 // Menu state
 const isMenuOpen = ref(false);

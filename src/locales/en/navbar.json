@@ -1,0 +1,14 @@
+{
+  "home": "Home",
+  "dashboard":"Dashboard",
+  "about": "About",
+  "browse": "Browse Nurses",
+  "services": "Services",
+  "bookings": "My Bookings",
+  "contact": "Contact Us",
+  "profile": "Profile",
+  "logout": "Log Out",
+  "joinAsNurse": "Join as Nurse",
+  "signIn": "Sign In",
+  "signUp": "Sign Up"
+}

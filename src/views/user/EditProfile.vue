@@ -1,10 +1,15 @@
 <template>
   <div class="edit-profile-container">
     <div class="form-card">
-      <h2>Edit Profile</h2>
+      <h2>{{ $t("editProfile.title") }}</h2>
 
       <div class="form-group">
+<<<<<<< HEAD
         <label>Profile Image</label>
+=======
+        <label>{{ $t("editProfile.profileImageLabel") }}</label>
+
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
         <div v-if="previewUrl" class="preview-img">
           <img :src="previewUrl" alt="Preview" />
         </div>
@@ -18,18 +23,22 @@
       </div>
 
       <div class="form-group">
-        <label>Full Name</label>
+        <label>{{ $t("editProfile.fullNameLabel") }}</label>
         <input type="text" v-model="fullName" />
       </div>
 
       <div class="form-group">
-        <label>Phone Number</label>
+        <label>{{ $t("editProfile.phoneLabel") }}</label>
         <input type="text" v-model="phone" />
       </div>
 
       <div class="button-group">
-        <button class="btn save" @click="saveChanges">Save Changes</button>
-        <button class="btn back" @click="goBack">Back</button>
+        <button class="btn save" @click="saveChanges">
+          {{ $t("editProfile.saveButton") }}
+        </button>
+        <button class="btn back" @click="goBack">
+          {{ $t("editProfile.backButton") }}
+        </button>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container">
     <div class="profile-card">
-      <h1>Profile</h1>
+      <h1>{{ $t("userProfile.title") }}</h1>
 
       <div class="profile-header">
         <div class="profile-picture">
@@ -11,23 +11,25 @@
       </div>
 
       <div class="account-section">
-        <h3>Account</h3>
+        {{ $t("userProfile.account") }}
         <div class="info-item">
-          <label>Mobile Phone</label>
+          <label>{{ $t("userProfile.mobile") }}</label>
           <div class="info-value">{{ user.phone }}</div>
         </div>
         <div class="info-item">
-          <label>Email</label>
+          <label>{{ $t("userProfile.email") }}</label>
           <div class="info-value">{{ user.email }}</div>
         </div>
       </div>
 
       <div class="actions-section">
-        <h3>Actions</h3>
+        <h3>{{ $t("userProfile.actions") }}</h3>
         <div class="actions-container">
-          <button @click="editProfile" class="action-btn">Edit Profile</button>
+          <button @click="editProfile" class="action-btn">
+            {{ $t("userProfile.edit") }}
+          </button>
           <button @click="changePassword" class="action-btn">
-            Change Password
+            {{ $t("userProfile.changePassword") }}
           </button>
         </div>
       </div>

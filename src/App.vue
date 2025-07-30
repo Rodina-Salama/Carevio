@@ -23,6 +23,8 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 export default {
   name: "App",
@@ -56,6 +58,13 @@ export default {
           await userStore.fetchUserData(user);
         }
       });
+    });
+    const { locale } = useI18n();
+
+    watch(locale, (newLang) => {
+      const html = document.documentElement;
+      html.setAttribute("dir", newLang === "ar" ? "rtl" : "ltr");
+      html.setAttribute("lang", newLang);
     });
 
     const toggleTheme = () => {

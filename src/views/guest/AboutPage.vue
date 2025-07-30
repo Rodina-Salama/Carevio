@@ -3,19 +3,12 @@
     <div class="container">
       <div class="content">
         <div class="text">
-          <h2>Who Are We?</h2>
+          <h2>{{ $t("about.title") }}</h2>
           <p>
-            We are a team of compassionate, highly trained caregivers and
-            licensed nurses dedicated to providing personalized, professional
-            care in the comfort of your home. Our mission is simple: to support
-            families and improve lives by delivering trustworthy, heartfelt home
-            nursing services tailored to each individual’s needs.
+            {{ $t("about.paragraph1") }}
           </p>
           <p>
-            We believe home is where healing happens best. That’s why our nurses
-            go beyond routine tasks. We build real relationships, offer
-            emotional support, and ensure that each client feels safe, seen, and
-            valued.
+            {{ $t("about.paragraph2") }}
           </p>
         </div>
         <div class="image">
@@ -26,29 +19,27 @@
   </section>
   <section class="what-we-offer">
     <div class="offer-content">
-      <h2>What We Offer</h2>
+      <h2>{{ $t("about.whatWeOfferTitle") }}</h2>
       <p>
-        We offer specialized care and personalized activities to provide
-        comfort,safety, and well-being to our seniors, promoting quality of life
-        on a daily basis.
+        {{ $t("about.whatWeOfferParagraph") }}
       </p>
     </div>
   </section>
   <section class="how-it-works">
     <div class="container">
-      <h2>How It Works</h2>
+      <h2>{{ $t("about.howItWorksTitle") }}</h2>
       <div class="steps">
         <div class="step-card">
           <img src="@/assets/Step1.png" alt="Step 1" />
-          <h3>Step 1 - Search on our site</h3>
+          <h3>{{ $t("about.step1Title") }}</h3>
         </div>
         <div class="step-card">
           <img src="@/assets/Step2.png" alt="Step 2" />
-          <h3>Step 2 - Connect With a Nurse</h3>
+          <h3>{{ $t("about.step2Title") }}</h3>
         </div>
         <div class="step-card">
           <img src="@/assets/Step3.png" alt="Step 3" />
-          <h3>Step 3 - Get Care at Home</h3>
+          <h3>{{ $t("about.step3Title") }}</h3>
         </div>
       </div>
     </div>

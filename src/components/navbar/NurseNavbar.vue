@@ -14,7 +14,7 @@
       <ul class="nav-links">
         <li>
           <router-link to="/" @click="closeMenu" active-class="active-link">
-            Home
+            {{ $t("navbar.home") }}
           </router-link>
         </li>
         <li>
@@ -23,7 +23,7 @@
             @click="closeMenu"
             active-class="active-link"
           >
-            Dashboard
+            {{ $t("navbar.dashboard") }}
           </router-link>
         </li>
         <li>
@@ -32,7 +32,7 @@
             @click="closeMenu"
             active-class="active-link"
           >
-            Browse Nurses
+            {{ $t("navbar.browse") }}
           </router-link>
         </li>
         <li>
@@ -41,7 +41,7 @@
             @click="closeMenu"
             active-class="active-link"
           >
-            Contact Us
+            {{ $t("navbar.contact") }}
           </router-link>
         </li>
       </ul>
@@ -58,6 +58,9 @@
           <button @click="logout" class="dropdown-item">Logout</button>
         </div>
       </div>
+      <button @click="toggleLanguage" class="btn">
+        {{ currentLang === "en" ? "العربية" : "English" }}
+      </button>
     </div>
   </nav>
 </template>
@@ -69,10 +72,23 @@ import avatarPlaceholder from "@/assets/avatar.jpg";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
+const { locale } = useI18n();
+const currentLang = ref(locale.value);
 const isMenuOpen = ref(false);
 const userStore = useUserStore();
 const router = useRouter();
+
+function toggleLanguage() {
+  currentLang.value = currentLang.value === "en" ? "ar" : "en";
+  locale.value = currentLang.value;
+  const html = document.documentElement;
+  html.setAttribute("dir", currentLang.value === "ar" ? "rtl" : "ltr");
+  html.setAttribute("lang", currentLang.value);
+  localStorage.setItem("language", currentLang.value);
+}
+
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
 };

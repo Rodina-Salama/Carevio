@@ -2,8 +2,8 @@
   <section class="contact-section">
     <div class="contact-container">
       <div class="contact-header">
-        <h2>Contact Us</h2>
-        <p>We're here to help. Fill out the form or reach out directly.</p>
+        <h2>{{ $t("contact.title") }}</h2>
+        <p>{{ $t("contact.subtitle") }}</p>
       </div>
 
       <form @submit.prevent="handleSubmit" class="contact-form">
@@ -11,7 +11,7 @@
           <input
             type="text"
             v-model="form.name"
-            placeholder="Your Name"
+            :placeholder="$t('contact.placeholders.name')"
             required
           />
         </div>
@@ -19,27 +19,31 @@
           <input
             type="email"
             v-model="form.email"
-            placeholder="Your Email"
+            :placeholder="$t('contact.placeholders.email')"
             required
           />
         </div>
         <div class="form-group">
           <textarea
             v-model="form.message"
-            placeholder="Your Message"
+            :placeholder="$t('contact.placeholders.message')"
             rows="4"
             required
           ></textarea>
         </div>
-        <button type="submit" class="submit-btn">Send Message</button>
+        <button type="submit" class="submit-btn">
+          {{ $t("contact.submitButton") }}
+        </button>
       </form>
 
       <div class="contact-infos">
         <div class="info-item">
-          <span>Email:</span><span>support@carevio.com</span>
+          <span>{{ $t("contact.info.emailLabel") }}</span
+          ><span>support@carevio.com</span>
         </div>
         <div class="info-item">
-          <span>Phone:</span><span>(555) 123-4567</span>
+          <span>{{ $t("contact.info.phoneLabel") }}</span
+          ><span>(555) 123-4567</span>
         </div>
       </div>
     </div>
@@ -55,10 +59,10 @@
               />
             </svg>
           </div>
-          <h3>Thank you!</h3>
-          <p>Your message has been submitted. You will hear from us soon.</p>
+          <h3>{{ $t("contact.popup.title") }}</h3>
+          <p>{{ $t("contact.popup.message") }}</p>
           <button @click="showSuccess = false" class="popup-btn">
-            Got It!
+            {{ $t("contact.popup.button") }}!
           </button>
           <div class="popup-progress"></div>
         </div>

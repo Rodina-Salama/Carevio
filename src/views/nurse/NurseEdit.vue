@@ -2,11 +2,11 @@
   <div class="edit-profile">
     <NurseSidebar />
     <div class="form-container">
-      <h2 class="title">Edit Profile</h2>
+      <h2 class="title">{{ $t("nurseEdit.title") }}</h2>
 
       <!-- Profile Picture -->
       <div class="form-group">
-        <label class="form-label">Profile picture</label>
+        <label class="form-label">{{ $t("nurseEdit.profilePicture") }}</label>
         <div class="profile-picture">
           <img
             :src="nurse.documents.photo.url || defaultAvatar"
@@ -14,15 +14,17 @@
           />
           <div class="btns">
             <input type="file" @change="uploadPhoto" />
+            <button class="btn-upload">Upload photo</button>
+            <button class="btn-delete" @click="deletePhoto">Delete</button>
           </div>
         </div>
       </div>
 
       <!-- Bio -->
       <div class="form-group bio-group">
-        <label class="form-label">Bio</label>
+        <label class="form-label">{{ $t("nurseEdit.bio") }}</label>
         <textarea
-          v-model="nurse.professional.bio"
+          v-model="nurse.bio"
           placeholder="Enter here"
           class="input bio"
         ></textarea>
@@ -30,9 +32,7 @@
 
       <!-- Pricing -->
       <div class="form-group">
-        <label class="form-label"
-          >Pricing (Carevio takes a 15% commission)</label
-        >
+        <label class="form-label">Pricing</label>
         <div class="pricing-field">
           <input
             v-model.number="nurse.professional.price"
@@ -40,7 +40,7 @@
             class="input small"
             placeholder="100"
           />
-          <span class="unit">EGP /hour</span>
+          <span class="unit">{{ $t("nurseEdit.unit") }}</span>
         </div>
       </div>
 
@@ -48,28 +48,27 @@
       <div class="form-group row">
         <div class="col">
           <label class="form-label">Government</label>
-          <select v-model="nurse.personal.city" class="input">
-            <option disabled value="">Select City</option>
-            <option v-for="city in cities" :key="city">{{ city }}</option>
+          <select v-model="nurse.government" class="input">
+            <option disabled value="">Enter here</option>
+            <option>Cairo</option>
+            <option>Giza</option>
+            <option>Alexandria</option>
           </select>
         </div>
         <div class="col">
           <label class="form-label">Area</label>
-          <select v-model="nurse.personal.area" class="input">
-            <option disabled value="">Select Area</option>
-            <option
-              v-for="area in areas[nurse.personal.city] || []"
-              :key="area"
-            >
-              {{ area }}
-            </option>
+          <select v-model="nurse.area" class="input">
+            <option disabled value="">Enter here</option>
+            <option>Nasr City</option>
+            <option>Dokki</option>
+            <option>Maadi</option>
           </select>
         </div>
       </div>
 
       <!-- Services -->
       <div class="form-group">
-        <label class="form-label">Services</label>
+        <label class="form-label">{{ $t("nurseEdit.services") }}</label>
         <div class="services">
           <label v-for="service in specializationOptions" :key="service">
             <input
@@ -143,7 +142,9 @@
       </div>
 
       <!-- Save Button -->
-      <button class="btn-save" @click="saveProfile">Save</button>
+      <button class="btn-save" @click="saveProfile">
+        {{ $t("nurseEdit.save") }}
+      </button>
     </div>
   </div>
 </template>

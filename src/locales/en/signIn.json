@@ -1,0 +1,11 @@
+{
+  "title": "Welcome Back",
+  "email": "Email",
+  "password": "Password",
+  "login": "Login",
+  "forgotPassword": "Forgot Password",
+  "dontHaveAccount": "Don't Have Account",
+  "signUp": "Sign Up",
+  "emailPlaceholder": "Enter your email",
+  "passwordPlaceholder": "Enter your password"
+}

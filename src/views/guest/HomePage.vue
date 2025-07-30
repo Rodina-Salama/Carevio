@@ -20,18 +20,19 @@
         <div class="hero-overlay">
           <div class="hero-text">
             <h1>
-              Professional <span class="highlight">Nursing Care</span><br />
-              At Your Doorstep
+              {{ $t("hero.titlePrefix") }}
+              <span class="highlight">{{ $t("hero.titleHighlight") }}</span
+              ><br />
+              {{ $t("hero.titleSuffix") }}
             </h1>
             <p>
-              Connect with verified, experienced nurses for home care, elderly
-              care, post-operative support, and specialized medical services.
+              {{ $t("hero.description") }}
             </p>
 
             <div class="search-bar">
               <!-- City -->
               <select v-model="selectedCity">
-                <option value="">Choose city</option>
+                <option value="">{{ $t("hero.chooseCity") }}</option>
                 <option v-for="city in cities" :key="city" :value="city">
                   {{ city }}
                 </option>
@@ -39,14 +40,14 @@
 
               <!-- Area -->
               <select v-model="selectedArea" :disabled="!selectedCity">
-                <option value="">Choose area</option>
+                <option value="">{{ $t("hero.chooseArea") }}</option>
                 <option v-for="area in filteredAreas" :key="area" :value="area">
                   {{ area }}
                 </option>
               </select>
 
               <select v-model="selectedService">
-                <option value="">Search service</option>
+                <option value="">{{ $t("hero.searchService") }}</option>
                 <option
                   v-for="service in specializationOptions"
                   :key="service"
@@ -56,7 +57,9 @@
                 </option>
               </select>
 
-              <button class="search-btn" @click="handleSearch">Search</button>
+              <button class="search-btn" @click="handleSearch">
+                {{ $t("hero.searchButton") }}
+              </button>
             </div>
           </div>
         </div>
@@ -64,45 +67,46 @@
     </section>
 
     <section class="why-choose">
-      <h2>Why Choose <span class="highlight">Carevio</span>?</h2>
+      <h2>
+        {{ $t("whyChoose.titlePrefix") }}
+        <span class="highlight">{{ $t("whyChoose.titleHighlight") }}</span
+        >?
+      </h2>
       <div class="features">
         <div class="feature">
           <div class="icon-box">
             <img src="@/assets/contract.png" alt="Trusted Nurses" />
           </div>
-          <h3>Trusted Nurses</h3>
+          <h3>{{ $t("whyChoose.trustedNursesTitle") }}</h3>
           <p>
-            All our caregivers are licensed, verified, and experienced in
-            professional home care.
+            {{ $t("whyChoose.trustedNursesDescription") }}
           </p>
         </div>
         <div class="feature">
           <div class="icon-box">
             <img src="@/assets/chat.png" alt="24/7 Support" />
           </div>
-          <h3>24/7 Support</h3>
+          <h3>{{ $t("whyChoose.supportTitle") }}</h3>
           <p>
-            We're available round the clock to answer your questions or schedule
-            care quickly.
+            {{ $t("whyChoose.supportDescription") }}
           </p>
         </div>
         <div class="feature">
           <div class="icon-box">
             <img src="@/assets/location.png" alt="In-Home Care" />
           </div>
-          <h3>In-Home Care</h3>
+          <h3>{{ $t("whyChoose.inHomeCareTitle") }}</h3>
           <p>
-            Book trusted nurses to come directly to your home, wherever you are.
+            {{ $t("whyChoose.inHomeCareDescription") }}
           </p>
         </div>
         <div class="feature">
           <div class="icon-box">
             <img src="@/assets/currencies.png" alt="Affordable Pricing" />
           </div>
-          <h3>Affordable Pricing</h3>
+          <h3>{{ $t("whyChoose.affordablePricingTitle") }}</h3>
           <p>
-            Transparent pricing plans tailored to your needs without
-            compromising on quality.
+            {{ $t("whyChoose.affordablePricingDescription") }}
           </p>
         </div>
       </div>
@@ -111,12 +115,10 @@
     <section class="testimonials-section">
       <div class="container">
         <div class="section-header">
-          <h2>Real experiences from our users</h2>
+          <h2>{{ $t("testimonials.title") }}</h2>
         </div>
         <p class="subtitle">
-          Discover their stories, how satisfied they were, and how our platform
-          made a difference in their lives. We are always committed to providing
-          high-quality, reliable care that truly meets your needs.
+          {{ $t("testimonials.subtitle") }}
         </p>
 
         <Carousel
@@ -150,9 +152,9 @@
     <section class="services-section">
       <div class="container">
         <div class="section-header">
-          <h2>Our Services</h2>
+          <h2>{{ $t("services.title") }}</h2>
           <button @click="navigateToServices" class="explore-btn">
-            Explore More Services →
+            {{ $t("services.moreServices") }}
           </button>
         </div>
 
@@ -161,10 +163,9 @@
             <div class="service-icon">
               <img src="@/assets/service1.png" alt="Elderly Care" />
             </div>
-            <h3>Elderly Care</h3>
+            <h3>{{ $t("services.elderlyCareTitle") }}</h3>
             <p>
-              Compassionate care for seniors, ensuring comfort and well-being at
-              home.
+              {{ $t("services.elderlyCareDesc") }}
             </p>
           </div>
 
@@ -172,10 +173,9 @@
             <div class="service-icon">
               <img src="@/assets/service2.png" alt="Pediatric Support" />
             </div>
-            <h3>Pediatric Support</h3>
+            <h3>{{ $t("services.pediatricTitle") }}</h3>
             <p>
-              Specialized care for children, providing comfort and support in a
-              familiar setting.
+              {{ $t("services.pediatricDesc") }}
             </p>
           </div>
 
@@ -183,10 +183,9 @@
             <div class="service-icon">
               <img src="@/assets/service3.png" alt="Injections & IV Therapy" />
             </div>
-            <h3>Injections & IV Therapy</h3>
+            <h3>{{ $t("services.injectionsTitle") }}</h3>
             <p>
-              Professional administration of injections and IV fluids, ensuring
-              safety and efficacy.
+              {{ $t("services.injectionsDesc") }}
             </p>
           </div>
         </div>
@@ -194,6 +193,7 @@
     </section>
   </div>
 </template>
+
 <script setup>
 /* eslint-disable */
 import { ref, computed } from "vue";

@@ -1,0 +1,26 @@
+{
+  "title": "Real experiences from our users",
+  "subtitle": "Discover their stories, how satisfied they were, and how our platform made a difference in their lives. We are always committed to providing high-quality, reliable care that truly meets your needs.",
+  "list": [
+    {
+      "name": "Karim Yasser",
+      "text": "I tried the platform after a friend recommended it. The nurse arrived on time and knew exactly what to do. I highly recommend it.",
+      "rating": 5
+    },
+    {
+      "name": "Ahmed Samir",
+      "text": "The caregiver was professional and compassionate. She took excellent care of my elderly mother and followed all medical instructions perfectly.",
+      "rating": 4
+    },
+    {
+      "name": "Rodina",
+      "text": "Booking was easy and the nurse was very knowledgeable. Will definitely use this service again for post-surgery care.",
+      "rating": 5
+    },
+    {
+      "name": "Sarah Mohamed",
+      "text": "At first I worried about strangers coming to my home. But after the first visit, I felt completely safe. Very professional.",
+      "rating": 5
+    }
+  ]
+}

@@ -5,33 +5,40 @@
       <nurse-sidebar />
 
       <div class="main-content">
-        <h1 class="title">Earnings</h1>
+        <h1 class="title">{{ $t("earnings.title") }}</h1>
 
         <div class="summary-cards">
           <div class="card">
-            <p>Total Earnings</p>
+            <p>{{ $t("earnings.total") }}</p>
             <h2>EGP {{ totalEarnings }}</h2>
           </div>
           <div class="card">
-            <p>Earnings This Week</p>
+            <p>{{ $t("earnings.week") }}</p>
             <h2>EGP {{ earningsThisWeek }}</h2>
           </div>
           <div class="card">
-            <p>Earnings This Month</p>
+            <p>{{ $t("earnings.month") }}</p>
             <h2>EGP {{ earningsThisMonth }}</h2>
           </div>
         </div>
 
         <div class="transaction-table">
-          <h3>Recent Transactions</h3>
+          <h3>{{ $t("earnings.recent") }}</h3>
           <table>
             <thead>
               <tr>
+<<<<<<< HEAD
                 <th>Booking Date</th>
                 <th>Client Name</th>
                 <th>Your Earnings</th>
                 <th>Status</th>
                 <th>Payment Method</th>
+=======
+                <th>{{ $t("earnings.date") }}</th>
+                <th>{{ $t("earnings.client") }}</th>
+                <th>{{ $t("earnings.amount") }}</th>
+                <th>{{ $t("earnings.status") }}</th>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
               </tr>
             </thead>
             <tbody>
@@ -39,8 +46,14 @@
                 <td>{{ formatDate(item.date) }}</td>
                 <td>{{ item.client }}</td>
                 <td>EGP {{ item.amount }}</td>
+<<<<<<< HEAD
                 <td><span class="paid-status">Paid</span></td>
                 <td>{{ item.paymentMethod }}</td>
+=======
+                <td>
+                  <span class="paid-status">{{ $t("earnings.paid") }}</span>
+                </td>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
               </tr>
             </tbody>
           </table>

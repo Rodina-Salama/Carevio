@@ -3,21 +3,21 @@
     <!-- Search Bar -->
     <div class="search-bar">
       <select v-model="selectedCity">
-        <option value="">Choose city</option>
+        <option value="">{{ $t("browse.chooseCity") }}</option>
         <option v-for="city in cities" :key="city" :value="city">
           {{ city }}
         </option>
       </select>
 
       <select v-model="selectedArea" :disabled="!selectedCity">
-        <option value="">Choose area</option>
+        <option value="">{{ $t("browse.chooseArea") }}</option>
         <option v-for="area in filteredAreas" :key="area" :value="area">
           {{ area }}
         </option>
       </select>
 
       <select v-model="selectedService">
-        <option value="">Search service</option>
+        <option value="">{{ $t("browse.searchService") }}</option>
         <option
           v-for="service in specializationOptions"
           :key="service"
@@ -28,10 +28,11 @@
       </select>
 
       <select v-model="selectedGender">
-        <option value="">Choose gender</option>
-        <option value="female">Female</option>
-        <option value="male">Male</option>
+        <option value="">{{ $t("browse.chooseGender") }}</option>
+        <option value="female">{{ $t("browse.female") }}</option>
+        <option value="male">{{ $t("browse.male") }}</option>
       </select>
+<<<<<<< HEAD
       <select v-model="selectedDay">
         <option value="">Available day</option>
         <option v-for="day in availableDays" :key="day" :value="day">
@@ -46,13 +47,22 @@
       </select>
       <button class="search-btn" @click="handleSearch">Search</button>
       <button class="reset-btn" @click="resetFilters">Reset</button>
+=======
+
+      <button class="search-btn" @click="handleSearch">
+        {{ $t("browse.searchButton") }}
+      </button>
+      <button class="reset-btn" @click="resetFilters">
+        {{ $t("browse.resetButton") }}
+      </button>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
     </div>
 
     <!-- Cards -->
     <div class="container">
       <template v-if="filteredNurses.length">
         <div v-for="nurse in filteredNurses" :key="nurse.id" class="card">
-          <div class="badge">Verified</div>
+          <div class="badge">{{ $t("browse.verifiedBadge") }}</div>
           <div class="header">
             <img
               :src="nurse?.documents?.photo?.url || defaultImage"
@@ -90,17 +100,28 @@
             {{ nurse.professional.bio || "No bio available." }}
           </p>
           <div class="actions">
+<<<<<<< HEAD
             <router-link
               :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
               class="view-btn"
             >
               View
             </router-link>
+=======
+            <button>
+              <router-link
+                :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
+                class="view-btn"
+              >
+                {{ $t("browse.viewButton") }}
+              </router-link>
+            </button>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
           </div>
         </div>
       </template>
       <p v-else class="no-results">
-        No nurses found matching the selected filters.
+        {{ $t("browse.noNursesFound") }}
       </p>
     </div>
   </div>

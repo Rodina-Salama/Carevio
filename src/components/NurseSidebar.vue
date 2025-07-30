@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div>
     <!-- Toggle Button (only shows on mobile) -->
     <button class="sidebar-toggle" @click="toggleSidebar">
@@ -30,6 +31,33 @@
         </li>
       </ul>
     </div>
+=======
+  <div class="sidebar-container">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="@/assets/icon.jpg" alt="Logo" class="logo-img" />
+      <span class="site-name">Carevio</span>
+    </div>
+    <!-- Navigation -->
+    <ul class="nav-links">
+      <li v-for="item in navItems" :key="item.path">
+        <router-link
+          :to="item.path"
+          class="nav-link"
+          :class="{ active: $route.path.startsWith(item.path) }"
+        >
+          {{ $t(`nurseSidebar.${item.label}`) }}
+        </router-link>
+      </li>
+
+      <!-- Sign Out -->
+      <li>
+        <button class="nav-link signout-link" @click="signOut">
+          {{ $t("nurseSidebar.signOut") }}
+        </button>
+      </li>
+    </ul>
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
   </div>
 </template>
 
@@ -41,11 +69,19 @@ export default {
   data() {
     return {
       navItems: [
+<<<<<<< HEAD
         { label: "overview", path: "/dashboard" },
         { label: "Bookings", path: "/nursebookings" },
         { label: "Earnings", path: "/nurseearnings" },
         { label: "Reviews", path: "/nursereviews" },
         { label: "Edit Profile", path: "/nurseedit" },
+=======
+        { label: "availability", path: "/nurseavailability" },
+        { label: "bookings", path: "/nursebookings" },
+        { label: "earnings", path: "/nurseearnings" },
+        { label: "reviews", path: "/nursereviews" },
+        { label: "editProfile", path: "/nurseedit" },
+>>>>>>> 34532b9 (Finally translated all pages in website & nurse dashboard)
       ],
       userName: "",
       userPhotoURL: "",

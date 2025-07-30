@@ -2,48 +2,58 @@
   <div class="change-password">
     <div class="container">
       <!-- Back button at top-left -->
-      <button type="button" class="back-btn-top" @click="goBack">← Back</button>
+      <button type="button" class="back-btn-top" @click="goBack">
+        {{ $t("changePassword.back") }}
+      </button>
 
-      <h2>Change Password</h2>
+      <h2>{{ $t("changePassword.title") }}</h2>
 
       <form @submit.prevent="handleChangePassword">
         <div class="form-group">
-          <label for="currentPassword">Current Password</label>
+          <label for="currentPassword">{{
+            $t("changePassword.current")
+          }}</label>
           <input
             type="password"
             id="currentPassword"
             v-model="currentPassword"
-            placeholder="Enter current password"
+            :placeholder="$t('changePassword.placeholderCurrent')"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="newPassword">New Password</label>
+          <label for="newPassword">{{ $t("changePassword.new") }}</label>
           <input
             type="password"
             id="newPassword"
             v-model="newPassword"
-            placeholder="Enter new password"
+            :placeholder="$t('changePassword.placeholderNew')"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm New Password</label>
+          <label for="confirmPassword">{{
+            $t("changePassword.confirm")
+          }}</label>
           <input
             type="password"
             id="confirmPassword"
             v-model="confirmPassword"
-            placeholder="Confirm new password"
+            :placeholder="$t('changePassword.placeholderConfirm')"
             required
           />
         </div>
 
-        <button type="submit">Update Password</button>
+        <button type="submit">{{ $t("changePassword.submit") }}</button>
 
-        <p v-if="successMessage" class="success">{{ successMessage }}</p>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p v-if="successMessage" class="success">
+          {{ $t("changePassword.success") }}
+        </p>
+        <p v-if="errorMessage" class="error">
+          {{ $t("changePassword.error") }}
+        </p>
       </form>
     </div>
   </div>
