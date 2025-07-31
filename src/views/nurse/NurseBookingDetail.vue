@@ -1,23 +1,46 @@
 <!-- src/views/nurse/NurseBookingDetails.vue -->
 <template>
   <div class="booking-details">
-    <button class="back-btn" @click="goBack">← Back</button>
-    <h1>Booking Details</h1>
+    <button class="back-btn" @click="goBack">← {{ $t("booking.back") }}</button>
+    <h1>{{ $t("booking.bookingDetails") }}</h1>
 
     <div v-if="loading">Loading...</div>
     <div v-else-if="booking">
       <ul>
-        <li><strong>Patient Name:</strong> {{ booking.userName }}</li>
-        <li><strong>Phone:</strong> {{ booking.userPhone }}</li>
-        <li><strong>Date:</strong> {{ booking.date }}</li>
-        <li><strong>Time:</strong> {{ booking.from }} - {{ booking.to }}</li>
-        <li><strong>Service:</strong> {{ booking.service }}</li>
-        <li><strong>Address:</strong> {{ booking.address }}</li>
-        <li><strong>Notes:</strong> {{ booking.notes || "No notes" }}</li>
-        <li><strong>Payment Method:</strong> {{ booking.paymentMethod }}</li>
-        <li><strong>Price:</strong> {{ booking.price }} EGP</li>
         <li>
-          <strong>Created At:</strong> {{ formatTimestamp(booking.createdAt) }}
+          <strong>{{ $t("booking.name") }}:</strong> {{ booking.userName }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.phone") }}:</strong> {{ booking.userPhone }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.date") }}:</strong> {{ booking.date }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.time") }}:</strong> {{ booking.from }} -
+          {{ booking.to }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.service") }}:</strong>
+          {{ $t(`data.specializations.${booking.service}`) }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.address") }}:</strong> {{ booking.address }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.notes") }}</strong>
+          {{ booking.notes || $t("booking.noNotes") }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.payment") }}:</strong>
+          {{ $t(`booking.${booking.paymentMethod}`) }}
+        </li>
+        <li>
+          <strong>{{ $t("booking.price") }}:</strong> {{ booking.price }} EGP
+        </li>
+        <li>
+          <strong>{{ $t("booking.createdAt") }}:</strong>
+          {{ formatTimestamp(booking.createdAt) }}
         </li>
       </ul>
     </div>
@@ -98,7 +121,6 @@ export default {
   margin-bottom: 1rem;
   padding: 0;
   font-weight: 600;
-  text-align: left;
 }
 .back-btn:hover {
   text-decoration: underline;

@@ -5,24 +5,26 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '50%' }"></div>
       </div>
-      <div class="progress-label">Step 2 of 4 (50%)</div>
+      <div class="progress-label">{{ $t("secondjoin.stepLabel") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">Professional Experience</h1>
-      <p class="form-subtitle">Tell us about your professional background</p>
+      <h1 class="form-title">{{ $t("secondjoin.title") }}</h1>
+      <p class="form-subtitle">{{ $t("secondjoin.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <div class="form-grid">
           <!-- Years of Experience -->
           <div class="input-group">
-            <label for="experience">Years of Experience</label>
+            <label for="experience">{{
+              $t("secondjoin.experienceLabel")
+            }}</label>
             <input
               type="number"
               id="experience"
               v-model="formData.experience"
-              placeholder="Enter years of experience"
+              :placeholder="$t('secondjoin.experiencePlaceholder')"
               min="0"
               required
             />
@@ -30,33 +32,32 @@
 
           <!-- License Number -->
           <div class="input-group">
-            <label for="licenseNumber">License Number</label>
+            <label for="licenseNumber">{{
+              $t("secondjoin.licenseLabel")
+            }}</label>
             <input
               type="text"
               id="licenseNumber"
               v-model="formData.licenseNumber"
-              placeholder="Enter your license number"
+              :placeholder="$t('secondjoin.licensePlaceholder')"
               required
             />
           </div>
 
           <!-- Price-->
           <div class="input-group">
-            <label for="Price"
-              >Your hourly rate (EGP) — Carevio takes a 15% commission
-              fee</label
-            >
+            <label for="price">{{ $t("secondjoin.priceLabel") }}</label>
             <input
               type="text"
               id="price"
               v-model="formData.price"
-              placeholder="Enter your Price (Price/hour)"
+              :placeholder="$t('secondjoin.pricePlaceholder')"
               required
             />
           </div>
           <!-- Available Days -->
           <div class="input-group">
-            <label>Available Days</label>
+            <label>{{ $t("secondjoin.availableDays") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -69,7 +70,7 @@
                     :value="day"
                     v-model="formData.availableDays"
                   />
-                  {{ day }}
+                  {{ $t(`data.days.${day}`) }}
                 </label>
               </div>
             </div>
@@ -78,7 +79,7 @@
           <!-- Shifts -->
           <!-- Shifts -->
           <div class="input-group">
-            <label>Available Time</label>
+            <label>{{ $t("secondjoin.availableTime") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -91,7 +92,7 @@
                     :value="shift"
                     v-model="formData.shifts"
                   />
-                  {{ shift.charAt(0).toUpperCase() + shift.slice(1) }}
+                  {{ $t(`data.shifts.${shift}`) }}
                   ({{ times[0].from }} - {{ times[times.length - 1].to }})
                 </label>
               </div>
@@ -100,7 +101,7 @@
 
           <!-- Languages -->
           <div class="input-group">
-            <label>Languages</label>
+            <label>{{ $t("secondjoin.languages") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -113,14 +114,14 @@
                     :value="lang"
                     v-model="formData.languages"
                   />
-                  {{ lang.charAt(0).toUpperCase() + lang.slice(1) }}
+                  {{ $t(`data.languages.${lang}`) }}
                 </label>
               </div>
             </div>
           </div>
           <!-- Specialization -->
           <div class="input-group">
-            <label>Services</label>
+            <label>{{ $t("secondjoin.services") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -133,7 +134,7 @@
                     :value="spec"
                     v-model="formData.specialization"
                   />
-                  {{ spec }}
+                  {{ $t(`data.specializations.${spec}`) }}
                 </label>
               </div>
             </div>
@@ -141,11 +142,11 @@
 
           <!-- Bio -->
           <div class="input-group full-width">
-            <label for="bio">Bio</label>
+            <label for="bio">{{ $t("secondjoin.bio") }}</label>
             <textarea
               id="bio"
               v-model="formData.bio"
-              placeholder="Write your bio..."
+              :placeholder="$t('secondjoin.bioPlaceholder')"
               rows="4"
               required
             ></textarea>
@@ -153,8 +154,12 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="back-btn" @click="goBack">Back</button>
-          <button type="submit" class="submit-btn">Next</button>
+          <button type="button" class="back-btn" @click="goBack">
+            {{ $t("secondjoin.back") }}
+          </button>
+          <button type="submit" class="submit-btn">
+            {{ $t("secondjoin.next") }}
+          </button>
         </div>
       </form>
     </div>
@@ -169,7 +174,9 @@ import { languageOptions } from "@/data/languageOptions";
 import { specializationOptions } from "@/data/specializationOptions";
 import { availableDays } from "@/data/availableDays";
 const router = useRouter();
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 // Form data
 const formData = ref({
   experience: "",
@@ -188,22 +195,27 @@ const goBack = () => {
 
 const handleSubmit = () => {
   if (formData.value.specialization.length === 0) {
-    alert("Please select at least one specialization.");
+    alert(t("secondjoin.alertSpecialization"));
     return;
   }
 
   if (formData.value.languages.length === 0) {
-    alert("Please select at least one language.");
+    alert(t("secondjoin.alertLanguages"));
     return;
   }
 
   if (formData.value.shifts.length === 0) {
-    alert("Please select at least one shift.");
+    alert(t("secondjoin.alertShifts"));
     return;
   }
   const price = parseFloat(formData.value.price);
   if (isNaN(price) || price < 50 || price > 500) {
-    alert("Price must be a number between 50 and 500.");
+    alert(t("secondjoin.alertPrice"));
+    return;
+  }
+  const bio = formData.value.bio.trim();
+  if (bio.length < 20) {
+    alert(t("secondjoin.bioTooShort"));
     return;
   }
   // Store data in localStorage
@@ -211,6 +223,10 @@ const handleSubmit = () => {
   router.push("/thirdjoin");
 };
 onMounted(() => {
+  const personalData = localStorage.getItem("personalData");
+  if (!personalData) {
+    router.push("/join");
+  }
   const saved = localStorage.getItem("professionalData");
   if (saved) {
     Object.assign(formData.value, JSON.parse(saved));
@@ -283,8 +299,8 @@ onMounted(() => {
   display: block;
   margin-bottom: 0.5rem;
   color: #19599a;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .input-group input,
@@ -356,16 +372,14 @@ onMounted(() => {
 }
 
 .back-btn {
-  display: inline-flex;
-  align-items: center;
-  background-color: #e9ecef;
-  color: #495057;
+  background-color: transparent;
+  color: #19599a;
+  border: 1px solid #19599a;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
-  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-size: 0.9rem;
 }
 
 .back-btn:hover {

@@ -1,8 +1,7 @@
 <template>
   <div>
-    <!-- Toggle Button (only shows on mobile) -->
     <button class="sidebar-toggle" @click="toggleSidebar">
-      <img src="@/assets/logo2.png" alt="Toggle Sidebar" />
+      <span class="toggle-label">{{ $t("navbar.dashboard") }}</span>
     </button>
 
     <div
@@ -25,7 +24,7 @@
             class="nav-link"
             :class="{ active: $route.path.startsWith(item.path) }"
           >
-            {{ item.label }}
+            {{ $t(item.label) }}
           </router-link>
         </li>
       </ul>
@@ -40,48 +39,27 @@ export default {
   name: "NurseSidebar",
   data() {
     return {
-      navItems: [
-        { label: "overview", path: "/dashboard" },
-        { label: "Bookings", path: "/nursebookings" },
-        { label: "Earnings", path: "/nurseearnings" },
-        { label: "Reviews", path: "/nursereviews" },
-        { label: "Edit Profile", path: "/nurseedit" },
-      ],
-      userName: "",
-      userPhotoURL: "",
-      defaultAvatar: "https://via.placeholder.com/60",
       sidebarVisible: true,
       isMobile: false,
     };
   },
+  computed: {
+    navItems() {
+      return [
+        { label: "nurseSidebar.Dashboard", path: "/dashboard" },
+        { label: "nurseSidebar.bookings", path: "/nursebookings" },
+        { label: "nurseSidebar.earnings", path: "/nurseearnings" },
+        { label: "nurseSidebar.reviews", path: "/nursereviews" },
+        { label: "nurseSidebar.editProfile", path: "/nurseedit" },
+      ];
+    },
+  },
   mounted() {
     this.checkIsMobile();
     window.addEventListener("resize", this.checkIsMobile);
-
-    this.$emit("nurse-layout", true);
-    const guestNavbar = document.querySelector(".guest-navbar");
-    if (guestNavbar) guestNavbar.style.display = "none";
-
-    const footer = document.querySelector("footer");
-    if (footer) footer.style.display = "none";
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      this.userName = user.displayName || "Nurse Name";
-      this.userPhotoURL = user.photoURL || "";
-    }
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.checkIsMobile);
-
-    const guestNavbar = document.querySelector(".guest-navbar");
-    if (guestNavbar) guestNavbar.style.display = "block";
-
-    const footer = document.querySelector("footer");
-    if (footer) footer.style.display = "block";
-
-    this.$emit("nurse-layout", false);
   },
   methods: {
     toggleSidebar() {
@@ -89,11 +67,7 @@ export default {
     },
     checkIsMobile() {
       this.isMobile = window.innerWidth <= 768;
-      if (this.isMobile) {
-        this.sidebarVisible = false;
-      } else {
-        this.sidebarVisible = true;
-      }
+      this.sidebarVisible = !this.isMobile;
     },
     async signOut() {
       try {
@@ -106,28 +80,29 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .sidebar-toggle {
   display: none;
   position: fixed;
-  top: 16px;
-  left: 16px;
+  top: 24px;
+  inset-inline-start: 24px;
   z-index: 1000;
   background-color: #19599a;
   color: white;
   border: none;
   font-size: 24px;
-  padding: 8px 12px;
+  padding: 8px 8px;
   border-radius: 4px;
   cursor: pointer;
 }
-
+.toggle-label {
+  font-size: 16px;
+  color: white;
+}
 @media (max-width: 768px) {
   .sidebar-toggle {
     display: block;
   }
-
   .sidebar-container {
     position: fixed;
     top: 0;
@@ -150,6 +125,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height: 100%;
   box-sizing: border-box;
   color: white;
 }
@@ -213,7 +189,6 @@ export default {
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  text-align: left;
   border: none;
   cursor: pointer;
   width: 100%;

@@ -75,29 +75,40 @@
           active-class="active-btn"
           >{{ $t("navbar.signUp") }}</router-link
         >
-        <button @click="toggleLanguage" class="btn">
-          {{ currentLang === "en" ? "العربية" : "English" }}
-        </button>
+        <div class="lang-switch-container" @click="toggleLang">
+          <img
+            :src="currentLang === 'ar' ? usFlag : egyptFlag"
+            alt="flag"
+            class="lang-flag"
+          />
+          <button class="lang-circle-btn">
+            <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
+          </button>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-
+import egyptFlag from "@/assets/egflag.png";
+import usFlag from "@/assets/usflag.png";
 const { locale } = useI18n();
-const currentLang = ref(locale.value);
+const currentLang = ref("ar");
 
-function toggleLanguage() {
-  currentLang.value = currentLang.value === "en" ? "ar" : "en";
+function toggleLang() {
+  currentLang.value = currentLang.value === "ar" ? "en" : "ar";
   locale.value = currentLang.value;
-  const html = document.documentElement;
-  html.setAttribute("dir", currentLang.value === "ar" ? "rtl" : "ltr");
-  html.setAttribute("lang", currentLang.value);
-  localStorage.setItem("language", currentLang.value);
+  localStorage.setItem("lang", currentLang.value);
 }
+
+onMounted(() => {
+  const savedLang = localStorage.getItem("lang") || "en";
+  currentLang.value = savedLang;
+  locale.value = savedLang;
+});
 
 // Menu state
 const isMenuOpen = ref(false);
@@ -202,7 +213,7 @@ const closeMenu = () => {
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #67aef5ff;
 }
 
 .btn.outline {
@@ -212,13 +223,8 @@ const closeMenu = () => {
 }
 
 .btn.outline:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: #ffffff;
-}
-
-.active-btn {
-  background-color: #0d3c6e;
-  color: white;
 }
 
 .profile-img {
@@ -226,6 +232,38 @@ const closeMenu = () => {
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+}
+.lang-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.lang-flag {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lang-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #c8dff6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-weight: bold;
+  color: #444;
+  transition: background-color 0.3s;
+}
+
+.lang-circle-btn:hover {
+  background-color: #a4caf0;
 }
 
 .user-info {
@@ -236,7 +274,8 @@ const closeMenu = () => {
 
 .hamburger {
   display: none;
-  background: none;
+  background-color: #19599a;
+  color: white;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -246,7 +285,7 @@ const closeMenu = () => {
   display: block;
   width: 1.5rem;
   height: 2px;
-  background-color: #007bff;
+  background-color: #ffffffff;
   margin: 0.3rem 0;
   transition: all 0.3s ease;
 }

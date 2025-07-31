@@ -34,7 +34,7 @@
               <select v-model="selectedCity">
                 <option value="">{{ $t("hero.chooseCity") }}</option>
                 <option v-for="city in cities" :key="city" :value="city">
-                  {{ city }}
+                  {{ $t(`data.cities.${city}`) }}
                 </option>
               </select>
 
@@ -42,7 +42,7 @@
               <select v-model="selectedArea" :disabled="!selectedCity">
                 <option value="">{{ $t("hero.chooseArea") }}</option>
                 <option v-for="area in filteredAreas" :key="area" :value="area">
-                  {{ area }}
+                  {{ $t(`data.areas.${area}`) }}
                 </option>
               </select>
 
@@ -53,7 +53,7 @@
                   :key="service"
                   :value="service"
                 >
-                  {{ service }}
+                  {{ $t(`data.specializations.${service}`) }}
                 </option>
               </select>
 
@@ -161,7 +161,7 @@
         <div class="services-grid">
           <div class="service-card">
             <div class="service-icon">
-              <img src="@/assets/service1.png" alt="Elderly Care" />
+              <img src="@/assets/service1.jpg" alt="Elderly Care" />
             </div>
             <h3>{{ $t("services.elderlyCareTitle") }}</h3>
             <p>
@@ -227,7 +227,7 @@ const testimonials = [
   },
   {
     name: "Ahmed Samir",
-    text: "The caregiver was professional and compassionate. She took excellent care of my elderly mother and followed all medical instructions perfectly.",
+    text: "كانت الممرضة محترفة ومليئة بالرحمة. اعتنت بوالدتي المسنّة بشكل ممتاز، واتبعت جميع التعليمات الطبية بدقة.",
     rating: 4,
   },
   {
@@ -237,7 +237,7 @@ const testimonials = [
   },
   {
     name: "Sarah Mohamed",
-    text: "At first I worried about strangers coming to my home. But after the first visit, I felt completely safe. Very professional.",
+    text: "في البداية كنت قلقة من دخول غرباء إلى منزلي، لكن بعد الزيارة الأولى شعرت بأمان تام. محترفون للغاية.",
     rating: 5,
   },
 ];
@@ -358,7 +358,7 @@ select {
 }
 
 .search-btn:hover {
-  background-color: #009acb;
+  background-color: #67aef5ff;
 }
 
 /* WHY CHOOSE SECTION  */
@@ -648,18 +648,18 @@ select {
 }
 
 .explore-btn {
-  background-color: transparent;
-  color: #19599a;
+  background-color: #19599a;
+  color: #ffffff;
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  border: 2px solid #19599a;
+  border: 1px solid #19599a;
 }
 
 .explore-btn:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
   transform: translateY(-2px);
 }

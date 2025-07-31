@@ -42,7 +42,12 @@ export default {
     );
     const userType = computed(() => userStore.type);
     const route = useRoute();
-    const isNurseRoute = computed(() => route.path.startsWith("/nurse"));
+    const isNurseRoute = computed(
+      () =>
+        route.path.startsWith("/nurse") ||
+        route.path.startsWith("/dashboard") ||
+        route.path.startsWith("/booking")
+    );
 
     const isDarkMode = ref(false);
 
@@ -52,6 +57,9 @@ export default {
         isDarkMode.value = savedTheme === "dark";
         document.documentElement.classList.toggle("dark", isDarkMode.value);
       }
+      const html = document.documentElement;
+      html.setAttribute("dir", locale.value === "ar" ? "rtl" : "ltr");
+      html.setAttribute("lang", locale.value);
 
       onAuthStateChanged(auth, async (user) => {
         if (user && !userStore.firebaseUser) {
@@ -163,13 +171,9 @@ nav {
   transition: background-color 0.3s;
 }
 
-nav a.router-link-exact-active {
-  color: var(--secondary-color) !important;
-}
-
 /* Dropdown menu styles */
 .dropdown-menu {
-  background-color: var(--card-bg) !important;
+  background-color: var(--bg-color) !important;
   border-color: var(--border-color) !important;
 }
 
@@ -248,7 +252,9 @@ nav a.router-link-exact-active {
   background: var(--hover-bg) !important;
   color: var(--text-color) !important;
 }
-
+.dark-mode .hamburger .bar {
+  background-color: white;
+}
 /* Mobile menu styles */
 .dark-mode .navbar-collapse {
   background-color: var(--nav-bg) !important;
@@ -428,7 +434,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .action-btn:hover {
-  background-color: #144a84;
+  background-color: #67aef5ff;
 }
 /* Dark Mode Calendar Styles */
 :root.dark .main-content {
@@ -536,7 +542,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .view-btn:hover {
-  background-color: #0077a3;
+  background-color: #67aef5ff;
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(0, 152, 203, 0.3);
 }
@@ -707,7 +713,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .action-button:hover {
-  background-color: #0077a3;
+  background-color: #67aef5ff;
 }
 
 :root.dark .section-title,
@@ -781,7 +787,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark button:hover {
-  background-color: #1565c0;
+  background-color: #67aef5ff;
 }
 
 /* Dark Mode Modal Styles */
@@ -830,7 +836,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .modal-box button:hover {
-  background-color: #1565c0;
+  background-color: #67aef5ff;
 }
 
 :root.dark .star-rating {
@@ -953,7 +959,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .booking-card:hover .view-btn {
-  background-color: #1565c0;
+  background-color: #67aef5ff;
   color: #ffffff;
   border: 1px solid #1565c0;
 }
@@ -1165,7 +1171,7 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .modal-content .success-note button:hover {
-  background-color: #2c5282; /* Darker blue on hover */
+  background-color: #67aef5ff; /* Darker blue on hover */
   transform: translateY(-1px);
 }
 
@@ -1205,10 +1211,37 @@ nav a.router-link-exact-active {
 }
 
 :root.dark .back-btn:hover {
-  color: #8bb8eb;
+  color: #67aef5ff;
   background-color: transparent;
 }
 :root.dark .nav-links a {
   color: #ffffff;
+}
+:root.dark .reset-btn {
+  background-color: transparent;
+}
+:root.dark .back-btn {
+  color: #ffffff;
+}
+:root.dark .btn.outline {
+  color: #ffffff;
+}
+:root.dark .changePassword {
+  text-rendering: auto;
+  color: buttontext;
+  display: inline-block;
+  text-align: center;
+  cursor: default;
+  box-sizing: border-box;
+  background-color: buttonface;
+  padding-block: 1px;
+  padding-inline: 6px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonborder;
+  border-image: initial;
+}
+:root.dark .lang-circle-btn {
+  background-color: #0f355b;
 }
 </style>

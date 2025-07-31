@@ -9,6 +9,7 @@ export const useUserStore = defineStore("user", {
     profileData: null,
     type: null,
   }),
+  persist: true,
 
   actions: {
     async setUser(user, profile) {

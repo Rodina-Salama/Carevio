@@ -12,5 +12,12 @@
   "disabilityTitle": "Disability Care",
   "disabilityDesc": "Support for patients with disability, Helping with Hygiene, feeding, mobility, medication",
   "vitalSignsTitle": "Vital Signs Monitoring",
-  "vitalSignsDesc": "Track heart rate, temperature, blood pressure, and oxygen using devices"
+  "vitalSignsDesc": "Track heart rate, temperature, blood pressure, and oxygen using devices",
+  "woundDressingTitle": "Wound Dressing",
+  "woundDressingDesc": "Cleaning and dressing wounds to promote healing and prevent infections.",
+  "catheterCareTitle": "Catheter Care",
+  "catheterCareDesc": "Managing and maintaining urinary catheters to ensure hygiene and prevent complications.",
+  "postSurgicalTitle": "Post-Surgical Care",
+  "postSurgicalDesc": "Assisting with wound care, medication, vital signs, mobility, and daily tasks after surgery."
+
 }

@@ -1,0 +1,52 @@
+{
+  "cities": {
+    "Cairo": "Cairo",
+    "Alexandria": "Alexandria",
+    "Giza": "Giza"
+  },
+  "areas": {
+    "Downtown": "Downtown",
+    "Maadi": "Maadi",
+    "Zamalek": "Zamalek",
+    "Nasr City": "Nasr City",
+    "Miami": "Miami",
+    "Stanley": "Stanley",
+    "Sidi Gaber": "Sidi Gaber",
+    "Smouha": "Smouha",
+    "Dokki": "Dokki",
+    "Mohandessin": "Mohandessin",
+    "Haram": "Haram",
+    "6th of October": "6th of October"
+  },
+  "days": {
+    "Saturday": "Saturday",
+    "Sunday": "Sunday",
+    "Monday": "Monday",
+    "Tuesday": "Tuesday",
+    "Wednesday": "Wednesday",
+    "Thursday": "Thursday",
+    "Friday": "Friday"
+  },
+  "languages": {
+    "arabic": "Arabic",
+    "english": "English",
+    "french": "French",
+    "german": "German"
+  },
+  "specializations": {
+    "Elderly Care": "Elderly Care",
+    "Pediatric Support": "Pediatric Support",
+    "Injections & IV Therapy": "Injections & IV Therapy",
+    "Bedridden Patient": "Bedridden Patient",
+    "Disability Care": "Disability Care",
+    "Vital Signs Monitoring": "Vital Signs Monitoring",
+    "Wound Dressing": "Wound Dressing",
+    "Catheter Care": "Catheter Care",
+    "Post-Surgical Care": "Post-Surgical Care"
+  },
+  "shifts": {
+    "morning": "Morning",
+    "evening": "Evening",
+    "overnight": "Overnight"
+  }
+}

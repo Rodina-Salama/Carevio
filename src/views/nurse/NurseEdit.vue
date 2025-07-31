@@ -1,7 +1,9 @@
 <template>
   <div class="edit-profile">
     <NurseSidebar />
-    <div class="form-container">
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+
+    <div v-else class="form-container">
       <h2 class="title">{{ $t("nurseEdit.title") }}</h2>
 
       <!-- Profile Picture -->
@@ -14,8 +16,6 @@
           />
           <div class="btns">
             <input type="file" @change="uploadPhoto" />
-            <button class="btn-upload">Upload photo</button>
-            <button class="btn-delete" @click="deletePhoto">Delete</button>
           </div>
         </div>
       </div>
@@ -25,14 +25,14 @@
         <label class="form-label">{{ $t("nurseEdit.bio") }}</label>
         <textarea
           v-model="nurse.bio"
-          placeholder="Enter here"
+          :placeholder="$t('nurseEdit.enterHere')"
           class="input bio"
         ></textarea>
       </div>
 
       <!-- Pricing -->
       <div class="form-group">
-        <label class="form-label">Pricing</label>
+        <label class="form-label">{{ $t("secondjoin.priceLabel") }}</label>
         <div class="pricing-field">
           <input
             v-model.number="nurse.professional.price"
@@ -47,21 +47,23 @@
       <!-- Government & Area -->
       <div class="form-group row">
         <div class="col">
-          <label class="form-label">Government</label>
-          <select v-model="nurse.government" class="input">
-            <option disabled value="">Enter here</option>
-            <option>Cairo</option>
-            <option>Giza</option>
-            <option>Alexandria</option>
+          <label class="form-label">{{ $t("nurseEdit.city") }}</label>
+          <select v-model="nurse.personal.city" class="input">
+            <option v-for="city in cities" :key="city" :value="city">
+              {{ $t(`data.cities.${city}`) }}
+            </option>
           </select>
         </div>
         <div class="col">
-          <label class="form-label">Area</label>
-          <select v-model="nurse.area" class="input">
-            <option disabled value="">Enter here</option>
-            <option>Nasr City</option>
-            <option>Dokki</option>
-            <option>Maadi</option>
+          <label class="form-label">{{ $t("nurseEdit.area") }}</label>
+          <select v-model="nurse.personal.area" class="input">
+            <option
+              v-for="area in areas[nurse.personal.city]"
+              :key="area"
+              :value="area"
+            >
+              {{ $t(`data.areas.${area}`) }}
+            </option>
           </select>
         </div>
       </div>
@@ -76,14 +78,14 @@
               :value="service"
               v-model="nurse.professional.specialization"
             />
-            {{ service }}
+            {{ $t(`data.specializations.${service}`) }}
           </label>
         </div>
       </div>
 
       <!-- Available Days -->
       <div class="form-group">
-        <label class="form-label">Available Days</label>
+        <label class="form-label">{{ $t("nurseEdit.availableDays") }}</label>
         <div class="services">
           <label v-for="day in availableDays" :key="day">
             <input
@@ -91,14 +93,14 @@
               :value="day"
               v-model="nurse.professional.availableDays"
             />
-            {{ day }}
+            {{ $t(`data.days.${day}`) }}
           </label>
         </div>
       </div>
 
       <!-- Languages -->
       <div class="form-group">
-        <label class="form-label">Languages</label>
+        <label class="form-label">{{ $t("nurseEdit.languages") }}</label>
         <div class="services">
           <label v-for="lang in languageOptions" :key="lang">
             <input
@@ -106,14 +108,14 @@
               :value="lang"
               v-model="nurse.professional.languages"
             />
-            {{ lang }}
+            {{ $t(`data.languages.${lang}`) }}
           </label>
         </div>
       </div>
 
       <!-- Available shifts -->
       <div class="form-group">
-        <label class="form-label">Available Time</label>
+        <label class="form-label">{{ $t("nurseEdit.availableTime") }}</label>
         <div class="services">
           <div
             class="checkbox-item"
@@ -126,7 +128,7 @@
                 :value="shift"
                 v-model="nurse.professional.shifts"
               />
-              {{ shift.charAt(0).toUpperCase() + shift.slice(1) }}
+              {{ $t(`data.shifts.${shift}`) }}
               ({{ times[0].from }} - {{ times[times.length - 1].to }})
             </label>
           </div>
@@ -134,13 +136,19 @@
       </div>
       <!-- Profile Visibility -->
       <div class="form-group switch-group">
-        <label class="form-label">Show my profile on the site</label>
+        <label class="form-label">{{
+          $t("nurseEdit.profileVisibility")
+        }}</label>
         <label class="switch">
           <input type="checkbox" v-model="nurse.isVisible" />
           <span class="slider"></span>
         </label>
       </div>
-
+      <div class="actions-container">
+        <button @click="changePassword" class="changePassword">
+          {{ $t("nurseEdit.changePassword") }}
+        </button>
+      </div>
       <!-- Save Button -->
       <button class="btn-save" @click="saveProfile">
         {{ $t("nurseEdit.save") }}
@@ -159,13 +167,16 @@ import { shiftOptions } from "@/data/shiftOptions";
 import { cities, areas } from "@/data/locationOptions";
 import { languageOptions } from "@/data/languageOptions";
 import { availableDays } from "@/data/availableDays";
-
+import { onAuthStateChanged } from "firebase/auth";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
     NurseSidebar,
+    LoadingSpinner,
   },
   data() {
     return {
+      loading: true,
       nurse: {
         personal: {
           city: "",
@@ -194,22 +205,28 @@ export default {
       defaultAvatar: "",
     };
   },
-  async mounted() {
+  mounted() {
     const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) return;
-    const db = getFirestore();
-    const docRef = doc(db, "applications", user.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      this.nurse = { ...this.nurse, ...docSnap.data() };
-    }
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        this.$router.push("/login");
+        return;
+      }
+
+      const db = getFirestore();
+      const docRef = doc(db, "applications", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        this.nurse = { ...this.nurse, ...docSnap.data() };
+      }
+
+      this.loading = false;
+    });
   },
   methods: {
     async uploadPhoto(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "Nurse_information");
@@ -253,7 +270,9 @@ export default {
         alert("Failed to upload photo.");
       }
     },
-
+    changePassword() {
+      this.$router.push("/changepasswordnurse");
+    },
     async saveProfile() {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -312,12 +331,16 @@ export default {
 .edit-profile {
   display: flex;
 }
-
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .form-container {
   padding: 40px 60px;
   flex: 1;
   max-width: 800px;
-  text-align: left;
 }
 
 .title {
@@ -328,7 +351,6 @@ export default {
 
 .form-group {
   margin-bottom: 24px;
-  text-align: left;
 }
 
 .bio-group {
@@ -428,9 +450,11 @@ export default {
   font-size: 14px;
   margin-top: 30px;
 }
+.btn-save:hover {
+  background-color: #67aef5ff;
+}
 .switch-group {
   display: flex;
-  align-items: left;
   gap: 16px;
 }
 

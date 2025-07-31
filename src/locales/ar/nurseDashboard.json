@@ -1,16 +1,16 @@
 {
-  "title": "لوحة التحكم",
-  "thisMonthEarnings": "أرباح هذا الشهر",
-  "sessions": "الجلسات",
-  "nextBooking": "الحجز القادم",
-  "latestReview": "أحدث تقييم",
-  "availabilityReminderTitle": "تذكير بالتوافر",
-  "availabilityReminderMessage": "لا تنسَ تحديث جدول التوافر الخاص بك!",
-  "quickActions": "إجراءات سريعة",
-  "setAvailability": "تعيين التوافر",
-  "viewBookings": "عرض الحجوزات",
-  "editProfile": "تعديل الملف الشخصي",
-  "reviewTimeAgo": "منذ يومين",
-  "reviewUserName": "أحمد",
-  "reviewComment": "كانت الممرضة محترفة للغاية ومهتمة!"
-}
+    "title": "لوحة التحكم",
+    "bannedMessage": "تم <strong>حظر</strong> حسابك. لا يمكنك قبول حجوزات جديدة في الوقت الحالي.",
+    "totalEarnings": "إجمالي الأرباح",
+    "monthlyEarnings": "أرباح هذا الشهر",
+    "totalBookings": "إجمالي الجلسات",
+    "nextBooking": "الحجز القادم",
+    "noUpcoming": "لا توجد حجوزات قادمة",
+    "latestReview": "أحدث تقييم",
+    "timeAgo": {
+      "minutes": "منذ {count} دقيقة",
+      "hours": "منذ {count} ساعة",
+      "days": "منذ {count} يوم"
+},
+  "noReviews": "لا توجد تقييمات بعد"
+} 

@@ -5,13 +5,13 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '25%' }"></div>
       </div>
-      <div class="progress-label">Step 1 of 4 (25%)</div>
+      <div class="progress-label">{{ $t("Joinasanurse.stepLabel") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">Personal Information</h1>
-      <p class="form-subtitle">Please provide your personal details</p>
+      <h1 class="form-title">{{ $t("Joinasanurse.title") }}</h1>
+      <p class="form-subtitle">{{ $t("Joinasanurse.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <div class="form-grid">
@@ -70,114 +70,123 @@
           </div>
 
           <div class="input-group">
-            <label for="password">Password</label>
+            <label for="password">{{ $t("Joinasanurse.password") }}</label>
             <input
               type="password"
               id="password"
               v-model="formData.password"
-              placeholder="Enter your password"
+              :placeholder="$t('Joinasanurse.passwordPlaceholder')"
               required
               pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}"
-              title="Password must be at least 8 characters long and include uppercase, lowercase letters, and a number."
+              title="Password must be at least 8 characters long and include
+            uppercase, lowercase letters, and a number."
             />
           </div>
 
           <!-- Confirm Password -->
           <div class="input-group">
-            <label for="confirmPassword">Confirm Password</label>
+            <label for="confirmPassword">{{
+              $t("Joinasanurse.confirmPassword")
+            }}</label>
             <input
               type="password"
               id="confirmPassword"
               v-model="formData.confirmPassword"
-              placeholder="Confirm your password"
+              :placeholder="$t('Joinasanurse.confirmPasswordPlaceholder')"
               required
             />
           </div>
 
           <!-- Date of Birth -->
           <div class="input-group">
-            <label for="dob">Date of Birth</label>
+            <label for="dob">{{ $t("Joinasanurse.dob") }}</label>
             <input type="date" id="dob" v-model="formData.dob" required />
           </div>
 
           <!-- Gender -->
           <div class="input-group">
-            <label for="gender">Gender</label>
+            <label for="gender">{{ $t("Joinasanurse.gender") }}</label>
             <select id="gender" v-model="formData.gender" required>
-              <option value="" disabled selected>Select your gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="" disabled selected>
+                {{ $t("Joinasanurse.gender") }}
+              </option>
+              <option :value="'male'">{{ $t("Joinasanurse.male") }}</option>
+              <option :value="'female'">{{ $t("Joinasanurse.female") }}</option>
             </select>
           </div>
 
           <!-- National ID -->
           <div class="input-group">
-            <label for="nationalId">National ID Number</label>
+            <label for="nationalId">{{ $t("Joinasanurse.nationalId") }}</label>
             <input
               type="text"
               id="nationalId"
               v-model="formData.nationalId"
-              placeholder="Enter your national ID"
+              :placeholder="$t('Joinasanurse.nationalIdPlaceholder')"
               required
             />
           </div>
 
           <!-- Phone Number -->
           <div class="input-group">
-            <label for="phone">Phone Number</label>
+            <label for="phone">{{ $t("Joinasanurse.phone") }}</label>
             <input
               type="tel"
               id="phone"
               v-model="formData.phone"
-              placeholder="Enter your phone number"
+              :placeholder="$t('Joinasanurse.phonePlaceholder')"
               required
             />
           </div>
 
           <!-- Email -->
           <div class="input-group">
-            <label for="email">Email Address</label>
+            <label for="email">{{ $t("Joinasanurse.email") }}</label>
             <input
               type="email"
               id="email"
               v-model="formData.email"
-              placeholder="Enter your email"
+              :placeholder="$t('Joinasanurse.emailPlaceholder')"
               required
             />
           </div>
 
           <!-- City -->
           <div class="input-group">
-            <label for="city">City</label>
+            <label for="city">{{ $t("Joinasanurse.city") }}</label>
             <select
               id="city"
               v-model="formData.city"
               @change="formData.area = ''"
               required
             >
-              <option value="" disabled>Select your city</option>
+              <option value="" disabled>
+                {{ $t("Joinasanurse.citySelect") }}
+              </option>
               <option v-for="city in cities" :key="city" :value="city">
-                {{ city }}
+                {{ $t(`data.cities.${city}`) }}
               </option>
             </select>
           </div>
 
           <!-- Area -->
           <div class="input-group">
-            <label for="area">Area</label>
+            <label for="area">{{ $t("Joinasanurse.area") }}</label>
             <select
               id="area"
               v-model="formData.area"
               :disabled="!formData.city"
               required
             >
-              <option value="" disabled>Select your area</option>
+              <option value="" disabled>
+                {{ $t("Joinasanurse.areaSelect") }}
+              </option>
               <option
                 v-for="area in areas[formData.city] || []"
                 :key="area"
                 :value="area"
               >
-                {{ area }}
+                {{ $t(`data.areas.${area}`) }}
               </option>
             </select>
           </div>
@@ -185,7 +194,7 @@
 
         <div class="form-actions">
           <button type="submit" class="submit-btn">
-            Continue to Professional Info
+            {{ $t("Joinasanurse.submit") }}
           </button>
         </div>
       </form>
@@ -353,8 +362,8 @@ const handleSubmit = () => {
   display: block;
   margin-bottom: 0.5rem;
   color: #19599a;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .input-group input,

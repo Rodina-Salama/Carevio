@@ -1,0 +1,28 @@
+{
+    "stepLabel": "Step 3 of 4 (75%)",
+    "title": "Document Uploads",
+    "subtitle": "Please upload all required documents",
+    "cv": "CV (PNG/JPG)",
+    "id": "National ID",
+    "idFront": "Front Side",
+    "idBack": "Back Side",
+    "additional": "Additional Documents",
+    "photo": "Personal Photo (choose a professional photo)",
+    "nursingLicense": "Nursing License",
+    "chooseFile": "Choose File",
+    "noFile": "No file chosen",
+    "back": "Back",
+    "submit": "Submit Application",
+    "submitting": "Submitting...",
+    "step": "Step 3 of 4 (75%)",
+    "error": {
+      "fileTooLarge": "File too large (max 5MB)",
+      "fileType": "Only JPG/PNG image files are allowed",
+      "step1": "Please complete Step 1: Personal Information",
+      "step2": "Please complete Step 2: Professional Information",
+      "emailInUse": "Email is already registered. Please use a different email.",
+      "authFailed": "Authentication failed",
+      "submissionFailed": "Submission failed"
+    
+  }
+}

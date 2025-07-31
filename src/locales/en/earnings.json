@@ -8,5 +8,6 @@
   "client": "Client Name",
   "amount": "Amount Paid",
   "status": "Status",
-  "paid": "Paid"
+  "paid": "Paid",
+  "paymentMethod": "Payment Method"
 }

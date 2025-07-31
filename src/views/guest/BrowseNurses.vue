@@ -5,14 +5,14 @@
       <select v-model="selectedCity">
         <option value="">{{ $t("browse.chooseCity") }}</option>
         <option v-for="city in cities" :key="city" :value="city">
-          {{ city }}
+          {{ $t(`data.cities.${city}`) }}
         </option>
       </select>
 
       <select v-model="selectedArea" :disabled="!selectedCity">
         <option value="">{{ $t("browse.chooseArea") }}</option>
         <option v-for="area in filteredAreas" :key="area" :value="area">
-          {{ area }}
+          {{ $t(`data.areas.${area}`) }}
         </option>
       </select>
 
@@ -23,7 +23,7 @@
           :key="service"
           :value="service"
         >
-          {{ service }}
+          {{ $t(`data.specializations.${service}`) }}
         </option>
       </select>
 
@@ -33,19 +33,17 @@
         <option value="male">{{ $t("browse.male") }}</option>
       </select>
       <select v-model="selectedDay">
-        <option value="">Available day</option>
+        <option value="">{{ $t("browse.chooseDay") }}</option>
         <option v-for="day in availableDays" :key="day" :value="day">
-          {{ day }}
+          {{ $t(`data.days.${day}`) }}
         </option>
       </select>
       <select v-model="selectedShift">
-        <option value="">Available time</option>
-        <option value="morning">Morning</option>
-        <option value="evening">Evening</option>
-        <option value="overnight">overnight</option>
+        <option value="">{{ $t("browse.chooseShift") }}</option>
+        <option value="morning">{{ $t("data.shifts.morning") }}</option>
+        <option value="evening">{{ $t("data.shifts.evening") }}</option>
+        <option value="overnight">{{ $t("data.shifts.overnight") }}</option>
       </select>
-      <button class="search-btn" @click="handleSearch">Search</button>
-      <button class="reset-btn" @click="resetFilters">Reset</button>
 
       <button class="search-btn" @click="handleSearch">
         {{ $t("browse.searchButton") }}
@@ -57,7 +55,10 @@
 
     <!-- Cards -->
     <div class="container">
-      <template v-if="filteredNurses.length">
+      <div v-if="loading" class="loading-wrapper">
+        <LoadingSpinner />
+      </div>
+      <template v-else-if="filteredNurses.length">
         <div v-for="nurse in filteredNurses" :key="nurse.id" class="card">
           <div class="badge">{{ $t("browse.verifiedBadge") }}</div>
           <div class="header">
@@ -73,15 +74,23 @@
                 {{ nurse.personal.lastNameEn }}
               </h2>
               <div class="rating">
-                ★ {{ nurse.rating ? nurse.rating.toFixed(1) : "No rating" }}
+                ★
+                {{
+                  nurse.rating ? nurse.rating.toFixed(1) : $t("browse.noRating")
+                }}
+
                 <span class="votes">({{ nurse.ratingCount || 0 }})</span>
               </div>
             </div>
           </div>
           <div class="location">
-            <span class="icon">📍</span>
+            <span class="contact-icon"
+              ><i class="fas fa-location-dot"></i>&nbsp;</span
+            >
             {{
-              nurse.personal.city + ", " + (nurse.personal.area || "Unknown")
+              $t(`data.cities.${nurse.personal.city}`) +
+              ", " +
+              $t(`data.areas.${nurse.personal.area}`)
             }}
           </div>
           <div class="specializations">
@@ -90,7 +99,7 @@
               :key="i"
               class="spec"
             >
-              {{ spec }}
+              {{ $t(`data.specializations.${spec}`) }}
             </span>
           </div>
           <p class="description">
@@ -101,16 +110,8 @@
               :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
               class="view-btn"
             >
-              View
+              {{ $t("browse.viewButton") }}
             </router-link>
-            <button>
-              <router-link
-                :to="{ name: 'NurseProfile', params: { id: nurse.id } }"
-                class="view-btn"
-              >
-                {{ $t("browse.viewButton") }}
-              </router-link>
-            </button>
           </div>
         </div>
       </template>
@@ -127,6 +128,7 @@ import { db } from "@/firebase";
 import { cities, areas } from "@/data/locationOptions";
 import { specializationOptions } from "@/data/specializationOptions";
 import { availableDays } from "@/data/availableDays";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 export default {
   name: "BrowseNurse",
@@ -144,6 +146,7 @@ export default {
       specializationOptions,
       isFiltered: false,
       availableDays,
+      loading: true,
     };
   },
   computed: {
@@ -198,42 +201,51 @@ export default {
     },
   },
   async created() {
-    const nursesSnap = await getDocs(collection(db, "applications"));
-    const reviewsSnap = await getDocs(collection(db, "reviews"));
+    this.loading = true;
+    try {
+      const nursesSnap = await getDocs(collection(db, "applications"));
+      const reviewsSnap = await getDocs(collection(db, "reviews"));
 
-    const reviews = reviewsSnap.docs.map((doc) => doc.data());
+      const reviews = reviewsSnap.docs.map((doc) => doc.data());
 
-    const nurses = nursesSnap.docs.map((doc) => {
-      const nurseId = doc.id;
+      const nurses = nursesSnap.docs.map((doc) => {
+        const nurseId = doc.id;
 
-      // Get only reviews for this nurse
-      const nurseReviews = reviews.filter(
-        (review) => review.nurseId === nurseId
-      );
+        const nurseReviews = reviews.filter(
+          (review) => review.nurseId === nurseId
+        );
 
-      const ratingCount = nurseReviews.length;
-      const rating = ratingCount
-        ? nurseReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
-          ratingCount
-        : null;
+        const ratingCount = nurseReviews.length;
+        const rating = ratingCount
+          ? nurseReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+            ratingCount
+          : null;
 
-      return {
-        id: nurseId,
-        ...doc.data(),
-        rating,
-        ratingCount,
-      };
-    });
+        return {
+          id: nurseId,
+          ...doc.data(),
+          rating,
+          ratingCount,
+        };
+      });
 
-    this.nurses = nurses;
-    const query = this.$route.query;
-    if (query.city || query.area || query.service) {
-      this.selectedCity = query.city || "";
-      this.selectedArea = query.area || "";
-      this.selectedService = query.service || "";
-      this.isFiltered = true;
+      this.nurses = nurses;
+
+      const query = this.$route.query;
+      if (query.city || query.area || query.service) {
+        this.selectedCity = query.city || "";
+        this.selectedArea = query.area || "";
+        this.selectedService = query.service || "";
+        this.isFiltered = true;
+      }
+    } finally {
+      this.loading = false;
     }
   },
+  components: {
+    LoadingSpinner,
+  },
+
   methods: {
     handleSearch() {
       this.isFiltered = true;
@@ -252,6 +264,12 @@ export default {
 </script>
 
 <style scoped>
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .browse-nurses {
   padding: 1rem;
   max-width: 1800px;
@@ -320,8 +338,7 @@ export default {
   font-size: 14px;
 }
 
-.search-btn,
-.reset-btn {
+.search-btn {
   background-color: #19599a;
   color: white;
   cursor: pointer;
@@ -334,14 +351,14 @@ export default {
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
   border: 2px solid #19599a;
+  transition: background-color 0.3s;
 }
-
 .search-btn:hover {
-  background-color: #009acb;
+  background-color: #67aef5ff;
 }
 
 .reset-btn:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 
@@ -417,7 +434,7 @@ export default {
 .badge {
   position: absolute;
   top: 12px;
-  right: 12px;
+  inset-inline-end: 12px;
   background: #d1fae5;
   color: #065f46;
   font-size: 12px;
@@ -523,11 +540,6 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.view-btn:hover {
-  background-color: #1a75d5ff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
 .no-results {
   grid-column: 1 / -1;
   text-align: center;

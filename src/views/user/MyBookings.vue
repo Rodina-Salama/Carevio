@@ -2,7 +2,7 @@
   <div class="my-bookings-page">
     <h1>{{ $t("myBookings.title") }}</h1>
 
-    <div v-if="loading">{{ $t("myBookings.loading") }}</div>
+    <LoadingSpinner v-if="loading" />
 
     <div v-else>
       <!-- Active Bookings -->
@@ -21,18 +21,15 @@
             {{ $t("myBookings.to") }}
             {{ booking.to }}
           </p>
-          <p><strong>Nurse:</strong> {{ booking.nurseName }}</p>
-          <p><strong>Service:</strong> {{ booking.service }}</p>
-
-          <p><strong>Price:</strong> EGP {{ booking.price }}</p>
-          <p>
-            <strong> {{ $t("myBookings.service") }}:</strong>
-            {{ booking.service }}
-          </p>
           <p>
             <strong>{{ $t("myBookings.nurse") }}:</strong>
             {{ booking.nurseName }}
           </p>
+          <p>
+            <strong>{{ $t("myBookings.service") }}:</strong>
+            {{ $t(`data.specializations.${booking.service}`) }}
+          </p>
+
           <p>
             <strong>{{ $t("myBookings.price") }}:</strong> EGP
             {{ booking.price }}
@@ -54,9 +51,19 @@
             {{ $t("myBookings.to") }}
             {{ booking.to }}
           </p>
-          <p><strong>Nurse:</strong> {{ booking.nurseName }}</p>
-          <p><strong>Service:</strong> {{ booking.service }}</p>
-          <p><strong>Price:</strong> EGP {{ booking.price }}</p>
+          <p>
+            <strong>{{ $t("myBookings.nurse") }}:</strong>
+            {{ booking.nurseName }}
+          </p>
+          <p>
+            <strong>{{ $t("myBookings.service") }}:</strong>
+            {{ $t(`data.specializations.${booking.service}`) }}
+          </p>
+
+          <p>
+            <strong>{{ $t("myBookings.price") }}:</strong> EGP
+            {{ booking.price }}
+          </p>
         </div>
 
         <div class="buttons-row">
@@ -65,40 +72,18 @@
             @click="openModal(booking)"
             class="add-review"
           >
-            Add Review
+            {{ $t("myBookings.addReview") }}
           </button>
 
           <button
             @click="bookSameNurse(booking.nurseId)"
             class="book-again-btn"
           >
-            Book the Same Nurse
+            {{ $t("myBookings.bookSameNurse") }}
           </button>
         </div>
 
         <div v-if="booking.review" class="submitted-review">
-          <p><strong>Your Review:</strong> {{ booking.review }}</p>
-          <p><strong>Rating:</strong> {{ booking.rating }} ★</p>
-          <p>
-            <strong>{{ $t("myBookings.service") }}:</strong>
-            {{ booking.service }}
-          </p>
-          <p>
-            <strong>{{ $t("myBookings.nurse") }}:</strong>
-            {{ booking.nurseName }}
-          </p>
-          <p>
-            <strong>{{ $t("myBookings.price") }}:</strong> EGP
-            {{ booking.price }}
-          </p>
-        </div>
-
-        <div v-if="!booking.review" class="review-box">
-          <button @click="openModal(booking)">
-            {{ $t("myBookings.addReview") }}
-          </button>
-        </div>
-        <div v-else class="submitted-review">
           <p>
             <strong>{{ $t("myBookings.yourReview") }}:</strong>
             {{ booking.review }}
@@ -114,11 +99,8 @@
     <!-- Review Modal -->
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-box">
-        <button class="close-btn" @click="closeModal">×</button>
-        <h3>Rate your experience</h3>
-        <button class="custom-close-btn" @click="closeModal">×</button>
+        <span class="close-icon" @click="closeModal"> × </span>
         <h3>{{ $t("myBookings.modalTitle") }}</h3>
-
         <div class="stars">
           <span
             v-for="n in 5"
@@ -157,6 +139,7 @@ import {
 import { db } from "@/firebase";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const router = useRouter();
 const bookings = ref([]);
@@ -279,12 +262,18 @@ onMounted(() => {
 <style scoped>
 .my-bookings-page {
   padding: 2rem 3rem;
-  text-align: left;
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
 }
-
+.close-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 36px;
+  cursor: pointer;
+  color: #333;
+}
 h1 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
@@ -336,7 +325,7 @@ button {
 }
 
 button:hover {
-  background-color: #1565c0;
+  background-color: #67aef5ff;
 }
 
 /* Modal Styles */
@@ -377,8 +366,8 @@ button:hover {
   padding: 0;
   line-height: 1;
   z-index: 1000;
-  width: 32px; /* مثلا */
-  height: 32px; /* مثلا */
+  width: 32px !important;
+  height: 32px;
   display: flex;
   flex-direction: row-reverse;
 }
@@ -429,9 +418,8 @@ button:hover {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  width: 90%;
+  width: 100%;
   max-width: 400px;
-  position: relative;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -443,7 +431,10 @@ button:hover {
   font-weight: bold;
   text-align: center;
 }
-
+.buttons-row {
+  display: flex;
+  gap: 1rem;
+}
 /* Star rating */
 .star-rating {
   display: flex;
@@ -458,21 +449,24 @@ button:hover {
 /* Comment textarea */
 .modal-box textarea {
   width: 100%;
-  height: 80px;
+  height: 100px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 0.6rem;
   resize: none;
   margin-bottom: 1rem;
   font-size: 0.95rem;
+  box-sizing: border-box;
 }
 
 /* Submit button (inherits global style) */
 .modal-box button {
   width: 100%;
 }
-.add-review {
-  margin-right: 1rem;
+.add-review,
+.book-again-btn {
+  color: #ffffff;
+  background-color: #19599a;
 }
 .booking-info p {
   font-size: 1.15rem;

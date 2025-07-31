@@ -1,14 +1,15 @@
 <template>
+  <LoadingSpinner v-if="loading" class="loading-wrapper" />
   <div class="booking-information" v-if="!loading">
-    <h1 class="title">Book a Nurse</h1>
+    <h1 class="title">{{ $t("booking.title") }}</h1>
     <p
       v-if="!nurseData?.isVisible || nurseData?.isBanned"
       class="nurse-warning"
     >
-      This nurse is currently not available for booking.
+      {{ $t("booking.notAvailable") }}
     </p>
     <p class="subtitle">
-      You're booking with
+      {{ $t("booking.bookingWith") }}
       <strong>
         {{ nurseData?.personal?.firstNameEn || "..." }}
         {{ nurseData?.personal?.lastNameEn || "" }}
@@ -18,38 +19,38 @@
     <div class="form-box">
       <!-- User Name -->
       <div class="form-item">
-        <label for="userName">Your Name</label>
+        <label for="userName">{{ $t("booking.yourName") }}</label>
         <input
           type="text"
           id="userName"
           v-model="booking.userName"
-          placeholder="Your full name"
+          :placeholder="$t('booking.placeholderName')"
           required
         />
       </div>
 
       <!-- Service Selection -->
       <div class="form-item">
-        <label for="service">Select Service</label>
+        <label for="service">{{ $t("booking.selectService") }}</label>
         <select
           id="service"
           v-model="booking.service"
           @change="updatePrice"
           required
         >
-          <option disabled value="">Choose a service</option>
+          <option disabled value="">{{ $t("booking.chooseService") }}</option>
           <option
             v-for="service in nurseData?.professional.specialization || []"
             :key="service"
             :value="service"
           >
-            {{ service }}
+            {{ $t(`data.specializations.${service}`) }}
           </option>
         </select>
       </div>
       <!-- Location (readonly) -->
       <div class="form-item">
-        <label>Location</label>
+        <label>{{ $t("booking.location") }}</label>
         <input
           type="text"
           :value="
@@ -63,19 +64,19 @@
 
       <!-- User Address -->
       <div class="form-item">
-        <label for="address">Your Address</label>
+        <label for="address">{{ $t("booking.yourAddress") }}</label>
         <input
           type="text"
           id="address"
           v-model="booking.address"
-          placeholder="e.g., 14th El Maadi street"
+          :placeholder="$t('booking.placeholderAddress')"
           required
         />
       </div>
 
       <!-- Date Selection -->
       <div class="form-item">
-        <label for="date">Select Date</label>
+        <label for="date">{{ $t("booking.selectDate") }}</label>
         <input
           type="date"
           id="date"
@@ -89,24 +90,26 @@
 
       <!-- Shift Selection -->
       <div class="form-item">
-        <label for="shift">Select Time</label>
+        <label for="shift">{{ $t("booking.selectTime") }}</label>
         <select id="shift" v-model="selectedShift">
-          <option disabled value="">Select shift</option>
+          <option disabled value="">{{ $t("booking.selectShift") }}</option>
           <option
             v-for="shift in nurseData?.professional?.shifts || []"
             :key="shift"
             :value="shift"
           >
-            {{ shift }}
+            {{ $t(`data.shifts.${shift}`) }}
           </option>
         </select>
       </div>
 
       <!-- From Time -->
       <div class="form-item" v-if="selectedShift">
-        <label for="fromTime">From</label>
+        <label for="fromTime">{{ $t("booking.from") }}</label>
         <select id="fromTime" v-model="selectedFrom">
-          <option disabled value="">Select start time</option>
+          <option disabled value="">
+            {{ $t("booking.selectStartTime") }}
+          </option>
           <option
             v-for="slot in fromOptions"
             :key="slot.from"
@@ -119,9 +122,9 @@
 
       <!-- To Time -->
       <div class="form-item" v-if="selectedFrom">
-        <label for="toTime">To</label>
+        <label for="toTime">{{ $t("booking.to") }}</label>
         <select id="toTime" v-model="selectedTo">
-          <option disabled value="">Select end time</option>
+          <option disabled value="">{{ $t("booking.selectEndTime") }}</option>
           <option v-for="slot in toOptions" :key="slot.to" :value="slot.to">
             {{ slot.to }}
           </option>
@@ -130,7 +133,7 @@
 
       <!-- Price Display -->
       <div class="form-item">
-        <label>Price Calculation</label>
+        <label>{{ $t("booking.priceCalculation") }}</label>
         <div v-if="calculatedPrice">
           <p v-if="detailedPriceDisplay">
             {{ detailedPriceDisplay }}
@@ -141,25 +144,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="notes">Notes (optional):</label>
+        <label for="notes">{{ $t("booking.notes") }}:</label>
         <textarea
           id="notes"
           v-model="booking.notes"
           rows="4"
-          placeholder="Write any notes or special instructions..."
+          :placeholder="$t('booking.placeholderNotes')"
           class="form-control"
         ></textarea>
       </div>
-      <div>
-        Note: Service fee does not include the cost of medical supplies. The
-        nurse will provide or request the necessary items and charge for them
-        separately based on the case.
+      <div class="noteInfo">
+        {{ $t("booking.noteInfo") }}
       </div>
       <!-- Buttons -->
       <div class="actions">
-        <button class="cancel" @click="$router.back()">Back</button>
+        <button class="cancel" @click="$router.back()">
+          {{ $t("booking.back") }}
+        </button>
         <button class="confirm" @click="proceedToPayment">
-          Proceed to Payment
+          {{ $t("booking.proceed") }}
         </button>
       </div>
     </div>
@@ -174,7 +177,10 @@ import { db } from "@/firebase";
 import { shiftOptions } from "@/data/shiftOptions";
 import { useUserStore } from "@/stores/userStore";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { useI18n } from "vue-i18n";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
+const { t } = useI18n();
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
@@ -282,7 +288,7 @@ const handleDateChange = () => {
   const dayName = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
 
   if (!nurseData.value.professional.availableDays.includes(dayName)) {
-    alert(`Nurse is not available on ${dayName}`);
+    alert(`${t("booking.notAvailableOnDay")} ${dayName}`);
     booking.value.date = "";
     return;
   }
@@ -314,7 +320,7 @@ const generateAvailableTimes = () => {
 
 const proceedToPayment = () => {
   if (!nurseData.value?.isVisible || nurseData.value?.isBanned) {
-    alert("Sorry, this nurse cannot be booked at the moment.");
+    alert(t("booking.nurseBlocked"));
     return;
   }
   if (
@@ -326,7 +332,7 @@ const proceedToPayment = () => {
     !selectedFrom.value ||
     !selectedTo.value
   ) {
-    alert("Please fill in all fields before proceeding.");
+    alert(t("booking.fillAllFields"));
     return;
   }
   const selectedDateTime = new Date(
@@ -338,11 +344,11 @@ const proceedToPayment = () => {
   const diffInHours = diffInMs / (1000 * 60 * 60);
 
   if (selectedDateTime < now) {
-    alert("You can't book a time that has already passed.");
+    alert(t("booking.timePassed"));
     return;
   }
   if (diffInHours < 2) {
-    alert("Please book at least 2 hours in advance.");
+    alert(t("booking.bookInAdvance"));
     return;
   }
   const nurseFullName = `${nurseData.value?.personal?.firstNameEn || ""} ${
@@ -409,7 +415,7 @@ const proceedToPayment = () => {
   localStorage.setItem("bookingData", JSON.stringify(bookingData));
   checkForConflict().then((conflict) => {
     if (conflict) {
-      alert("This time slot is already booked. Please choose another time.");
+      alert(t("booking.bookingConflict"));
       return;
     }
 
@@ -440,7 +446,9 @@ onMounted(fetchNurseData);
   font-weight: bold;
   margin-top: 20px;
 }
-
+.noteInfo {
+  font-weight: bold;
+}
 .subtitle {
   font-size: 16px;
   color: #333;
@@ -488,7 +496,7 @@ onMounted(fetchNurseData);
 }
 
 .cancel:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 
@@ -508,14 +516,12 @@ form-group {
   font-weight: 700;
   margin-bottom: 8px;
   color: #333;
-  text-align: left;
 }
 label {
   font-weight: 777;
   color: #333;
   display: block;
   margin-bottom: 5px;
-  text-align: left;
 }
 
 .form-group textarea {

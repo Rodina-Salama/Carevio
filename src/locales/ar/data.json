@@ -1,0 +1,52 @@
+{
+"cities": {
+  "Cairo": "القاهرة",
+  "Alexandria": "الإسكندرية",
+  "Giza": "الجيزة"
+},
+"areas": {
+  "Downtown": "وسط البلد",
+  "Maadi": "المعادي",
+  "Zamalek": "الزمالك",
+  "Nasr City": "مدينة نصر",
+  "Miami": "ميامي",
+  "Stanley": "ستانلي",
+  "Sidi Gaber": "سيدي جابر",
+  "Smouha": "سموحة",
+  "Dokki": "الدقي",
+  "Mohandessin": "المهندسين",
+  "Haram": "الهرم",
+  "6th of October": "٦ أكتوبر"
+},
+"days": {
+    "Saturday": "السبت",
+    "Sunday": "الأحد",
+    "Monday": "الاثنين",
+    "Tuesday": "الثلاثاء",
+    "Wednesday": "الأربعاء",
+    "Thursday": "الخميس",
+    "Friday": "الجمعة"
+},
+"languages": {
+    "arabic": "العربية",
+    "english": "الإنجليزية",
+    "french": "الفرنسية",
+    "german": "الألمانية"
+},
+  "specializations": {
+    "Elderly Care": "رعاية المسنين",
+    "Pediatric Support": "دعم الأطفال",
+    "Injections & IV Therapy": "الحقن والعلاج الوريدي",
+    "Bedridden Patient": "رعاية المرضى طريحي الفراش",
+    "Disability Care": "رعاية ذوي الإعاقة",
+    "Vital Signs Monitoring": "مراقبة العلامات الحيوية",
+    "Wound Dressing": "تضميد الجروح",
+    "Catheter Care": "العناية بالقسطرة",
+    "Post-Surgical Care": "الرعاية بعد الجراحة"
+},
+"shifts": {
+    "morning": "صباحًا",
+    "evening": "مساءً",
+    "overnight": "ليلاً"
+}
+}

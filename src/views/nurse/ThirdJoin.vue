@@ -5,18 +5,18 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '75%' }"></div>
       </div>
-      <div class="progress-label">Step 3 of 4 (75%)</div>
+      <div class="progress-label">{{ $t("thirdjoin.stepLabel") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">Document Uploads</h1>
-      <p class="form-subtitle">Please upload all required documents</p>
+      <h1 class="form-title">{{ $t("thirdjoin.title") }}</h1>
+      <p class="form-subtitle">{{ $t("thirdjoin.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <!-- Document Upload Sections -->
         <div class="upload-section">
-          <h3 style="color: #555">CV (PNG/JPG)</h3>
+          <h3>{{ $t("thirdjoin.cv") }}</h3>
           <div class="upload-group">
             <input
               type="file"
@@ -26,18 +26,20 @@
               @change="handleFileUpload('cv', $event)"
               required
             />
-            <label for="cv" class="upload-btn">Choose File</label>
+            <label for="cv" class="upload-btn">{{
+              $t("thirdjoin.chooseFile")
+            }}</label>
             <span class="file-name">{{
-              documents.cv ? documents.cv.name : "No file chosen"
+              documents.cv ? documents.cv.name : $t("thirdjoin.noFile")
             }}</span>
           </div>
         </div>
 
         <div class="upload-section">
-          <h3>National ID</h3>
+          <h3>{{ $t("thirdjoin.id") }}</h3>
           <div class="upload-grid">
             <div class="upload-group">
-              <label>Front Side</label>
+              <label>{{ $t("thirdjoin.idFront") }}</label>
               <input
                 type="file"
                 id="idFront"
@@ -46,13 +48,17 @@
                 @change="handleFileUpload('idFront', $event)"
                 required
               />
-              <label for="idFront" class="upload-btn">Choose File</label>
+              <label for="idFront" class="upload-btn">{{
+                $t("thirdjoin.chooseFile")
+              }}</label>
               <span class="file-name">{{
-                documents.idFront ? documents.idFront.name : "No file chosen"
+                documents.idFront
+                  ? documents.idFront.name
+                  : $t("thirdjoin.noFile")
               }}</span>
             </div>
             <div class="upload-group">
-              <label>Back Side</label>
+              <label>{{ $t("thirdjoin.idBack") }}</label>
               <input
                 type="file"
                 id="idBack"
@@ -61,19 +67,23 @@
                 @change="handleFileUpload('idBack', $event)"
                 required
               />
-              <label for="idBack" class="upload-btn">Choose File</label>
+              <label for="idBack" class="upload-btn">{{
+                $t("thirdjoin.chooseFile")
+              }}</label>
               <span class="file-name">{{
-                documents.idBack ? documents.idBack.name : "No file chosen"
+                documents.idBack
+                  ? documents.idBack.name
+                  : $t("thirdjoin.noFile")
               }}</span>
             </div>
           </div>
         </div>
 
         <div class="upload-section">
-          <h3>Additional Documents</h3>
+          <h3>{{ $t("thirdjoin.additional") }}</h3>
           <div class="upload-grid">
             <div class="upload-group">
-              <label>Personal Photo (choose a professional photo)</label>
+              <label>{{ $t("thirdjoin.photo") }}</label>
               <input
                 type="file"
                 id="photo"
@@ -82,13 +92,15 @@
                 @change="handleFileUpload('photo', $event)"
                 required
               />
-              <label for="photo" class="upload-btn">Choose File</label>
+              <label for="photo" class="upload-btn">{{
+                $t("thirdjoin.chooseFile")
+              }}</label>
               <span class="file-name">{{
-                documents.photo ? documents.photo.name : "No file chosen"
+                documents.photo ? documents.photo.name : $t("thirdjoin.noFile")
               }}</span>
             </div>
             <div class="upload-group">
-              <label>Nursing License</label>
+              <label>{{ $t("thirdjoin.nursingLicense") }}</label>
               <input
                 type="file"
                 id="nursingLicense"
@@ -97,20 +109,26 @@
                 @change="handleFileUpload('nursingLicense', $event)"
                 required
               />
-              <label for="nursingLicense" class="upload-btn">Choose File</label>
+              <label for="nursingLicense" class="upload-btn">{{
+                $t("thirdjoin.chooseFile")
+              }}</label>
               <span class="file-name">{{
                 documents.nursingLicense
                   ? documents.nursingLicense.name
-                  : "No file chosen"
+                  : $t("thirdjoin.noFile")
               }}</span>
             </div>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="button" class="back-btn" @click="goBack">Back</button>
+          <button type="button" class="back-btn" @click="goBack">
+            {{ $t("thirdjoin.back") }}
+          </button>
           <button type="submit" class="submit-btn" :disabled="isSubmitting">
-            {{ isSubmitting ? "Submitting..." : "Submit Application" }}
+            {{
+              isSubmitting ? $t("thirdjoin.submitting") : $t("thirdjoin.submit")
+            }}
           </button>
         </div>
       </form>
@@ -130,7 +148,16 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
+import { onMounted } from "vue";
 
+onMounted(() => {
+  const personalcheck = localStorage.getItem("personalData");
+  const professionalcheck = localStorage.getItem("professionalData");
+
+  if (!personalcheck || !professionalcheck) {
+    router.push("/join");
+  }
+});
 const CLOUDINARY_UPLOAD_PRESET = "Nurse_information";
 const getUploadUrl = () => {
   return "https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload";
@@ -412,10 +439,10 @@ input[type="file"] {
 }
 
 .back-btn {
-  background-color: #f8f9fa;
-  color: #495057;
+  background-color: transparent;
+  color: #19599a;
+  border: 1px solid #19599a;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -438,7 +465,7 @@ input[type="file"] {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #134980;
+  background-color: #67aef5ff;
 }
 
 .submit-btn:disabled {

@@ -1,53 +1,59 @@
 <template>
   <div class="booking-confirmation" v-if="!showSuccessMessage">
-    <div class="back-button" @click="$router.back()">← Back</div>
+    <div class="back-button" @click="$router.back()">
+      ← {{ $t("booking.back") }}
+    </div>
 
-    <h1 class="title">Booking Confirmation</h1>
+    <h1 class="title">{{ $t("booking.confirmationTitle") }}</h1>
     <p class="subtitle">
-      Please review your booking details below before confirming.
+      {{ $t("booking.reviewText") }}
     </p>
 
     <div class="details-box">
       <div class="detail">
-        <strong>Date</strong><span>{{ booking.date }}</span>
+        <strong>{{ $t("booking.date") }}</strong
+        ><span>{{ booking.date }}</span>
       </div>
       <div class="detail">
-        <strong>Time</strong><span>{{ booking.time }}</span>
+        <strong>{{ $t("booking.time") }}</strong
+        ><span>{{ booking.time }}</span>
       </div>
       <div class="detail">
-        <strong>Nurse</strong><span>{{ booking.nurse }}</span>
+        <strong>{{ $t("booking.nurse") }}</strong
+        ><span>{{ booking.nurse }}</span>
       </div>
       <div class="detail">
-        <strong>Service</strong><span>{{ booking.service }}</span>
+        <strong>{{ $t("booking.service") }}</strong>
+        <span>{{ $t(`data.specializations.${booking.service}`) }}</span>
       </div>
       <div class="detail">
-        <strong>Address</strong><span>{{ booking.address }}</span>
+        <strong>{{ $t("booking.address") }}</strong
+        ><span>{{ booking.address }}</span>
       </div>
       <div class="detail">
-        <strong>Total Cost</strong><span>{{ booking.total }} EGP</span>
+        <strong>{{ $t("booking.totalCost") }}</strong
+        ><span>{{ booking.total }} EGP</span>
       </div>
-      <div>
-        Note: Service fee does not include the cost of medical supplies. The
-        nurse will provide or request the necessary items and charge for them
-        separately based on the case.
+      <div class="noteInfo">
+        {{ $t("booking.noteInfo") }}
       </div>
       <div class="payment-methods">
         <label @click="handlePaypalClick">
           <input type="radio" value="paypal" v-model="paymentMethod" />
           <img :src="paypalImg" alt="PayPal" />
-          PayPal
+          {{ $t("booking.paypal") }}
         </label>
 
         <label>
           <input type="radio" value="cash" v-model="paymentMethod" />
           <img :src="cashImg" alt="Cash" />
-          Cash
+          {{ $t("booking.cash") }}
         </label>
       </div>
 
       <div class="actions">
         <button class="confirm" @click="handleConfirm" :disabled="isSubmitting">
-          Confirm Booking
+          {{ $t("booking.confirmBooking") }}
         </button>
       </div>
     </div>
@@ -56,7 +62,7 @@
   <!-- Success Modal -->
   <div v-if="showSuccessMessage" class="modal-overlay">
     <div class="modal-content">
-      <h2 class="success-title">Booking Confirmed!</h2>
+      <h2 class="success-title">{{ $t("booking.confirmed") }}</h2>
       <div class="success-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,11 +76,13 @@
         </svg>
       </div>
       <p class="success-text">
-        We've sent your booking confirmation via email. Please check your inbox.
+        {{ $t("booking.emailNotice") }}
       </p>
       <p class="success-note">
-        Redirecting to your bookings in {{ countdown }} seconds...
-        <button @click="router.push('/my-bookings')">Go Now</button>
+        {{ $t("booking.redirectNote") }}
+        <button @click="router.push('/my-bookings')">
+          {{ $t("booking.goNow") }}
+        </button>
       </p>
     </div>
   </div>
@@ -88,7 +96,9 @@ import cashImg from "@/assets/cash.png";
 import { db } from "@/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 
 const booking = ref({
@@ -108,6 +118,10 @@ let countdownInterval = null;
 
 onMounted(() => {
   const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+  if (!storedBooking) {
+    router.push("browse");
+    return;
+  }
   if (storedBooking) {
     booking.value = {
       date: storedBooking.date,
@@ -210,7 +224,7 @@ const handleConfirm = async () => {
   if (isSubmitting.value) return;
 
   if (!paymentMethod.value) {
-    alert("Please choose a payment method.");
+    alert(t("booking.selectPayment"));
     return;
   }
 
@@ -241,7 +255,9 @@ const handleConfirm = async () => {
   cursor: pointer;
   font-weight: bold;
 }
-
+.noteInfo {
+  font-weight: bold;
+}
 .title {
   font-size: 24px;
   font-weight: bold;
@@ -305,7 +321,7 @@ const handleConfirm = async () => {
 }
 
 .cancel:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 

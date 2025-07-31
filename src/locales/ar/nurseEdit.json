@@ -1,20 +1,22 @@
 {
-  "title": "تعديل الملف الشخصي",
-  "profilePicture": "صورة الملف الشخصي",
-  "upload": "رفع صورة",
-  "delete": "حذف",
-  "bio": "نبذة",
-  "enterHere": "ادخل هنا",
-  "pricing": "السعر",
-  "unit": "ج.م / الساعة",
-  "government": "المحافظة",
-  "cairo": "القاهرة",
-  "giza": "الجيزة",
-  "alexandria": "الاسكندرية",
-  "area": "المنطقة",
-  "nasrcity": "مدينة نصر",
-  "dokki": "الدقي",
-  "maadi": "المعادي",
-  "services": "الخدمات",
-  "save": "حفظ"
-}
+
+    "title": "تعديل الملف الشخصي",
+    "profilePicture": "الصورة الشخصية",
+    "upload": "رفع صورة",
+    "delete": "حذف",
+    "bio": "نبذة",
+    "pricing": "السعر",
+    "pricePlaceholder": "100",
+    "unit": "جنيه/ساعة",
+    "city": "المحافظة",
+    "area": "المنطقة",
+    "services": "الخدمات",
+    "availableDays": "الأيام المتاحة",
+    "languages": "اللغات",
+    "availableTime": "الوقت المتاح",
+    "profileVisibility": "إظهار ملفي على الموقع",
+    "changePassword": "تغيير كلمة المرور",
+    "save": "حفظ",
+    "enterHere": "أدخل هنا"
+  }
+

@@ -1,7 +1,7 @@
 <template>
   <section class="who-we-are">
     <div class="container">
-      <div class="content">
+      <div class="aboutcontent">
         <div class="text">
           <h2>{{ $t("about.title") }}</h2>
           <p>
@@ -64,7 +64,7 @@ export default {
   padding: 0 1rem;
 }
 
-.content {
+.aboutcontent {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -74,7 +74,6 @@ export default {
 
 .text {
   flex: 1;
-  text-align: left;
   align-self: flex-start;
 }
 
