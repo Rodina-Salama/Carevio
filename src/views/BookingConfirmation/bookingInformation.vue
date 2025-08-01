@@ -1,14 +1,14 @@
 <template>
   <div class="booking-information" v-if="!loading">
-    <h1 class="title">Book a Nurse</h1>
+    <h1 class="title">{{ $t("bookingNurse.title") }}</h1>
     <p
       v-if="!nurseData?.isVisible || nurseData?.isBanned"
       class="nurse-warning"
     >
-      This nurse is currently not available for booking.
+      {{ $t("bookingNurse.unavailable") }}
     </p>
     <p class="subtitle">
-      You're booking with
+      {{ $t("bookingNurse.subtitle") }}
       <strong>
         {{ nurseData?.personal?.firstNameEn || "..." }}
         {{ nurseData?.personal?.lastNameEn || "" }}
@@ -18,26 +18,28 @@
     <div class="form-box">
       <!-- User Name -->
       <div class="form-item">
-        <label for="userName">Your Name</label>
+        <label for="userName"> {{ $t("bookingNurse.userName") }}</label>
         <input
           type="text"
           id="userName"
           v-model="booking.userName"
-          placeholder="Your full name"
+          :placeholder="$t('bookingNurse.userNamePlaceholder')"
           required
         />
       </div>
 
       <!-- Service Selection -->
       <div class="form-item">
-        <label for="service">Select Service</label>
+        <label for="service">{{ $t("bookingNurse.service") }}</label>
         <select
           id="service"
           v-model="booking.service"
           @change="updatePrice"
           required
         >
-          <option disabled value="">Choose a service</option>
+          <option disabled value="">
+            {{ $t("bookingNurse.servicePlaceholder") }}
+          </option>
           <option
             v-for="service in nurseData?.professional.specialization || []"
             :key="service"
@@ -49,7 +51,7 @@
       </div>
       <!-- Location (readonly) -->
       <div class="form-item">
-        <label>Location</label>
+        <label>{{ $t("bookingNurse.location") }}</label>
         <input
           type="text"
           :value="
@@ -63,19 +65,19 @@
 
       <!-- User Address -->
       <div class="form-item">
-        <label for="address">Your Address</label>
+        <label for="address">{{ $t("bookingNurse.address") }}</label>
         <input
           type="text"
           id="address"
           v-model="booking.address"
-          placeholder="e.g., 14th El Maadi street"
+          :placeholder="$t('bookingNurse.addressPlaceholder')"
           required
         />
       </div>
 
       <!-- Date Selection -->
       <div class="form-item">
-        <label for="date">Select Date</label>
+        <label for="date">{{ $t("bookingNurse.date") }}</label>
         <input
           type="date"
           id="date"
@@ -89,9 +91,11 @@
 
       <!-- Shift Selection -->
       <div class="form-item">
-        <label for="shift">Select Time</label>
+        <label for="shift">{{ $t("bookingNurse.time") }}</label>
         <select id="shift" v-model="selectedShift">
-          <option disabled value="">Select shift</option>
+          <option disabled value="">
+            {{ $t("bookingNurse.shiftPlaceholder") }}
+          </option>
           <option
             v-for="shift in nurseData?.professional?.shifts || []"
             :key="shift"
@@ -104,9 +108,11 @@
 
       <!-- From Time -->
       <div class="form-item" v-if="selectedShift">
-        <label for="fromTime">From</label>
+        <label for="fromTime">{{ $t("bookingNurse.from") }}</label>
         <select id="fromTime" v-model="selectedFrom">
-          <option disabled value="">Select start time</option>
+          <option disabled value="">
+            {{ $t("bookingNurse.fromPlaceholder") }}
+          </option>
           <option
             v-for="slot in fromOptions"
             :key="slot.from"
@@ -119,9 +125,11 @@
 
       <!-- To Time -->
       <div class="form-item" v-if="selectedFrom">
-        <label for="toTime">To</label>
+        <label for="toTime">{{ $t("bookingNurse.to") }}</label>
         <select id="toTime" v-model="selectedTo">
-          <option disabled value="">Select end time</option>
+          <option disabled value="">
+            {{ $t("bookingNurse.toPlaceholder") }}
+          </option>
           <option v-for="slot in toOptions" :key="slot.to" :value="slot.to">
             {{ slot.to }}
           </option>
@@ -130,7 +138,7 @@
 
       <!-- Price Display -->
       <div class="form-item">
-        <label>Price Calculation</label>
+        <label> {{ $t("bookingNurse.price") }}</label>
         <div v-if="calculatedPrice">
           <p v-if="detailedPriceDisplay">
             {{ detailedPriceDisplay }}
@@ -141,25 +149,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="notes">Notes (optional):</label>
+        <label for="notes">{{ $t("bookingNurse.notes") }}</label>
         <textarea
           id="notes"
           v-model="booking.notes"
           rows="4"
-          placeholder="Write any notes or special instructions..."
+          :placeholder="$t('bookingNurse.notesPlaceholder')"
           class="form-control"
         ></textarea>
       </div>
       <div>
-        Note: Service fee does not include the cost of medical supplies. The
-        nurse will provide or request the necessary items and charge for them
-        separately based on the case.
+        {{ $t("bookingNurse.disclaimer") }}
       </div>
       <!-- Buttons -->
       <div class="actions">
-        <button class="cancel" @click="$router.back()">Back</button>
+        <button class="cancel" @click="$router.back()">
+          {{ $t("bookingNurse.back") }}
+        </button>
         <button class="confirm" @click="proceedToPayment">
-          Proceed to Payment
+          {{ $t("bookingNurse.confirm") }}
         </button>
       </div>
     </div>

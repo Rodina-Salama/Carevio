@@ -5,24 +5,26 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '50%' }"></div>
       </div>
-      <div class="progress-label">Step 2 of 4 (50%)</div>
+      <div class="progress-label">{{ $t("joinAsNurse.step2.progress") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">Professional Experience</h1>
-      <p class="form-subtitle">Tell us about your professional background</p>
+      <h1 class="form-title">{{ $t("joinAsNurse.step2.title") }}</h1>
+      <p class="form-subtitle">{{ $t("joinAsNurse.step2.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <div class="form-grid">
           <!-- Years of Experience -->
           <div class="input-group">
-            <label for="experience">Years of Experience</label>
+            <label for="experience">{{
+              $t("joinAsNurse.step2.experience")
+            }}</label>
             <input
               type="number"
               id="experience"
               v-model="formData.experience"
-              placeholder="Enter years of experience"
+              :placeholder="$t('joinAsNurse.step2.experiencePlaceholder')"
               min="0"
               required
             />
@@ -30,33 +32,34 @@
 
           <!-- License Number -->
           <div class="input-group">
-            <label for="licenseNumber">License Number</label>
+            <label for="licenseNumber">{{
+              $t("joinAsNurse.step2.license")
+            }}</label>
             <input
               type="text"
               id="licenseNumber"
               v-model="formData.licenseNumber"
-              placeholder="Enter your license number"
+              :placeholder="$t('joinAsNurse.step2.licensePlaceholder')"
               required
             />
           </div>
 
           <!-- Price-->
           <div class="input-group">
-            <label for="Price"
-              >Your hourly rate (EGP) — Carevio takes a 15% commission
-              fee</label
-            >
+            <label for="Price">
+              {{ $t("joinAsNurse.step2.priceLabel") }}
+            </label>
             <input
               type="text"
               id="price"
               v-model="formData.price"
-              placeholder="Enter your Price (Price/hour)"
+              :placeholder="$t('joinAsNurse.step2.pricePlaceholder')"
               required
             />
           </div>
           <!-- Available Days -->
           <div class="input-group">
-            <label>Available Days</label>
+            <label>{{ $t("joinAsNurse.step2.availableDays") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -78,7 +81,7 @@
           <!-- Shifts -->
           <!-- Shifts -->
           <div class="input-group">
-            <label>Available Time</label>
+            <label>{{ $t("joinAsNurse.step2.shifts") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -100,7 +103,7 @@
 
           <!-- Languages -->
           <div class="input-group">
-            <label>Languages</label>
+            <label>{{ $t("joinAsNurse.step2.languages") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -120,7 +123,7 @@
           </div>
           <!-- Specialization -->
           <div class="input-group">
-            <label>Services</label>
+            <label>{{ $t("joinAsNurse.step2.services") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -141,11 +144,11 @@
 
           <!-- Bio -->
           <div class="input-group full-width">
-            <label for="bio">Bio</label>
+            <label for="bio">{{ $t("joinAsNurse.step2.bio") }}</label>
             <textarea
               id="bio"
               v-model="formData.bio"
-              placeholder="Write your bio..."
+              :placeholder="$t('joinAsNurse.step2.bioPlaceholder')"
               rows="4"
               required
             ></textarea>
@@ -153,8 +156,12 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="back-btn" @click="goBack">Back</button>
-          <button type="submit" class="submit-btn">Next</button>
+          <button type="button" class="back-btn" @click="goBack">
+            {{ $t("joinAsNurse.buttons.back") }}
+          </button>
+          <button type="submit" class="submit-btn">
+            {{ $t("joinAsNurse.buttons.next") }}
+          </button>
         </div>
       </form>
     </div>

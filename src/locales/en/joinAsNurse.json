@@ -1,0 +1,103 @@
+{
+  "step1": {
+    "title": "Personal Information",
+    "subtitle": "Please provide your personal details",
+    "firstNameEn": "First Name (English)",
+    "firstNameEnPlaceholder": "Enter your first name in English",
+    "firstNameArPlaceholder": "اكتب اسمك بالعربي",
+    "lastNameEnPlaceholder": "Enter your last name in English",
+    "lastNameArPlaceholder": "اكتب اسم العائلة بالعربي",
+    "firstNameAr": "الاسم الأول (بالعربي)",
+    "lastNameEn": "Last Name (English)",
+    "lastNameAr": "اسم العائلة (بالعربي)",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "dob": "Date of Birth",
+    "gender": "Gender",
+    "selectGender": "Select your gender",
+    "male": "Male",
+    "female": "Female",
+    "nationalId": "National ID Number",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "idPlaceholder": "Enter Your National ID",
+    "phonePlaceholder": "Enter Your Phone",
+    "emailPlaceholder": "Enter Your Email",
+    "city": "City",
+    "selectCity": "Select your city",
+    "selectArea": "Select your Area",
+    "area": "Area",
+    "submit": "Continue to Professional Info",
+    "progress": "Step 1 of 4 (25%)"
+  },
+
+  "step2": {
+    "progress": "Step 2 of 4 (50%)",
+    "title": "Professional Experience",
+    "subtitle": "Tell us about your professional background",
+    "experience": "Years of Experience",
+    "experiencePlaceholder": "Enter years of experience",
+    "license": "License Number",
+    "licensePlaceholder": "Enter your license number",
+    "priceLabel": "Your hourly rate (EGP) — Carevio takes a 15% commission fee",
+    "pricePlaceholder": "Enter your Price (Price/hour)",
+    "availableDays": "Available Days",
+    "days": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "shifts": "Available Time",
+    "shiftsOptions": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "night": "Night"
+    },
+    "languages": "Languages",
+    "languagesOptions": {
+      "arabic": "Arabic",
+      "english": "English",
+      "french": "French"
+    },
+    "services": "Services",
+    "servicesOptions": {
+      "woundCare": "Wound Care",
+      "ivTherapy": "IV Therapy",
+      "elderlyCare": "Elderly Care"
+    },
+    "bio": "Bio",
+    "bioPlaceholder": "Write your bio..."
+  },
+  "step3": {
+    "progress": "Step 3 of 4 (75%)",
+    "title": "Document Uploads",
+    "subtitle": "Please upload all required documents",
+    "cv": "CV (PNG/JPG)",
+    "chooseFile": "Choose File",
+    "noFile": "No file chosen",
+    "nationalId": "National ID",
+    "frontSide": "Front Side",
+    "backSide": "Back Side",
+    "additionalDocs": "Additional Documents",
+    "personalPhoto": "Personal Photo (choose a professional photo)",
+    "license": "Nursing License",
+    "submitting": "Submitting..."
+  },
+  "step4": {
+    "progress": "Step 4 of 4 (100%)",
+    "title": "Registration Complete!",
+    "subtitle": "Thank you for submitting your application. We'll review your documents and contact you soon."
+  },
+  "buttons": {
+    "back": "Back",
+    "submit": "Submit Application",
+    "next": "Next",
+    "ok": "OK"
+  }
+}

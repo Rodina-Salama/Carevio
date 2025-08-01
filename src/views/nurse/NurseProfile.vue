@@ -22,7 +22,7 @@
         </div>
         <div class="nurse-profile-right">
           <div class="price-label">
-            Price per hour :
+            {{ $t("nurseProfile.priceLabel") }} :
             <span class="price-value"
               >{{ nurse?.professional?.price }} EGP</span
             >
@@ -32,7 +32,7 @@
             v-if="userStore.type !== 'nurse'"
             @click="goToBooking"
           >
-            BOOK NOW
+            {{ $t("nurseProfile.bookNow") }}
           </button>
         </div>
       </div>
@@ -40,24 +40,27 @@
         class="availability-section"
         v-if="nurse?.professional?.availableDays?.length"
       >
-        <h4 class="section-title">Available Days</h4>
+        <h4 class="section-title">{{ $t("nurseProfile.availableDays") }}</h4>
         <p class="section-text">
           {{ nurse.professional.availableDays.join(", ") }}
         </p>
       </div>
       <div class="shift-section" v-if="nurse?.professional?.shifts?.length">
-        <h4 class="section-title">Available time</h4>
+        <h4 class="section-title">{{ $t("nurseProfile.AvailableTime") }}</h4>
         <p class="section-text">
           {{ nurse.professional.shifts.join(", ") }}
         </p>
         <p class="section-text">{{ nurse.professional.shift }}</p>
       </div>
       <div class="experience-section" v-if="nurse?.professional?.experience">
-        <h4 class="section-title">Experience</h4>
-        <p class="section-text">{{ nurse?.professional?.experience }} years</p>
+        <h4 class="section-title">{{ $t("nurseProfile.experience") }}</h4>
+        <p class="section-text">
+          {{ nurse?.professional?.experience }}
+          {{ $t("nurseProfile.experienceUnit") }}
+        </p>
       </div>
       <div class="bio-section" v-if="nurse?.professional?.bio">
-        <h4 class="section-title">About</h4>
+        <h4 class="section-title">{{ $t("nurseProfile.about") }}</h4>
         <p class="section-text">{{ nurse?.professional?.bio }}</p>
       </div>
 
@@ -65,7 +68,7 @@
         class="services-section"
         v-if="nurse?.professional?.specialization?.length"
       >
-        <h4>Services</h4>
+        <h4>{{ $t("nurseProfile.services") }}</h4>
         <div class="services-list">
           <span
             class="service-chip"
@@ -77,14 +80,16 @@
         </div>
       </div>
       <div class="reviews-section" v-if="reviews.length">
-        <h4 class="section-title">Reviews</h4>
+        <h4 class="section-title">{{ $t("nurseProfile.reviews") }}</h4>
         <div class="review-card" v-for="(review, idx) in reviews" :key="idx">
           <div class="review-header">
             <div class="review-user-info">
-              <span class="review-user-name">{{
-                review.fullName || "User"
-              }}</span>
-              <span class="review-rating">Rating: {{ review.rating }} ★</span>
+              <span class="review-user-name">
+                {{ review.fullName || $t("nurseProfile.user") }}
+              </span>
+              <span class="review-rating"
+                >{{ $t("nurseProfile.rating") }}: {{ review.rating }} ★</span
+              >
             </div>
           </div>
           <p class="review-text">"{{ review.comment }}"</p>

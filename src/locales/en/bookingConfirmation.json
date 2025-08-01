@@ -1,0 +1,19 @@
+{
+  "title": "Booking Confirmation",
+  "subtitle": "Please review your booking details below before confirming.",
+  "date": "Date",
+  "time": "Time",
+  "nurse": "Nurse",
+  "service": "Service",
+  "address": "Address",
+  "total": "Total Cost",
+  "note": "Note: Service fee does not include the cost of medical supplies. The nurse will provide or request the necessary items and charge for them separately based on the case.",
+  "paypal": "PayPal",
+  "cash": "Cash",
+  "confirm": "Confirm Booking",
+  "successTitle": "Booking Confirmed!",
+  "successText": "We've sent your booking confirmation via email. Please check your inbox.",
+  "successRedirect": "Redirecting to your bookings in ",
+  "successGoNow": "Go Now",
+  "back": "← Back"
+}

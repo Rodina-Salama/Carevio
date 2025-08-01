@@ -1,0 +1,102 @@
+{
+  "step1": {
+    "title": "المعلومات الشخصية",
+    "subtitle": "يرجى تقديم بياناتك الشخصية",
+    "firstNameEn": "الاسم الأول (بالإنجليزية)",
+    "firstNameEnPlaceholder": "اكتب اسمك بالعربي",
+    "firstNameArPlaceholder": "Enter your first name in English",
+    "lastNameEnPlaceholder": "اكتب اسم العائلة بالعربي",
+    "lastNameArPlaceholder": "Enter your last name in English",
+    "firstNameAr": "First Name (English)",
+    "lastNameEn": "اسم العائلة (بالإنجليزية)",
+    "lastNameAr": "Last Name (English)",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordPlaceholder": "ادخل كلمة السر",
+    "confirmPasswordPlaceholder": "اعد ادخال كلمة السر",
+    "dob": "تاريخ الميلاد",
+    "gender": "النوع",
+    "selectGender": "اختار نوع جنسك",
+    "male": "ذكر",
+    "female": "أنثى",
+    "nationalId": "الرقم القومي",
+    "phone": "رقم الهاتف",
+    "email": "البريد الإلكتروني",
+    "idPlaceholder": "ادخل رقمك القومي",
+    "phonePlaceholder": "ادخل رقم الهاتف",
+    "emailPlaceholder": "ادخل البريد الالكتروني",
+    "city": "المدينة",
+    "selectCity": "اختار مدينة",
+    "selectArea": "اختار منطقة",
+    "area": "المنطقة",
+    "submit": "متابعة إلى المعلومات المهنية",
+    "progress": "الخطوة 1 من 4 (25%)"
+  },
+  "step2": {
+    "progress": "الخطوة ٢ من ٤ (٥٠٪)",
+    "title": "الخبرة المهنية",
+    "subtitle": "أخبرنا عن خلفيتك المهنية",
+    "experience": "سنوات الخبرة",
+    "experiencePlaceholder": "أدخل عدد سنوات الخبرة",
+    "license": "رقم الترخيص",
+    "licensePlaceholder": "أدخل رقم الترخيص الخاص بك",
+    "priceLabel": "سعرك بالساعة (جنيه) — كيرفيو تحصل على عمولة 15%",
+    "pricePlaceholder": "أدخل السعر (سعر/ساعة)",
+    "availableDays": "الأيام المتاحة",
+    "days": {
+      "sunday": "الأحد",
+      "monday": "الاثنين",
+      "tuesday": "الثلاثاء",
+      "wednesday": "الأربعاء",
+      "thursday": "الخميس",
+      "friday": "الجمعة",
+      "saturday": "السبت"
+    },
+    "shifts": "الأوقات المتاحة",
+    "shiftsOptions": {
+      "morning": "صباحًا",
+      "afternoon": "مساءً",
+      "night": "ليلًا"
+    },
+    "languages": "اللغات",
+    "languagesOptions": {
+      "arabic": "العربية",
+      "english": "الإنجليزية",
+      "french": "الفرنسية"
+    },
+    "services": "الخدمات",
+    "servicesOptions": {
+      "woundCare": "العناية بالجروح",
+      "ivTherapy": "العلاج الوريدي",
+      "elderlyCare": "رعاية كبار السن"
+    },
+    "bio": "نبذة عنك",
+    "bioPlaceholder": "اكتب نبذة مختصرة عنك..."
+  },
+  "step3": {
+    "progress": "الخطوة ٣ من ٤ (٧٥٪)",
+    "title": "تحميل المستندات",
+    "subtitle": "يرجى رفع جميع المستندات المطلوبة",
+    "cv": "السيرة الذاتية (PNG/JPG)",
+    "chooseFile": "اختيار ملف",
+    "noFile": "لم يتم اختيار ملف",
+    "nationalId": "الرقم القومي",
+    "frontSide": "الوجه الأمامي",
+    "backSide": "الوجه الخلفي",
+    "additionalDocs": "مستندات إضافية",
+    "personalPhoto": "الصورة الشخصية (اختر صورة احترافية)",
+    "license": "رخصة التمريض",
+    "submitting": "جارٍ الإرسال..."
+  },
+  "step4": {
+    "progress": "الخطوة ٤ من ٤ (١٠٠٪)",
+    "title": "تم إكمال التسجيل",
+    "subtitle": "شكرًا لتقديم طلبك. سنراجع مستنداتك ونتواصل معك قريبًا."
+  },
+  "buttons": {
+    "back": "رجوع",
+    "submit": "إرسال الطلب",
+    "next": "التالي",
+    "ok": "حسنًا"
+  }
+}

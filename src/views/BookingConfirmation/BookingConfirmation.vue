@@ -1,53 +1,59 @@
 <template>
   <div class="booking-confirmation" v-if="!showSuccessMessage">
-    <div class="back-button" @click="$router.back()">← Back</div>
+    <div class="back-button" @click="$router.back()">
+      {{ $t("bookingConfirmation.back") }}
+    </div>
 
-    <h1 class="title">Booking Confirmation</h1>
+    <h1 class="title">{{ $t("bookingConfirmation.title") }}</h1>
     <p class="subtitle">
-      Please review your booking details below before confirming.
+      {{ $t("bookingConfirmation.subtitle") }}
     </p>
 
     <div class="details-box">
       <div class="detail">
-        <strong>Date</strong><span>{{ booking.date }}</span>
+        <strong>{{ $t("bookingConfirmation.date") }}</strong
+        ><span>{{ booking.date }}</span>
       </div>
       <div class="detail">
-        <strong>Time</strong><span>{{ booking.time }}</span>
+        <strong>{{ $t("bookingConfirmation.time") }}</strong
+        ><span>{{ booking.time }}</span>
       </div>
       <div class="detail">
-        <strong>Nurse</strong><span>{{ booking.nurse }}</span>
+        <strong>{{ $t("bookingConfirmation.nurse") }}</strong
+        ><span>{{ booking.nurse }}</span>
       </div>
       <div class="detail">
-        <strong>Service</strong><span>{{ booking.service }}</span>
+        <strong>{{ $t("bookingConfirmation.service") }}</strong
+        ><span>{{ booking.service }}</span>
       </div>
       <div class="detail">
-        <strong>Address</strong><span>{{ booking.address }}</span>
+        <strong>{{ $t("bookingConfirmation.address") }}</strong
+        ><span>{{ booking.address }}</span>
       </div>
       <div class="detail">
-        <strong>Total Cost</strong><span>{{ booking.total }} EGP</span>
+        <strong>{{ $t("bookingConfirmation.total") }}</strong
+        ><span>{{ booking.total }} EGP</span>
       </div>
       <div>
-        Note: Service fee does not include the cost of medical supplies. The
-        nurse will provide or request the necessary items and charge for them
-        separately based on the case.
+        {{ $t("bookingConfirmation.note") }}
       </div>
       <div class="payment-methods">
         <label @click="handlePaypalClick">
           <input type="radio" value="paypal" v-model="paymentMethod" />
           <img :src="paypalImg" alt="PayPal" />
-          PayPal
+          {{ $t("bookingConfirmation.paypal") }}
         </label>
 
         <label>
           <input type="radio" value="cash" v-model="paymentMethod" />
           <img :src="cashImg" alt="Cash" />
-          Cash
+          {{ $t("bookingConfirmation.cash") }}
         </label>
       </div>
 
       <div class="actions">
         <button class="confirm" @click="handleConfirm" :disabled="isSubmitting">
-          Confirm Booking
+          {{ $t("bookingConfirmation.confirm") }}
         </button>
       </div>
     </div>
@@ -56,7 +62,9 @@
   <!-- Success Modal -->
   <div v-if="showSuccessMessage" class="modal-overlay">
     <div class="modal-content">
-      <h2 class="success-title">Booking Confirmed!</h2>
+      <h2 class="success-title">
+        {{ $t("bookingConfirmation.successTitle") }}
+      </h2>
       <div class="success-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,11 +78,14 @@
         </svg>
       </div>
       <p class="success-text">
-        We've sent your booking confirmation via email. Please check your inbox.
+        {{ $t("bookingConfirmation.successText") }}
       </p>
       <p class="success-note">
-        Redirecting to your bookings in {{ countdown }} seconds...
-        <button @click="router.push('/my-bookings')">Go Now</button>
+        {{ $t("bookingConfirmation.success.successRedirect") }}
+        {{ countdown }}
+        <button @click="router.push('/my-bookings')">
+          {{ $t("bookingConfirmation.successGoNow") }}
+        </button>
       </p>
     </div>
   </div>

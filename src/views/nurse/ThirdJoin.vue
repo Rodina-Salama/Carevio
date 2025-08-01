@@ -5,18 +5,18 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '75%' }"></div>
       </div>
-      <div class="progress-label">Step 3 of 4 (75%)</div>
+      <div class="progress-label">{{ $t("joinAsNurse.step3.progress") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">Document Uploads</h1>
-      <p class="form-subtitle">Please upload all required documents</p>
+      <h1 class="form-title">{{ $t("joinAsNurse.step3.title") }}</h1>
+      <p class="form-subtitle">{{ $t("joinAsNurse.step3.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <!-- Document Upload Sections -->
         <div class="upload-section">
-          <h3 style="color: #555">CV (PNG/JPG)</h3>
+          <h3 style="color: #555">{{ $t("joinAsNurse.step3.cv") }}</h3>
           <div class="upload-group">
             <input
               type="file"
@@ -26,18 +26,20 @@
               @change="handleFileUpload('cv', $event)"
               required
             />
-            <label for="cv" class="upload-btn">Choose File</label>
+            <label for="cv" class="upload-btn">{{
+              $t("joinAsNurse.step3.chooseFile")
+            }}</label>
             <span class="file-name">{{
-              documents.cv ? documents.cv.name : "No file chosen"
+              documents.cv ? documents.cv.name : $t("joinAsNurse.step3.noFile")
             }}</span>
           </div>
         </div>
 
         <div class="upload-section">
-          <h3>National ID</h3>
+          <h3>{{ $t("joinAsNurse.step3.nationalId") }}</h3>
           <div class="upload-grid">
             <div class="upload-group">
-              <label>Front Side</label>
+              <label>{{ $t("joinAsNurse.step3.frontSide") }}</label>
               <input
                 type="file"
                 id="idFront"
@@ -46,13 +48,15 @@
                 @change="handleFileUpload('idFront', $event)"
                 required
               />
-              <label for="idFront" class="upload-btn">Choose File</label>
+              <label for="idFront" class="upload-btn">{{
+                $t("joinAsNurse.step3.chooseFile")
+              }}</label>
               <span class="file-name">{{
                 documents.idFront ? documents.idFront.name : "No file chosen"
               }}</span>
             </div>
             <div class="upload-group">
-              <label>Back Side</label>
+              <label>{{ $t("joinAsNurse.step3.backSide") }}</label>
               <input
                 type="file"
                 id="idBack"
@@ -61,7 +65,9 @@
                 @change="handleFileUpload('idBack', $event)"
                 required
               />
-              <label for="idBack" class="upload-btn">Choose File</label>
+              <label for="idBack" class="upload-btn">{{
+                $t("joinAsNurse.step3.chooseFile")
+              }}</label>
               <span class="file-name">{{
                 documents.idBack ? documents.idBack.name : "No file chosen"
               }}</span>
@@ -70,10 +76,10 @@
         </div>
 
         <div class="upload-section">
-          <h3>Additional Documents</h3>
+          <h3>{{ $t("joinAsNurse.step3.additionalDocs") }}</h3>
           <div class="upload-grid">
             <div class="upload-group">
-              <label>Personal Photo (choose a professional photo)</label>
+              <label>{{ $t("joinAsNurse.step3.personalPhoto") }}</label>
               <input
                 type="file"
                 id="photo"
@@ -82,13 +88,15 @@
                 @change="handleFileUpload('photo', $event)"
                 required
               />
-              <label for="photo" class="upload-btn">Choose File</label>
+              <label for="photo" class="upload-btn">{{
+                $t("joinAsNurse.step3.chooseFile")
+              }}</label>
               <span class="file-name">{{
                 documents.photo ? documents.photo.name : "No file chosen"
               }}</span>
             </div>
             <div class="upload-group">
-              <label>Nursing License</label>
+              <label>{{ $t("joinAsNurse.step3.license") }}</label>
               <input
                 type="file"
                 id="nursingLicense"
@@ -97,7 +105,9 @@
                 @change="handleFileUpload('nursingLicense', $event)"
                 required
               />
-              <label for="nursingLicense" class="upload-btn">Choose File</label>
+              <label for="nursingLicense" class="upload-btn">{{
+                $t("joinAsNurse.step3.chooseFile")
+              }}</label>
               <span class="file-name">{{
                 documents.nursingLicense
                   ? documents.nursingLicense.name
@@ -108,9 +118,15 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="back-btn" @click="goBack">Back</button>
+          <button type="button" class="back-btn" @click="goBack">
+            {{ $t("joinAsNurse.buttons.back") }}
+          </button>
           <button type="submit" class="submit-btn" :disabled="isSubmitting">
-            {{ isSubmitting ? "Submitting..." : "Submit Application" }}
+            {{
+              isSubmitting
+                ? $t("joinAsNurse.step3.submitting")
+                : $t("joinAsNurse.buttons.submit")
+            }}
           </button>
         </div>
       </form>

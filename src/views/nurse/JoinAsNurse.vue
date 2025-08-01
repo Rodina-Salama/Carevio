@@ -5,24 +5,26 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '25%' }"></div>
       </div>
-      <div class="progress-label">Step 1 of 4 (25%)</div>
+      <div class="progress-label">{{ $t("joinAsNurse.step1.progress") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">Personal Information</h1>
-      <p class="form-subtitle">Please provide your personal details</p>
+      <h1 class="form-title">{{ $t("joinAsNurse.step1.title") }}</h1>
+      <p class="form-subtitle">{{ $t("joinAsNurse.step1.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <div class="form-grid">
           <!-- First Name (English) -->
           <div class="input-group">
-            <label for="firstNameEn">First Name (English)</label>
+            <label for="firstNameEn">{{
+              $t("joinAsNurse.step1.firstNameEn")
+            }}</label>
             <input
               type="text"
               id="firstNameEn"
               v-model="formData.firstNameEn"
-              placeholder="Enter your first name in English"
+              :placeholder="$t('joinAsNurse.step1.firstNameEnPlaceholder')"
               required
               pattern="^[A-Za-z\s]+$"
               title="Only English letters allowed"
@@ -31,12 +33,14 @@
 
           <!-- First Name (Arabic) -->
           <div class="input-group">
-            <label for="firstNameAr">الاسم الأول (بالعربي)</label>
+            <label for="firstNameAr">{{
+              $t("joinAsNurse.step1.firstNameAr")
+            }}</label>
             <input
               type="text"
               id="firstNameAr"
               v-model="formData.firstNameAr"
-              placeholder="اكتب اسمك بالعربي"
+              :placeholder="$t('joinAsNurse.step1.firstNameArPlaceholder')"
               required
               pattern="^[\u0600-\u06FF\s]+$"
               title="الاسم يجب أن يكون باللغة العربية فقط"
@@ -44,12 +48,14 @@
           </div>
           <!-- Last Name (English) -->
           <div class="input-group">
-            <label for="lastNameEn">Last Name (English)</label>
+            <label for="lastNameEn">{{
+              $t("joinAsNurse.step1.lastNameEn")
+            }}</label>
             <input
               type="text"
               id="lastNameEn"
               v-model="formData.lastNameEn"
-              placeholder="Enter your last name in English"
+              :placeholder="$t('joinAsNurse.step1.lastNameEnPlaceholder')"
               required
               pattern="^[A-Za-z\s]+$"
               title="Only English letters allowed"
@@ -57,12 +63,14 @@
           </div>
           <!-- Last Name (Arabic) -->
           <div class="input-group">
-            <label for="lastNameAr">اسم العائلة (بالعربي)</label>
+            <label for="lastNameAr">{{
+              $t("joinAsNurse.step1.lastNameAr")
+            }}</label>
             <input
               type="text"
               id="lastNameAr"
               v-model="formData.lastNameAr"
-              placeholder="اكتب اسم العائلة بالعربي"
+              :placeholder="$t('joinAsNurse.step1.lastNameArPlaceholder')"
               required
               pattern="^[\u0600-\u06FF\s]+$"
               title="اسم العائلة يجب أن يكون باللغة العربية فقط"
@@ -70,12 +78,12 @@
           </div>
 
           <div class="input-group">
-            <label for="password">Password</label>
+            <label for="password">{{ $t("joinAsNurse.step1.password") }}</label>
             <input
               type="password"
               id="password"
               v-model="formData.password"
-              placeholder="Enter your password"
+              :placeholder="$t('joinAsNurse.step1.passwordPlaceholder')"
               required
               pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}"
               title="Password must be at least 8 characters long and include uppercase, lowercase letters, and a number."
@@ -84,78 +92,88 @@
 
           <!-- Confirm Password -->
           <div class="input-group">
-            <label for="confirmPassword">Confirm Password</label>
+            <label for="confirmPassword">{{
+              $t("joinAsNurse.step1.confirmPassword")
+            }}</label>
             <input
               type="password"
               id="confirmPassword"
               v-model="formData.confirmPassword"
-              placeholder="Confirm your password"
+              :placeholder="$t('joinAsNurse.step1.confirmPasswordPlaceholder')"
               required
             />
           </div>
 
           <!-- Date of Birth -->
           <div class="input-group">
-            <label for="dob">Date of Birth</label>
+            <label for="dob">{{ $t("joinAsNurse.step1.dob") }}</label>
             <input type="date" id="dob" v-model="formData.dob" required />
           </div>
 
           <!-- Gender -->
           <div class="input-group">
-            <label for="gender">Gender</label>
+            <label for="gender">{{ $t("joinAsNurse.step1.gender") }}</label>
             <select id="gender" v-model="formData.gender" required>
-              <option value="" disabled selected>Select your gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="" disabled selected>
+                {{ $t("joinAsNurse.step1.selectGender") }}
+              </option>
+              <option value="male">{{ $t("joinAsNurse.step1.male") }}</option>
+              <option value="female">
+                {{ $t("joinAsNurse.step1.female") }}
+              </option>
             </select>
           </div>
 
           <!-- National ID -->
           <div class="input-group">
-            <label for="nationalId">National ID Number</label>
+            <label for="nationalId">
+              {{ $t("joinAsNurse.step1.nationalId") }}
+            </label>
             <input
               type="text"
               id="nationalId"
               v-model="formData.nationalId"
-              placeholder="Enter your national ID"
+              :placeholder="$t('joinAsNurse.step1.idPlaceholder')"
               required
             />
           </div>
 
           <!-- Phone Number -->
           <div class="input-group">
-            <label for="phone">Phone Number</label>
+            <label for="phone"> {{ $t("joinAsNurse.step1.phone") }} </label>
             <input
               type="tel"
               id="phone"
               v-model="formData.phone"
-              placeholder="Enter your phone number"
+              :placeholder="$t('joinAsNurse.step1.phonePlaceholder')"
               required
             />
           </div>
 
           <!-- Email -->
           <div class="input-group">
-            <label for="email">Email Address</label>
+            <label for="email"> {{ $t("joinAsNurse.step1.email") }} </label>
             <input
               type="email"
               id="email"
               v-model="formData.email"
-              placeholder="Enter your email"
+              :placeholder="$t('joinAsNurse.step1.emailPlaceholder')"
               required
             />
           </div>
 
           <!-- City -->
           <div class="input-group">
-            <label for="city">City</label>
+            <label for="city"> {{ $t("joinAsNurse.step1.city") }} </label>
             <select
               id="city"
               v-model="formData.city"
               @change="formData.area = ''"
               required
             >
-              <option value="" disabled>Select your city</option>
+              <option value="" disabled>
+                {{ $t("joinAsNurse.step1.selectCity") }}
+              </option>
               <option v-for="city in cities" :key="city" :value="city">
                 {{ city }}
               </option>
@@ -164,14 +182,16 @@
 
           <!-- Area -->
           <div class="input-group">
-            <label for="area">Area</label>
+            <label for="area"> {{ $t("joinAsNurse.step1.area") }} </label>
             <select
               id="area"
               v-model="formData.area"
               :disabled="!formData.city"
               required
             >
-              <option value="" disabled>Select your area</option>
+              <option value="" disabled>
+                {{ $t("joinAsNurse.step1.selectArea") }}
+              </option>
               <option
                 v-for="area in areas[formData.city] || []"
                 :key="area"
@@ -185,7 +205,7 @@
 
         <div class="form-actions">
           <button type="submit" class="submit-btn">
-            Continue to Professional Info
+            {{ $t("joinAsNurse.step1.submit") }}
           </button>
         </div>
       </form>
