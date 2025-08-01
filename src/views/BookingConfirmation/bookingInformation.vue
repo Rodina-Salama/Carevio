@@ -1,4 +1,5 @@
 <template>
+  <LoadingSpinner v-if="loading" class="loading-wrapper" />
   <div class="booking-information" v-if="!loading">
     <h1 class="title">{{ $t("bookingNurse.title") }}</h1>
     <p
@@ -45,7 +46,7 @@
             :key="service"
             :value="service"
           >
-            {{ service }}
+            {{ $t(`data.specializations.${service}`) }}
           </option>
         </select>
       </div>
@@ -101,7 +102,7 @@
             :key="shift"
             :value="shift"
           >
-            {{ shift }}
+            {{ $t(`data.shifts.${shift}`) }}
           </option>
         </select>
       </div>
@@ -182,7 +183,10 @@ import { db } from "@/firebase";
 import { shiftOptions } from "@/data/shiftOptions";
 import { useUserStore } from "@/stores/userStore";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { useI18n } from "vue-i18n";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
+const { t } = useI18n();
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
@@ -290,7 +294,7 @@ const handleDateChange = () => {
   const dayName = selectedDate.toLocaleDateString("en-US", { weekday: "long" });
 
   if (!nurseData.value.professional.availableDays.includes(dayName)) {
-    alert(`Nurse is not available on ${dayName}`);
+    alert(`${t("booking.notAvailableOnDay")} ${dayName}`);
     booking.value.date = "";
     return;
   }
@@ -322,7 +326,7 @@ const generateAvailableTimes = () => {
 
 const proceedToPayment = () => {
   if (!nurseData.value?.isVisible || nurseData.value?.isBanned) {
-    alert("Sorry, this nurse cannot be booked at the moment.");
+    alert(t("booking.nurseBlocked"));
     return;
   }
   if (
@@ -334,7 +338,7 @@ const proceedToPayment = () => {
     !selectedFrom.value ||
     !selectedTo.value
   ) {
-    alert("Please fill in all fields before proceeding.");
+    alert(t("booking.fillAllFields"));
     return;
   }
   const selectedDateTime = new Date(
@@ -346,11 +350,11 @@ const proceedToPayment = () => {
   const diffInHours = diffInMs / (1000 * 60 * 60);
 
   if (selectedDateTime < now) {
-    alert("You can't book a time that has already passed.");
+    alert(t("booking.timePassed"));
     return;
   }
   if (diffInHours < 2) {
-    alert("Please book at least 2 hours in advance.");
+    alert(t("booking.bookInAdvance"));
     return;
   }
   const nurseFullName = `${nurseData.value?.personal?.firstNameEn || ""} ${
@@ -417,7 +421,7 @@ const proceedToPayment = () => {
   localStorage.setItem("bookingData", JSON.stringify(bookingData));
   checkForConflict().then((conflict) => {
     if (conflict) {
-      alert("This time slot is already booked. Please choose another time.");
+      alert(t("booking.bookingConflict"));
       return;
     }
 
@@ -448,7 +452,9 @@ onMounted(fetchNurseData);
   font-weight: bold;
   margin-top: 20px;
 }
-
+.noteInfo {
+  font-weight: bold;
+}
 .subtitle {
   font-size: 16px;
   color: #333;
@@ -496,7 +502,7 @@ onMounted(fetchNurseData);
 }
 
 .cancel:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 
@@ -516,14 +522,12 @@ form-group {
   font-weight: 700;
   margin-bottom: 8px;
   color: #333;
-  text-align: left;
 }
 label {
   font-weight: 777;
   color: #333;
   display: block;
   margin-bottom: 5px;
-  text-align: left;
 }
 
 .form-group textarea {

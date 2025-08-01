@@ -1,6 +1,8 @@
 {
   "chooseCity": "Choose city",
   "chooseArea": "Choose area",
+  "chooseDay": "Choose day",
+  "chooseShift": "Choose shift",
   "searchService": "Search service",
   "chooseGender": "Choose gender",
   "female": "Female",
@@ -12,5 +14,6 @@
   "unknownArea": "Unknown",
   "noBioAvailable": "No bio available.",
   "viewButton": "View",
-  "noNursesFound": "No nurses found matching the selected filters."
+  "noNursesFound": "No nurses found matching the selected filters.",
+  "noRating": "No ratings yet"
 }

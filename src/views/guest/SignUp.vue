@@ -186,9 +186,9 @@ export default {
         : "";
     },
     validatePassword() {
-      const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{6,}$/;
+      const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/;
       this.errors.password = !regex.test(this.user.password)
-        ? "Password must contain at least 6 characters, one uppercase, one lowercase and one number"
+        ? "Password must contain at least 8 characters, one uppercase, one lowercase and one number"
         : "";
     },
     validatePasswordConfirmation() {
@@ -353,7 +353,7 @@ export default {
 .btn-primary {
   width: 100%;
   padding: 14px;
-  background-color: #3498db;
+  background-color: #19599a;
   color: white;
   border: none;
   border-radius: 6px;
@@ -365,7 +365,7 @@ export default {
 }
 
 .btn-primary:hover {
-  background-color: #2980b9;
+  background-color: #67aef5ff;
 }
 
 .login-link {

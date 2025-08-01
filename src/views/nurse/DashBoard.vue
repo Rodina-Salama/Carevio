@@ -1,34 +1,34 @@
 <template>
   <div class="dashboard-container">
     <NurseSidebar />
-    <div class="main-content">
-      <h1 class="page-title">Dashboard</h1>
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+    <div v-else class="main-content">
+      <h1 class="page-title">{{ $t("navbar.dashboard") }}</h1>
       <div v-if="isBanned" class="banned-alert">
-        Your account has been <strong>banned</strong>. You cannot accept new
-        bookings at the moment.
+        {{ $t("nurseDashboard.bannedMessage") }}
       </div>
       <div class="summary-cards">
         <div class="card">
-          <h3>Total Earnings</h3>
+          <h3>{{ $t("nurseDashboard.totalEarnings") }}</h3>
           <p class="value">EGP {{ totalEarnings }}</p>
         </div>
         <div class="card">
-          <h3>This Month’s Earnings</h3>
+          <h3>{{ $t("nurseDashboard.monthlyEarnings") }}</h3>
           <p class="value">EGP {{ monthlyEarnings }}</p>
         </div>
         <div class="card">
-          <h3>Total Bookings</h3>
+          <h3>{{ $t("nurseDashboard.totalBookings") }}</h3>
           <p class="value">{{ sessionCount }}</p>
         </div>
         <div class="card highlight">
-          <h3>Next Booking</h3>
+          <h3>{{ $t("nurseDashboard.nextBooking") }}</h3>
           <p class="value">
             {{
               nextBooking
                 ? formatDate(nextBooking.date) +
                   " - " +
                   formatTime(nextBooking.from)
-                : "No upcoming booking"
+                : $t("nurseDashboard.noUpcoming")
             }}
           </p>
         </div>
@@ -36,7 +36,7 @@
 
       <div class="lower-section" v-if="latestReview">
         <div class="card full">
-          <h3>Latest Review</h3>
+          <h3>{{ $t("nurseDashboard.latestReview") }}</h3>
           <div class="review-section">
             <img
               :src="latestReview.userImage || defaultAvatar"
@@ -64,6 +64,12 @@
           </div>
         </div>
       </div>
+      <div class="lower-section" v-else>
+        <div class="card full">
+          <h3>{{ $t("nurseDashboard.latestReview") }}</h3>
+          <p class="no-review">{{ $t("nurseDashboard.noReviews") }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -82,12 +88,15 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import { useUserStore } from "@/stores/userStore";
-
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase/config";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
-  components: { NurseSidebar },
+  components: { NurseSidebar, LoadingSpinner },
   setup() {
     const userStore = useUserStore();
     const nurseId = userStore.firebaseUser?.uid;
+    const loading = ref(true);
 
     const totalEarnings = ref(0);
     const monthlyEarnings = ref(0);
@@ -211,10 +220,15 @@ export default {
       }
     }
 
-    onMounted(async () => {
-      await fetchBookings();
-      await fetchLatestReview();
-      await fetchBannedStatus();
+    onMounted(() => {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          await fetchBookings();
+          await fetchLatestReview();
+          await fetchBannedStatus();
+        }
+        loading.value = false;
+      });
     });
 
     return {
@@ -228,6 +242,7 @@ export default {
       timeAgo,
       formatTime,
       isBanned,
+      loading,
     };
   },
 };
@@ -242,7 +257,12 @@ export default {
   overflow-x: hidden;
   flex-wrap: wrap;
 }
-
+.loading-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .main-content {
   flex: 1;
   padding: 24px 32px;
@@ -382,7 +402,6 @@ export default {
   gap: 14px;
   flex-wrap: wrap;
 }
-
 .action-btn {
   background-color: #19599a;
   color: white;

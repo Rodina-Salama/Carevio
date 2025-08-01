@@ -46,48 +46,67 @@
         </li>
       </ul>
 
-      <div class="user-info" @click="toggleDropdown">
-        <img
-          :src="userStore.profileData.profileImage || avatarPlaceholder"
-          class="user-avatar"
-          alt="avatar"
-        />
-        <span>{{ userStore.profileData.fullName || "User" }}</span>
+      <div class="user-menu" ref="dropdownRef">
+        <div class="user-info" @click="toggleDropdown">
+          <img
+            :src="userStore.profileData.profileImage || avatarPlaceholder"
+            class="user-avatar"
+            alt="avatar"
+          />
+          <span class="user-name">{{ userStore.profileData.fullName }}</span>
+        </div>
 
-        <div class="dropdown" v-if="isDropdownOpen">
-          <button @click="logout" class="dropdown-item">Logout</button>
+        <div v-if="isDropdownOpen" class="dropdown-menu">
+          <button class="dropdown-item" @click="logout">
+            {{ $t("navbar.logout") }}
+          </button>
         </div>
       </div>
-      <button @click="toggleLanguage" class="btn">
-        {{ currentLang === "en" ? "العربية" : "English" }}
-      </button>
+      <div class="lang-switch-container" @click="toggleLang">
+        <img
+          :src="currentLang === 'ar' ? usFlag : egyptFlag"
+          alt="flag"
+          class="lang-flag"
+        />
+        <button class="lang-circle-btn">
+          <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
+        </button>
+      </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import avatarPlaceholder from "@/assets/avatar.jpg";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-
+import egyptFlag from "@/assets/egflag.png";
+import usFlag from "@/assets/usflag.png";
 const { locale } = useI18n();
-const currentLang = ref(locale.value);
+const currentLang = ref("ar");
+
+function toggleLang() {
+  currentLang.value = currentLang.value === "ar" ? "en" : "ar";
+  locale.value = currentLang.value;
+  localStorage.setItem("lang", currentLang.value);
+}
+
+onMounted(() => {
+  const savedLang = localStorage.getItem("lang") || "en";
+  currentLang.value = savedLang;
+  locale.value = savedLang;
+});
+
 const isMenuOpen = ref(false);
+const isDropdownOpen = ref(false);
+const dropdownRef = ref(null);
+
 const userStore = useUserStore();
 const router = useRouter();
-
-function toggleLanguage() {
-  currentLang.value = currentLang.value === "en" ? "ar" : "en";
-  locale.value = currentLang.value;
-  const html = document.documentElement;
-  html.setAttribute("dir", currentLang.value === "ar" ? "rtl" : "ltr");
-  html.setAttribute("lang", currentLang.value);
-  localStorage.setItem("language", currentLang.value);
-}
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value;
@@ -96,7 +115,7 @@ const toggleMenu = () => {
 const closeMenu = () => {
   isMenuOpen.value = false;
 };
-const isDropdownOpen = ref(false);
+
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
@@ -104,8 +123,22 @@ const toggleDropdown = () => {
 const logout = async () => {
   await signOut(auth);
   userStore.clearUser();
-  router.push("/"); // رجع المستخدم للصفحة الرئيسية
+  router.push("/");
 };
+
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <style scoped>
@@ -150,6 +183,32 @@ const logout = async () => {
   margin: 0;
 }
 
+.dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  z-index: 100;
+  min-width: 120px;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  border: none;
+  background: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #444;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
 .nav-links a {
   text-decoration: none;
   color: #444;
@@ -233,7 +292,8 @@ const logout = async () => {
 
 .hamburger {
   display: none;
-  background: none;
+  background-color: #19599a;
+  color: white;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -243,7 +303,7 @@ const logout = async () => {
   display: block;
   width: 1.5rem;
   height: 2px;
-  background-color: #007bff;
+  background-color: #ffffffff;
   margin: 0.3rem 0;
   transition: all 0.3s ease;
 }
@@ -259,6 +319,32 @@ const logout = async () => {
 
   .nav-links {
     gap: 1rem;
+  }
+}
+@media (min-width: 769px) {
+  .dropdown-menu {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    z-index: 1000;
+    min-width: 120px;
+  }
+
+  .dropdown-item {
+    padding: 10px 15px;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #444;
+    transition: background 0.2s;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
   }
 }
 
@@ -327,6 +413,32 @@ const logout = async () => {
   .hamburger.active .bar:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
   }
+  .dropdown-menu {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .dropdown-item {
+    all: unset;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #19599a;
+    border-radius: 6px;
+    text-align: center;
+    color: #19599a;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -348,31 +460,36 @@ const logout = async () => {
   position: relative;
   cursor: pointer;
 }
-
-.dropdown {
-  position: absolute;
-  top: 120%;
-  right: 0;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
-  z-index: 100;
-  min-width: 120px;
-}
-
-.dropdown-item {
-  padding: 10px 15px;
-  border: none;
-  background: none;
-  text-align: left;
-  width: 100%;
+.lang-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  font-size: 0.95rem;
-  color: #444;
-  transition: background 0.2s;
 }
 
-.dropdown-item:hover {
-  background-color: #f0f0f0;
+.lang-flag {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lang-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #c8dff6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-weight: bold;
+  color: #444;
+  transition: background-color 0.3s;
+}
+
+.lang-circle-btn:hover {
+  background-color: #a4caf0;
 }
 </style>

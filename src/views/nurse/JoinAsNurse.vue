@@ -86,7 +86,8 @@
               :placeholder="$t('joinAsNurse.step1.passwordPlaceholder')"
               required
               pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}"
-              title="Password must be at least 8 characters long and include uppercase, lowercase letters, and a number."
+              title="Password must be at least 8 characters long and include
+            uppercase, lowercase letters, and a number."
             />
           </div>
 
@@ -175,7 +176,7 @@
                 {{ $t("joinAsNurse.step1.selectCity") }}
               </option>
               <option v-for="city in cities" :key="city" :value="city">
-                {{ city }}
+                {{ $t(`data.cities.${city}`) }}
               </option>
             </select>
           </div>
@@ -197,7 +198,7 @@
                 :key="area"
                 :value="area"
               >
-                {{ area }}
+                {{ $t(`data.areas.${area}`) }}
               </option>
             </select>
           </div>
@@ -373,8 +374,8 @@ const handleSubmit = () => {
   display: block;
   margin-bottom: 0.5rem;
   color: #19599a;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .input-group input,

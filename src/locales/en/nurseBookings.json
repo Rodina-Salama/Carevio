@@ -1,6 +1,16 @@
 {
-  "title": "Nurse Bookings",
-  "loading": "Loading...",
-  "empty": "No bookings available.",
-  "viewBtn": "View"
+  "title": "Your Bookings",
+  "active": "Active Bookings",
+  "past": "Past Bookings",
+  "all": "All",
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "thisWeek": "This Week",
+  "noBookings": "No bookings found",
+  "patientName": "Patient Name",
+  "date": "Date",
+  "time": "Time",
+  "address": "Address",
+  "details": "Details",
+  "view": "View"
 }

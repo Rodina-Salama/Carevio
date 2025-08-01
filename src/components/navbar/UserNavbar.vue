@@ -73,23 +73,25 @@
           />
           <span class="user-name">{{ userStore.profileData.fullName }}</span>
         </div>
-
         <div v-if="isDropdownOpen" class="dropdown-menu">
-          <router-link
-            to="/userprofile"
-            class="dropdown-item"
-            @click="closeDropdown"
-          >
-            {{ $t("navbar.profile") }}</router-link
-          >
+          <button class="dropdown-item" @click="handleProfileClick">
+            {{ $t("navbar.profile") }}
+          </button>
           <button class="dropdown-item" @click="logout">
             {{ $t("navbar.logout") }}
           </button>
         </div>
       </div>
-      <button @click="toggleLanguage" class="btn">
-        {{ currentLang === "en" ? "العربية" : "English" }}
-      </button>
+      <div class="lang-switch-container" @click="toggleLang">
+        <img
+          :src="currentLang === 'ar' ? usFlag : egyptFlag"
+          alt="flag"
+          class="lang-flag"
+        />
+        <button class="lang-circle-btn">
+          <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
+        </button>
+      </div>
     </div>
   </nav>
 </template>
@@ -109,14 +111,20 @@ const isMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
-function toggleLanguage() {
-  currentLang.value = currentLang.value === "en" ? "ar" : "en";
+import egyptFlag from "@/assets/egflag.png";
+import usFlag from "@/assets/usflag.png";
+
+function toggleLang() {
+  currentLang.value = currentLang.value === "ar" ? "en" : "ar";
   locale.value = currentLang.value;
-  const html = document.documentElement;
-  html.setAttribute("dir", currentLang.value === "ar" ? "rtl" : "ltr");
-  html.setAttribute("lang", currentLang.value);
-  localStorage.setItem("language", currentLang.value);
+  localStorage.setItem("lang", currentLang.value);
 }
+
+onMounted(() => {
+  const savedLang = localStorage.getItem("lang") || "en";
+  currentLang.value = savedLang;
+  locale.value = savedLang;
+});
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -143,11 +151,14 @@ const logout = async () => {
   router.push("/");
 };
 
-// إغلاق الـ dropdown لو ضغطت بره
 const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isDropdownOpen.value = false;
   }
+};
+const handleProfileClick = () => {
+  router.push("/userprofile");
+  closeDropdown();
 };
 
 onMounted(() => {
@@ -169,6 +180,42 @@ onBeforeUnmount(() => {
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   font-family: "Cairo", sans-serif;
+}
+.dropdown-router {
+  text-decoration: none;
+  color: inherit;
+}
+.lang-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.lang-flag {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lang-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-weight: bold;
+  color: #444;
+  transition: background-color 0.3s;
+}
+
+.lang-circle-btn:hover {
+  background-color: #d6d6d6;
 }
 
 .navbar-brand {
@@ -275,7 +322,32 @@ onBeforeUnmount(() => {
   border-radius: 50%;
   object-fit: cover;
 }
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 10;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 150px;
+}
 
+.dropdown-item {
+  padding: 10px 16px;
+  text-align: left;
+  background: white;
+  border: none;
+  width: 100%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  color: black;
+}
 .user-info {
   display: flex;
   align-items: center;
@@ -284,7 +356,8 @@ onBeforeUnmount(() => {
 
 .hamburger {
   display: none;
-  background: none;
+  background-color: #19599a;
+  color: white;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -294,7 +367,7 @@ onBeforeUnmount(() => {
   display: block;
   width: 1.5rem;
   height: 2px;
-  background-color: #007bff;
+  background-color: #ffffffff;
   margin: 0.3rem 0;
   transition: all 0.3s ease;
 }
@@ -378,6 +451,32 @@ onBeforeUnmount(() => {
   .hamburger.active .bar:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
   }
+  .dropdown-menu {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .dropdown-item {
+    all: unset;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #19599a;
+    border-radius: 6px;
+    text-align: center;
+    color: #19599a;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -417,34 +516,39 @@ onBeforeUnmount(() => {
 .user-menu {
   position: relative;
 }
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  margin-top: 8px;
-  z-index: 10;
-  border-radius: 6px;
-  overflow: hidden;
-  min-width: 150px;
-}
-
-.dropdown-item {
-  padding: 10px 16px;
-  text-align: left;
-  background: white;
-  border: none;
-  width: 100%;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s;
-  text-decoration: none;
-  color: black;
-}
-
 .dropdown-item:hover {
   background: #f0f0f0;
+}
+.lang-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.lang-flag {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.lang-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #c8dff6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-weight: bold;
+  color: #444;
+  transition: background-color 0.3s;
+}
+
+.lang-circle-btn:hover {
+  background-color: #a4caf0;
 }
 </style>

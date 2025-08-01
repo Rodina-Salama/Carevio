@@ -194,6 +194,6 @@ label {
 }
 
 .action-btn:hover {
-  background-color: #3a5a8a;
+  background-color: #67aef5ff;
 }
 </style>

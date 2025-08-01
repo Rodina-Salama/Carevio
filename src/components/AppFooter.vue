@@ -42,15 +42,17 @@
         <h3 class="footer-heading">{{ $t("footer.contactInfo") }}</h3>
         <ul class="contact-info">
           <li>
-            <span class="contact-icon">📞</span>
+            <span class="contact-icon"><i class="fas fa-phone"></i></span>
             <span>+1 (555) 123-4567</span>
           </li>
           <li>
-            <span class="contact-icon">✉️</span>
+            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
             <span>contact@Carevio.com</span>
           </li>
           <li>
-            <span class="contact-icon">📍</span>
+            <span class="contact-icon"
+              ><i class="fas fa-location-dot"></i
+            ></span>
             <span>{{ $t("footer.address") }}</span>
           </li>
         </ul>
@@ -174,6 +176,8 @@ export default {
 @media (max-width: 768px) {
   .footer {
     padding: 1.5rem 1rem 1rem;
+    align-items: center;
+    text-align: center;
   }
 
   .footer-column {
@@ -192,6 +196,10 @@ export default {
 
   .contact-info li {
     justify-content: center;
+  }
+  .footer-logo {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>

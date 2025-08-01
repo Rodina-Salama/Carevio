@@ -6,12 +6,17 @@
         <div class="progress-fill" :style="{ width: '50%' }"></div>
       </div>
       <div class="progress-label">{{ $t("joinAsNurse.step2.progress") }}</div>
+
+      <div class="progress-label">{{ $t("secondjoin.stepLabel") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
       <h1 class="form-title">{{ $t("joinAsNurse.step2.title") }}</h1>
       <p class="form-subtitle">{{ $t("joinAsNurse.step2.subtitle") }}</p>
+
+      <h1 class="form-title">{{ $t("secondjoin.title") }}</h1>
+      <p class="form-subtitle">{{ $t("secondjoin.subtitle") }}</p>
 
       <form @submit.prevent="handleSubmit" class="form-content">
         <div class="form-grid">
@@ -49,6 +54,8 @@
             <label for="Price">
               {{ $t("joinAsNurse.step2.priceLabel") }}
             </label>
+
+            <label for="price">{{ $t("secondjoin.priceLabel") }}</label>
             <input
               type="text"
               id="price"
@@ -60,6 +67,9 @@
           <!-- Available Days -->
           <div class="input-group">
             <label>{{ $t("joinAsNurse.step2.availableDays") }}</label>
+
+            <label>{{ $t("secondjoin.availableDays") }}</label>
+
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -72,7 +82,7 @@
                     :value="day"
                     v-model="formData.availableDays"
                   />
-                  {{ day }}
+                  {{ $t(`data.days.${day}`) }}
                 </label>
               </div>
             </div>
@@ -82,6 +92,9 @@
           <!-- Shifts -->
           <div class="input-group">
             <label>{{ $t("joinAsNurse.step2.shifts") }}</label>
+
+            <label>{{ $t("secondjoin.availableTime") }}</label>
+
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -94,7 +107,7 @@
                     :value="shift"
                     v-model="formData.shifts"
                   />
-                  {{ shift.charAt(0).toUpperCase() + shift.slice(1) }}
+                  {{ $t(`data.shifts.${shift}`) }}
                   ({{ times[0].from }} - {{ times[times.length - 1].to }})
                 </label>
               </div>
@@ -104,6 +117,7 @@
           <!-- Languages -->
           <div class="input-group">
             <label>{{ $t("joinAsNurse.step2.languages") }}</label>
+            <label>{{ $t("secondjoin.languages") }}</label>
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -116,7 +130,7 @@
                     :value="lang"
                     v-model="formData.languages"
                   />
-                  {{ lang.charAt(0).toUpperCase() + lang.slice(1) }}
+                  {{ $t(`data.languages.${lang}`) }}
                 </label>
               </div>
             </div>
@@ -124,6 +138,9 @@
           <!-- Specialization -->
           <div class="input-group">
             <label>{{ $t("joinAsNurse.step2.services") }}</label>
+
+            <label>{{ $t("secondjoin.services") }}</label>
+
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -136,7 +153,7 @@
                     :value="spec"
                     v-model="formData.specialization"
                   />
-                  {{ spec }}
+                  {{ $t(`data.specializations.${spec}`) }}
                 </label>
               </div>
             </div>
@@ -161,6 +178,11 @@
           </button>
           <button type="submit" class="submit-btn">
             {{ $t("joinAsNurse.buttons.next") }}
+
+            {{ $t("secondjoin.back") }}
+          </button>
+          <button type="submit" class="submit-btn">
+            {{ $t("secondjoin.next") }}
           </button>
         </div>
       </form>
@@ -176,7 +198,9 @@ import { languageOptions } from "@/data/languageOptions";
 import { specializationOptions } from "@/data/specializationOptions";
 import { availableDays } from "@/data/availableDays";
 const router = useRouter();
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 // Form data
 const formData = ref({
   experience: "",
@@ -195,22 +219,27 @@ const goBack = () => {
 
 const handleSubmit = () => {
   if (formData.value.specialization.length === 0) {
-    alert("Please select at least one specialization.");
+    alert(t("secondjoin.alertSpecialization"));
     return;
   }
 
   if (formData.value.languages.length === 0) {
-    alert("Please select at least one language.");
+    alert(t("secondjoin.alertLanguages"));
     return;
   }
 
   if (formData.value.shifts.length === 0) {
-    alert("Please select at least one shift.");
+    alert(t("secondjoin.alertShifts"));
     return;
   }
   const price = parseFloat(formData.value.price);
   if (isNaN(price) || price < 50 || price > 500) {
-    alert("Price must be a number between 50 and 500.");
+    alert(t("secondjoin.alertPrice"));
+    return;
+  }
+  const bio = formData.value.bio.trim();
+  if (bio.length < 20) {
+    alert(t("secondjoin.bioTooShort"));
     return;
   }
   // Store data in localStorage
@@ -218,6 +247,10 @@ const handleSubmit = () => {
   router.push("/thirdjoin");
 };
 onMounted(() => {
+  const personalData = localStorage.getItem("personalData");
+  if (!personalData) {
+    router.push("/join");
+  }
   const saved = localStorage.getItem("professionalData");
   if (saved) {
     Object.assign(formData.value, JSON.parse(saved));
@@ -290,8 +323,8 @@ onMounted(() => {
   display: block;
   margin-bottom: 0.5rem;
   color: #19599a;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
 .input-group input,
@@ -363,16 +396,14 @@ onMounted(() => {
 }
 
 .back-btn {
-  display: inline-flex;
-  align-items: center;
-  background-color: #e9ecef;
-  color: #495057;
+  background-color: transparent;
+  color: #19599a;
+  border: 1px solid #19599a;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
-  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-size: 0.9rem;
 }
 
 .back-btn:hover {

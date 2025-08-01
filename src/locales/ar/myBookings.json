@@ -1,18 +1,18 @@
 {
   "title": "حجوزاتي",
-  "loading": "جارٍ تحميل الحجوزات...",
-  "activeTitle": "الحجوزات النشطة",
-  "noActive": "لا توجد حجوزات نشطة",
+  "activeTitle": "الحجوزات القادمة",
   "pastTitle": "الحجوزات السابقة",
-  "noPast": "لا توجد حجوزات سابقة",
+  "noActive": "لا توجد حجوزات حالية.",
+  "noPast": "لا توجد حجوزات سابقة.",
   "to": "إلى",
-  "service": "الخدمة",
   "nurse": "الممرضة",
+  "service": "الخدمة",
   "price": "السعر",
-  "addReview": "إضافة مراجعة",
-  "yourReview": "مراجعتك",
+  "addReview": "أضف تقييمًا",
+  "yourReview": "تقييمك",
   "rating": "التقييم",
   "modalTitle": "قيّم تجربتك",
-  "reviewPlaceholder": "اكتب تقييمك...",
-  "submit": "إرسال"
+  "reviewPlaceholder": "اكتب ملاحظاتك هنا...",
+  "submit": "إرسال",
+  "bookSameNurse": "احجز نفس الممرض/ة"
 }

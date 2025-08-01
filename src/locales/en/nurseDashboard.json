@@ -1,16 +1,15 @@
 {
-  "title": "Dashboard",
-  "thisMonthEarnings": "This Month’s Earnings",
-  "sessions": "Sessions",
+  "bannedMessage": "Your account has been <strong>banned</strong>. You cannot accept new bookings at the moment.",
+  "totalEarnings": "Total Earnings",
+  "monthlyEarnings": "This Month’s Earnings",
+  "totalBookings": "Total Bookings",
   "nextBooking": "Next Booking",
+  "noUpcoming": "No upcoming booking",
   "latestReview": "Latest Review",
-  "availabilityReminderTitle": "Availability Reminder",
-  "availabilityReminderMessage": "Don’t forget to update your availability!",
-  "quickActions": "Quick Actions",
-  "setAvailability": "Set Availability",
-  "viewBookings": "View Bookings",
-  "editProfile": "Edit Profile",
-  "reviewTimeAgo": "2 days ago",
-  "reviewUserName": "Ahmed",
-  "reviewComment": "The nurse was extremely professional and caring!"
+  "timeAgo": {
+    "minutes": "{count} minutes ago",
+    "hours": "{count} hours ago",
+    "days": "{count} days ago"
+  },
+  "noReviews": "No reviews yet"
 }

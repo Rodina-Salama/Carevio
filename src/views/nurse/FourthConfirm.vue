@@ -8,7 +8,10 @@
           :style="{ width: '100%', backgroundColor: '#4CAF50' }"
         ></div>
       </div>
+
       <div class="progress-label">{{ $t("joinAsnurse.step4.progress") }}</div>
+
+      <div class="progress-label">{{ $t("confirmnurse.progress") }}</div>
     </div>
 
     <!-- Confirmation Card -->
@@ -24,14 +27,22 @@
           <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
         </svg>
       </div>
+
       <h1 class="form-title">{{ $t("joinAsnurse.step4.title") }}</h1>
       <p class="form-subtitle">
         {{ $t("joinAsnurse.step4.subtitle") }}
       </p>
 
+      <h1 class="form-title">{{ $t("confirmnurse.title") }}</h1>
+      <p class="form-subtitle">
+        {{ $t("confirmnurse.subtitle") }}
+      </p>
+
       <div class="confirmation-actions">
         <button @click="goToHome" class="submit-btn">
           {{ $t("joinAsnurse.buttons.ok") }}
+
+          {{ $t("confirmnurse.ok") }}
         </button>
       </div>
     </div>

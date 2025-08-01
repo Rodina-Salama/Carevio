@@ -8,7 +8,7 @@
       <div class="services-grid">
         <div class="service-card">
           <div class="service-icon">
-            <img src="@/assets/service1.png" alt="Elderly Care" />
+            <img src="@/assets/service1.jpg" alt="Elderly Care" />
           </div>
           <h3>{{ $t("services.elderlyCareTitle") }}</h3>
           <p>{{ $t("services.elderlyCareDesc") }}</p>
@@ -52,6 +52,29 @@
           </div>
           <h3>{{ $t("services.vitalSignsTitle") }}</h3>
           <p>{{ $t("services.vitalSignsDesc") }}</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">
+            <img src="@/assets/service7.png" alt="Wound Dressing" />
+          </div>
+          <h3>{{ $t("services.woundDressingTitle") }}</h3>
+          <p>{{ $t("services.woundDressingDesc") }}</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <img src="@/assets/service8.jpg" alt="Catheter Care" />
+          </div>
+          <h3>{{ $t("services.catheterCareTitle") }}</h3>
+          <p>{{ $t("services.catheterCareDesc") }}</p>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">
+            <img src="@/assets/service9.jpg" alt="Post-Surgical Care" />
+          </div>
+          <h3>{{ $t("services.postSurgicalTitle") }}</h3>
+          <p>{{ $t("services.postSurgicalDesc") }}</p>
         </div>
       </div>
     </div>

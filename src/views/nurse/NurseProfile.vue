@@ -1,6 +1,7 @@
 <template>
   <div class="nurse-profile-container">
-    <div class="nurse-profile-page">
+    <LoadingSpinner v-if="loading" class="loading-wrapper" />
+    <div v-else class="nurse-profile-page">
       <div class="nurse-profile-header">
         <div class="nurse-profile-left">
           <img
@@ -15,7 +16,7 @@
             </h2>
             <div class="nurse-subinfo">
               <span class="nurse-location">
-                {{ nurse?.personal?.city }}, {{ nurse?.personal?.area }}
+                {{ nurseCity }}, {{ nurseRegion }}
               </span>
             </div>
           </div>
@@ -36,29 +37,30 @@
           </button>
         </div>
       </div>
+
       <div
         class="availability-section"
-        v-if="nurse?.professional?.availableDays?.length"
+        v-if="nurseDays.length && nurseDays[0] !== t('general.unknown')"
       >
         <h4 class="section-title">{{ $t("nurseProfile.availableDays") }}</h4>
         <p class="section-text">
-          {{ nurse.professional.availableDays.join(", ") }}
+          {{ nurseDays.join(", ") }}
         </p>
       </div>
       <div class="shift-section" v-if="nurse?.professional?.shifts?.length">
         <h4 class="section-title">{{ $t("nurseProfile.AvailableTime") }}</h4>
-        <p class="section-text">
-          {{ nurse.professional.shifts.join(", ") }}
-        </p>
-        <p class="section-text">{{ nurse.professional.shift }}</p>
       </div>
-      <div class="experience-section" v-if="nurse?.professional?.experience">
-        <h4 class="section-title">{{ $t("nurseProfile.experience") }}</h4>
+
+      <div class="shift-section">
+        <h4 class="section-title">{{ $t("nurseProfile.availableTime") }}</h4>
         <p class="section-text">
           {{ nurse?.professional?.experience }}
           {{ $t("nurseProfile.experienceUnit") }}
+
+          {{ nurse?.professional?.experience }} {{ $t("nurseProfile.years") }}
         </p>
       </div>
+
       <div class="bio-section" v-if="nurse?.professional?.bio">
         <h4 class="section-title">{{ $t("nurseProfile.about") }}</h4>
         <p class="section-text">{{ nurse?.professional?.bio }}</p>
@@ -75,10 +77,11 @@
             v-for="(service, idx) in nurse.professional.specialization"
             :key="idx"
           >
-            {{ service }}
+            {{ t(`data.specializations.${service}`) }}
           </span>
         </div>
       </div>
+
       <div class="reviews-section" v-if="reviews.length">
         <h4 class="section-title">{{ $t("nurseProfile.reviews") }}</h4>
         <div class="review-card" v-for="(review, idx) in reviews" :key="idx">
@@ -87,6 +90,10 @@
               <span class="review-user-name">
                 {{ review.fullName || $t("nurseProfile.user") }}
               </span>
+
+              <span class="review-user-name">{{
+                review.fullName || "User"
+              }}</span>
               <span class="review-rating"
                 >{{ $t("nurseProfile.rating") }}: {{ review.rating }} ★</span
               >
@@ -100,37 +107,39 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { doc, getDoc } from "firebase/firestore";
+import { ref, onMounted, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "@/firebase";
-import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
-import { collection, query, where, getDocs } from "firebase/firestore";
-const reviews = ref([]);
+import { useI18n } from "vue-i18n";
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+const loading = ref(true);
+
+const { t } = useI18n();
+const userStore = useUserStore();
+const router = useRouter();
 const route = useRoute();
 const nurseId = route.params.id;
 const nurse = ref(null);
-const router = useRouter();
-const userStore = useUserStore();
+const reviews = ref([]);
 
-function goToBooking() {
+const goToBooking = () => {
   if (userStore.firebaseUser) {
     router.push({ path: "/bookingInformation", query: { nurseId } });
   } else {
     router.push("/signup");
   }
-}
-onMounted(async () => {
-  const docRef = doc(db, "applications", nurseId);
-  const docSnap = await getDoc(docRef);
+};
 
-  if (docSnap.exists()) {
-    nurse.value = docSnap.data();
-  } else {
-    console.log("No such document!");
-  }
-});
 const fetchReviews = async () => {
   const q = query(collection(db, "reviews"), where("nurseId", "==", nurseId));
   const querySnapshot = await getDocs(q);
@@ -143,17 +152,41 @@ onMounted(async () => {
 
   if (docSnap.exists()) {
     nurse.value = docSnap.data();
-    await fetchReviews(); // Fetch reviews after nurse is loaded
+    await fetchReviews();
   } else {
     console.log("No such document!");
   }
+  loading.value = false;
+});
+
+const nurseCity = computed(() => {
+  const city = nurse.value?.personal?.city;
+  return city ? t(`data.cities.${city}`) : t("general.unknown");
+});
+
+const nurseRegion = computed(() => {
+  const area = nurse.value?.personal?.area;
+  return area ? t(`data.areas.${area}`) : t("general.unknown");
+});
+
+const nurseShifts = computed(() => {
+  return (
+    nurse.value?.professional?.shifts?.map((shift) =>
+      t(`data.shifts.${shift}`)
+    ) || [t("general.unknown")]
+  );
+});
+
+const nurseDays = computed(() => {
+  return (
+    nurse.value?.professional?.availableDays?.map((day) =>
+      t(`data.days.${day}`)
+    ) || [t("general.unknown")]
+  );
 });
 </script>
 
 <style scoped>
-body {
-  text-align: left;
-}
 .nurse-profile-container {
   display: flex;
   justify-content: center;
@@ -199,7 +232,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  text-align: left;
 }
 
 .nurse-name {
@@ -273,7 +305,6 @@ body {
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 7px;
-  text-align: left;
   color: #19599a;
   letter-spacing: 0.2px;
 }
@@ -283,7 +314,6 @@ body {
   color: #444;
   line-height: 1.7;
   margin-bottom: 8px;
-  text-align: left;
 }
 
 .services-list {
@@ -313,7 +343,6 @@ body {
   margin-bottom: 18px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(25, 89, 154, 0.04);
-  text-align: left;
 }
 
 .review-header {

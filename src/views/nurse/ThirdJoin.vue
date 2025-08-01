@@ -52,7 +52,9 @@
                 $t("joinAsNurse.step3.chooseFile")
               }}</label>
               <span class="file-name">{{
-                documents.idFront ? documents.idFront.name : "No file chosen"
+                documents.idFront
+                  ? documents.idFront.name
+                  : $t("thirdjoin.noFile")
               }}</span>
             </div>
             <div class="upload-group">
@@ -69,7 +71,9 @@
                 $t("joinAsNurse.step3.chooseFile")
               }}</label>
               <span class="file-name">{{
-                documents.idBack ? documents.idBack.name : "No file chosen"
+                documents.idBack
+                  ? documents.idBack.name
+                  : $t("thirdjoin.noFile")
               }}</span>
             </div>
           </div>
@@ -92,7 +96,7 @@
                 $t("joinAsNurse.step3.chooseFile")
               }}</label>
               <span class="file-name">{{
-                documents.photo ? documents.photo.name : "No file chosen"
+                documents.photo ? documents.photo.name : $t("thirdjoin.noFile")
               }}</span>
             </div>
             <div class="upload-group">
@@ -111,7 +115,7 @@
               <span class="file-name">{{
                 documents.nursingLicense
                   ? documents.nursingLicense.name
-                  : "No file chosen"
+                  : $t("thirdjoin.noFile")
               }}</span>
             </div>
           </div>
@@ -146,7 +150,16 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
+import { onMounted } from "vue";
 
+onMounted(() => {
+  const personalcheck = localStorage.getItem("personalData");
+  const professionalcheck = localStorage.getItem("professionalData");
+
+  if (!personalcheck || !professionalcheck) {
+    router.push("/join");
+  }
+});
 const CLOUDINARY_UPLOAD_PRESET = "Nurse_information";
 const getUploadUrl = () => {
   return "https://api.cloudinary.com/v1_1/dqa1o4xga/image/upload";
@@ -428,10 +441,10 @@ input[type="file"] {
 }
 
 .back-btn {
-  background-color: #f8f9fa;
-  color: #495057;
+  background-color: transparent;
+  color: #19599a;
+  border: 1px solid #19599a;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -454,7 +467,7 @@ input[type="file"] {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #134980;
+  background-color: #67aef5ff;
 }
 
 .submit-btn:disabled {

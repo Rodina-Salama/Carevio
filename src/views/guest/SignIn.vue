@@ -90,10 +90,8 @@ export default {
         );
         const currentUser = userCredential.user;
 
-        // ✅ تأكد من تحميل بيانات المستخدم
         await currentUser.reload();
 
-        // ✅ تحقق من التفعيل قبل أي حاجة تانية
         if (!currentUser.emailVerified) {
           this.messageError = "Please verify your email before logging in.";
           await signOut(auth); // مهم علشان يوقف تسجيل الدخول فعليًا
@@ -103,7 +101,6 @@ export default {
           return;
         }
 
-        // ✅ حمل بيانات المستخدم من Firestore
         const userDocRef = doc(db, "users", currentUser.uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -111,10 +108,8 @@ export default {
           const userData = userDocSnap.data();
           const type = userData.type;
 
-          // ✅ سجل بيانات المستخدم في Pinia
           await userStore.setUser(currentUser, userData);
 
-          // ✅ اعمل توجيه حسب نوع المستخدم
           if (type === "nurse") {
             router.push({ name: "DashBoard" });
           } else if (type === "user") {
@@ -232,7 +227,7 @@ export default {
 .btn-primary {
   width: 100%;
   padding: 15px;
-  background-color: #4299e1;
+  background-color: #19599a;
   color: white;
   border: none;
   border-radius: 6px;
@@ -244,7 +239,7 @@ export default {
 }
 
 .btn-primary:hover {
-  background-color: #3182ce;
+  background-color: #67aef5ff;
   transform: translateY(-1px);
 }
 
@@ -310,8 +305,11 @@ export default {
     max-width: 500px;
   }
 
+  .login-image {
+    display: none !important;
+  }
   .login-right {
-    padding: 30px;
+    display: none !important;
   }
 
   .login-left {
@@ -319,15 +317,16 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .login-left {
     padding: 30px 20px;
   }
-
-  .login-right {
-    padding: 20px;
+  .login-image {
+    display: none !important;
   }
-
+  .login-right {
+    display: none !important;
+  }
   .form-title {
     font-size: 1.8rem;
   }

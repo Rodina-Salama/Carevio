@@ -1,9 +1,7 @@
 {
-  "availability": "التوافر",
+  "Dashboard": "نظرة عامة",
   "bookings": "الحجوزات",
   "earnings": "الأرباح",
-  "reviews": "التقييمات",
-  "editProfile": "تعديل الملف الشخصي",
-  "signOut": "تسجيل الخروج",
-  "defaultName": "اسم الممرضة"
+  "reviews": "الأراء",
+  "editProfile": "تعديل الملف الشخصي"
 }

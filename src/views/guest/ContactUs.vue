@@ -175,7 +175,7 @@ textarea {
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #19599a;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
@@ -185,7 +185,7 @@ textarea {
 }
 
 .submit-btn {
-  background: #3498db;
+  background: #19599a;
   color: white;
   padding: 1rem;
   border: none;
@@ -201,7 +201,7 @@ textarea {
 }
 
 .submit-btn:hover {
-  background: #2980b9;
+  background: #67aef5ff;
   transform: translateY(-2px);
   box-shadow: 0 6px 10px rgba(52, 152, 219, 0.3);
 }

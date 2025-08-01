@@ -1,9 +1,7 @@
 {
-  "availability": "Availability",
+  "Dashboard": "Overview",
   "bookings": "Bookings",
   "earnings": "Earnings",
   "reviews": "Reviews",
-  "editProfile": "Edit Profile",
-  "signOut": "Sign Out",
-  "defaultName": "Nurse Name"
+  "editProfile": "Edit Profile"
 }

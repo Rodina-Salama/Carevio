@@ -1,6 +1,8 @@
 {
   "chooseCity": "اختر المدينة",
   "chooseArea": "اختر المنطقة",
+  "chooseDay": "اختر اليوم",
+  "chooseShift": "اختر الوردية",
   "searchService": "ابحث عن خدمة",
   "chooseGender": "اختر الجنس",
   "female": "أنثى",
@@ -12,5 +14,6 @@
   "unknownArea": "غير معروف",
   "noBioAvailable": "لا توجد سيرة ذاتية متاحة.",
   "viewButton": "عرض",
-  "noNursesFound": "لم يتم العثور على ممرضين مطابقين للمرشحات المحددة."
+  "noNursesFound": "لم يتم العثور على ممرضين مطابقين للمرشحات المحددة.",
+  "noRating": "لا توجد تقييمات بعد"
 }

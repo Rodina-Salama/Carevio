@@ -99,7 +99,9 @@ import cashImg from "@/assets/cash.png";
 import { db } from "@/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 
 const booking = ref({
@@ -119,6 +121,10 @@ let countdownInterval = null;
 
 onMounted(() => {
   const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
+  if (!storedBooking) {
+    router.push("browse");
+    return;
+  }
   if (storedBooking) {
     booking.value = {
       date: storedBooking.date,
@@ -221,7 +227,7 @@ const handleConfirm = async () => {
   if (isSubmitting.value) return;
 
   if (!paymentMethod.value) {
-    alert("Please choose a payment method.");
+    alert(t("booking.selectPayment"));
     return;
   }
 
@@ -252,7 +258,9 @@ const handleConfirm = async () => {
   cursor: pointer;
   font-weight: bold;
 }
-
+.noteInfo {
+  font-weight: bold;
+}
 .title {
   font-size: 24px;
   font-weight: bold;
@@ -316,7 +324,7 @@ const handleConfirm = async () => {
 }
 
 .cancel:hover {
-  background-color: #19599a;
+  background-color: #67aef5ff;
   color: white;
 }
 
