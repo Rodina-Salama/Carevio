@@ -169,14 +169,6 @@ const nurseRegion = computed(() => {
   return area ? t(`data.areas.${area}`) : t("general.unknown");
 });
 
-const nurseShifts = computed(() => {
-  return (
-    nurse.value?.professional?.shifts?.map((shift) =>
-      t(`data.shifts.${shift}`)
-    ) || [t("general.unknown")]
-  );
-});
-
 const nurseDays = computed(() => {
   return (
     nurse.value?.professional?.availableDays?.map((day) =>
