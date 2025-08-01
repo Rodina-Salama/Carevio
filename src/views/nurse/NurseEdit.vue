@@ -24,7 +24,7 @@
       <div class="form-group bio-group">
         <label class="form-label">{{ $t("nurseEdit.bio") }}</label>
         <textarea
-          v-model="nurse.bio"
+          v-model="nurse.professional.bio"
           :placeholder="$t('nurseEdit.enterHere')"
           class="input bio"
         ></textarea>

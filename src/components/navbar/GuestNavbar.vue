@@ -55,18 +55,18 @@
 
       <div class="navbar-actions">
         <router-link
-          to="/join"
+          to="/signin"
           class="btn outline"
           @click="closeMenu"
           active-class="active-btn"
-          >{{ $t("navbar.joinAsNurse") }}</router-link
+          >{{ $t("navbar.signIn") }}</router-link
         >
         <router-link
-          to="/signin"
+          to="/join"
           class="btn btn1"
           @click="closeMenu"
           active-class="active-btn"
-          >{{ $t("navbar.signIn") }}</router-link
+          >{{ $t("navbar.joinAsNurse") }}</router-link
         >
         <router-link
           to="/signup"

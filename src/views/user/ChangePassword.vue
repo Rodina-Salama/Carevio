@@ -2,7 +2,7 @@
   <div class="change-password">
     <div class="container">
       <!-- Back button at top-left -->
-      <button type="button" class="back-btn-top" @click="goBack">
+      <button type="button" class="back-btn-top" @click="$router.back()">
         ← {{ $t("changePassword.back") }}
       </button>
 
