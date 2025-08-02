@@ -4,7 +4,6 @@
       <h2>{{ $t("editProfile.title") }}</h2>
 
       <div class="form-group">
-        <label>Profile Image</label>
         <label>{{ $t("editProfile.profileImageLabel") }}</label>
 
         <div v-if="previewUrl" class="preview-img">

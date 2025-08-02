@@ -1244,4 +1244,10 @@ nav {
 :root.dark .lang-circle-btn {
   background-color: #0f355b;
 }
+:root.dark .upload-btn {
+  background-color: #333333;
+}
+:root.dark .cancel {
+  background-color: transparent;
+}
 </style>
