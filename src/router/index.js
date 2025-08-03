@@ -83,6 +83,11 @@ const routes = [
     name: "ChangePasswordnurse",
     component: ChangePasswordnurse,
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/views/NotFound.vue"),
+  },
 ];
 
 const router = createRouter({

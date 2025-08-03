@@ -1,5 +1,8 @@
 {
 "loading":"Loading",
 "unauthorizedtitle": "You are not authorized to access this page",
-"unauthorizedredirectMessage": "You will be redirected to the home page shortly..."
+"unauthorizedredirectMessage": "You will be redirected to the home page shortly...",
+"pagenotfound":"Page Not Found",
+"gotohome":"Go to Home"
+
 }
