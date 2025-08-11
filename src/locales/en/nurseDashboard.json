@@ -1,15 +1,15 @@
 {
-    "bannedMessage": "Your account has been <strong>banned</strong>. You cannot accept new bookings at the moment.",
-    "totalEarnings": "Total Earnings",
-    "monthlyEarnings": "This Month’s Earnings",
-    "totalBookings": "Total Bookings",
-    "nextBooking": "Next Booking",
-    "noUpcoming": "No upcoming booking",
-    "latestReview": "Latest Review",
-    "timeAgo": {
-      "minutes": "{count} minutes ago",
-      "hours": "{count} hours ago",
-      "days": "{count} days ago"
-    },
-    "noReviews": "No reviews yet"
+  "bannedMessage": "Your account has been <strong>banned</strong>. You cannot accept new bookings at the moment.",
+  "totalEarnings": "Total Earnings",
+  "monthlyEarnings": "This Month’s Earnings",
+  "totalBookings": "Total Bookings",
+  "nextBooking": "Next Booking",
+  "noUpcoming": "No upcoming booking",
+  "latestReview": "Latest Review",
+  "timeAgo": {
+    "minutes": "{count} minutes ago",
+    "hours": "{count} hours ago",
+    "days": "{count} days ago"
+  },
+  "noReviews": "No reviews yet"
 }

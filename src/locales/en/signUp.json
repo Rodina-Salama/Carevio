@@ -11,5 +11,10 @@
   "namePlaceholder": "Enter your name",
   "emailPlaceholder": "Enter your email",
   "passwordPlaceholder": "Enter your password",
-  "confirmPasswordPlaceholder": "Confirm your password"
+  "confirmPasswordPlaceholder": "Confirm your password",
+  "terms": {
+  "label": "I agree to the",
+  "link": "Terms and Conditions",
+  "error": "You must agree to the Terms and Conditions before signing up."
+}
 }

@@ -1,0 +1,37 @@
+{
+  "termsPage": {
+    "title": "Terms and Conditions for Using Carevio",
+    "sections": {
+      "respect": {
+        "title": "1. Principle of Mutual Respect",
+        "body": "Both parties — the client and the nurse — must maintain mutual respect during the provision or receipt of services. Any offensive language, insults, threats, or hostile behavior of any kind is strictly prohibited."
+      },
+      "violation": {
+        "title": "2. Actions in Case of Violation",
+        "point1": "Upon receiving the first documented complaint of abusive behavior, the offending party will receive an official warning.",
+        "point2": "Repeated violations or severe cases (physical threats, excessive verbal abuse, harassment) may result in account suspension or permanent ban from the platform.",
+        "point3": "All suspension or ban decisions are made by the support team after an internal investigation based on evidence (chat logs, recordings, witness statements, etc.)."
+      },
+      "complaint": {
+        "title": "3. How to File a Complaint",
+        "body": "The affected party may file a complaint via the 'Contact Us' form or by email at <strong>support@carevio.com</strong>."
+      },
+      "appeal": {
+        "title": "4. Right to Appeal",
+        "body": "Any party receiving a warning or suspension has the right to appeal within 14 days from the date of notification. Appeals will be reviewed within a reasonable timeframe and the decision will be communicated in writing."
+      },
+      "nurseConduct": {
+        "title": "5. Nurse Conduct",
+        "body": "Nurses must adhere to professional ethics, respect privacy, and refrain from using any offensive language towards clients. Violations may result in supervisory actions or removal from the platform."
+      },
+      "changes": {
+        "title": "6. Changes to Terms",
+        "body": "We reserve the right to update these terms at any time. Any changes will be posted on this page."
+      },
+      "law": {
+        "title": "7. Governing Law",
+        "body": "In matters not provided for herein, the applicable local laws shall apply. Any disputes arising from these terms shall be subject to the jurisdiction of the competent courts."
+      }
+    }
+  }
+}

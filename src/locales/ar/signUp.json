@@ -11,5 +11,10 @@
   "namePlaceholder": "ادخل اسمك",
   "emailPlaceholder": "ادخل بريدك الإلكتروني",
   "passwordPlaceholder": "ادخل كلمة المرور",
-  "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور"
+  "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+  "terms": {
+  "label": "أوافق على",
+  "link": "الشروط والأحكام",
+  "error": "يجب الموافقة على الشروط والأحكام قبل التسجيل."
+}
 }
