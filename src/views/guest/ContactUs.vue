@@ -72,9 +72,16 @@
 </template>
 
 <script setup>
+import { getAuth } from "firebase/auth";
 import { ref } from "vue";
 import { db } from "@/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDoc,
+  doc,
+} from "firebase/firestore";
 // ❌ Optional: remove if not using emailjs
 // import emailjs from "emailjs-com";
 
@@ -85,33 +92,60 @@ const form = ref({
 });
 const showSuccess = ref(false);
 
+// const handleSubmit = async () => {
+//   try {
+//     // Save to Firestore
+//     await addDoc(collection(db, "complains"), {
+//       name: form.value.name,
+//       email: form.value.email,
+//       message: form.value.message,
+//       createdAt: serverTimestamp(), // 🔄 timestamp
+//       status: "pending", // Default status
+//     });
+// };
+
 const handleSubmit = async () => {
   try {
-    // Save to Firestore
-    await addDoc(collection(db, "complains"), {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    let messageData = {
       name: form.value.name,
       email: form.value.email,
       message: form.value.message,
-      createdAt: serverTimestamp(), // 🔄 timestamp
-      status: "pending", // Default status
-    });
+      createdAt: serverTimestamp(),
+      status: "pending",
+    };
 
-    // ✅ Optional: EmailJS - Remove or configure properly if not used
-    /*
-    await emailjs.send(
-      "your_service_id",
-      "your_template_id",
-      {
-        to_name: form.value.name,
-        to_email: form.value.email,
-        message:
-          "Your message has been submitted successfully. We’ll contact you soon.",
-      },
-      "your_user_id"
-    );
-    */
+    if (user) {
+      // User is logged in
+      messageData.userId = user.uid;
+      messageData.userName = user.displayName || user.email || "";
 
-    // Reset and show popup
+      // Fetch user type from Firestore (assuming you store it in "users" collection)
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          messageData.userType = userSnap.data().type || "unknown";
+        } else {
+          messageData.userType = "unknown";
+        }
+      } catch {
+        messageData.userType = "unknown";
+      }
+    } else {
+      // Guest: get IP address
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+        messageData.ip = ipData.ip;
+      } catch {
+        messageData.ip = "unknown";
+      }
+    }
+
+    await addDoc(collection(db, "complains"), messageData);
+
     form.value = { name: "", email: "", message: "" };
     showSuccess.value = true;
     setTimeout(() => (showSuccess.value = false), 5000);
