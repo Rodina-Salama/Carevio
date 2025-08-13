@@ -15,6 +15,11 @@
   "submit": "Submit Application",
   "submitting": "Submitting...",
   "step": "Step 3 of 4 (75%)",
+  "terms": {
+    "label": "I agree to the",
+    "link": "Terms and Conditions",
+    "error": "You must agree to the Terms and Conditions before signing up."
+  },
   "error": {
     "fileTooLarge": "File too large (max 5MB)",
     "fileType": "Only JPG/PNG image files are allowed",

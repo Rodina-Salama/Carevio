@@ -92,6 +92,19 @@
             }}</span>
           </div>
 
+          <div class="terms-box">
+            <label>
+              <input type="checkbox" v-model="agreeToTerms" />
+              {{ $t("signUp.terms.label") }}
+              <router-link to="/termsandconditions" target="_blank">
+                {{ $t("signUp.terms.link") }}
+              </router-link>
+            </label>
+            <p v-if="showError" class="error-text">
+              {{ $t("signUp.terms.error") }}
+            </p>
+          </div>
+
           <button type="submit" class="btn btn-primary">
             {{ $t("signUp.submit") }}
           </button>
@@ -161,6 +174,8 @@ export default {
         password: "",
         passwordConfirmation: "",
       },
+      agreeToTerms: false,
+      showError: false,
       showSuccessMessage: false,
       countdown: 5,
       countdownInterval: null,
@@ -217,6 +232,12 @@ export default {
       }, 1000);
     },
     async registerUser() {
+      this.showError = false; // reset checkbox error
+
+      if (!this.agreeToTerms) {
+        this.showError = true; // show error if not checked
+        return;
+      }
       if (!this.validateForm()) return;
 
       try {
@@ -441,5 +462,14 @@ export default {
   .register-content {
     padding: 30px 20px;
   }
+}
+.terms-box {
+  margin-top: 12px;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
 }
 </style>
