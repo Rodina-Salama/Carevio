@@ -26,7 +26,7 @@
         <textarea
           v-model="nurse.professional.bio"
           :placeholder="$t('nurseEdit.enterHere')"
-          class="input bio"
+          class="input-bio"
         ></textarea>
       </div>
 
@@ -432,12 +432,59 @@ export default {
   flex: 1;
 }
 
+/* Base desktop styles remain */
 .services {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px 20px;
   font-size: 14px;
   margin-top: 10px;
+}
+
+/* Tablet view (2 columns, centered) */
+@media (max-width: 1024px) {
+  .services {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    justify-content: center;
+    justify-items: center; /* centers individual labels in their grid cells */
+  }
+  .row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  .form-container {
+    padding: 30px 40px;
+    max-width: 90%;
+    margin: auto;
+  }
+}
+
+/* Mobile view (1 column, full width) */
+@media (max-width: 600px) {
+  .services {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+  .row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .form-container {
+    padding: 20px;
+    max-width: 100%;
+  }
+  .input {
+    width: 100%;
+  }
+  .pricing-field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+.input-bio {
+  width: 95%;
 }
 
 .btn-save {
@@ -448,11 +495,14 @@ export default {
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  margin-top: 30px;
+  margin: 30px auto 0; /* auto left/right centers it */
+  display: block; /* makes it respect auto margins */
 }
+
 .btn-save:hover {
   background-color: #67aef5ff;
 }
+
 .switch-group {
   display: flex;
   gap: 16px;
@@ -501,5 +551,28 @@ input:checked + .slider {
 
 input:checked + .slider::before {
   transform: translateX(26px);
+}
+.actions-container {
+  margin-top: 1.5rem; /* space from previous field */
+}
+
+.changePassword {
+  background-color: #19599a; /* main color */
+  color: white; /* text color */
+  border: none; /* remove default border */
+  padding: 10px 20px; /* space inside */
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px; /* rounded edges */
+  cursor: pointer; /* hand cursor */
+  transition: background 0.3s ease;
+}
+
+.changePassword:hover {
+  background-color: #144879; /* darker on hover */
+}
+
+.changePassword:active {
+  background-color: #0f3558; /* even darker when clicked */
 }
 </style>

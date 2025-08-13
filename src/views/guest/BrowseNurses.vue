@@ -282,11 +282,21 @@ export default {
   padding: 10px 14px;
 }
 
-/* Mobile (default) - 2 columns */
 .search-bar {
   grid-template-columns: repeat(2, 1fr);
 }
 
+/* Smaller selects & buttons on mobile only */
+@media (max-width: 767px) {
+  .search-bar select {
+    max-width: 150px;
+    margin: 5px;
+    justify-self: center;
+  }
+  .search-bar {
+    justify-self: center;
+  }
+}
 /* Tablet - 3 columns */
 @media (min-width: 768px) {
   .search-bar {
@@ -332,9 +342,12 @@ export default {
   }
 }
 
-.search-bar select,
+.search-bar select {
+  padding: 5px 8px;
+  font-size: 14px;
+}
 .search-bar button {
-  padding: 8px 12px;
+  padding: 4px 7px;
   font-size: 14px;
 }
 

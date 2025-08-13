@@ -380,4 +380,37 @@ const closeMenu = () => {
     height: 2rem;
   }
 }
+@media (max-width: 768px) {
+  .btn {
+    width: 150px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .navbar-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    align-items: center;
+  }
+}
+@media (max-width: 1024px) and (min-width: 769px) {
+  .navbar-actions {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  /* Arabic */
+  html[lang="ar"] .navbar-actions .btn {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  /* English */
+  html[lang="en"] .navbar-actions .btn {
+    font-size: 1.1rem; /* slightly bigger for English */
+    padding: 0.25rem 0.4rem;
+  }
+}
 </style>

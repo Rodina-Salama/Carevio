@@ -1,7 +1,7 @@
 {
-"loading":"جاري التحميل",
-"unauthorizedtitle": "أنت غير مصرح لك بالدخول إلى هذه الصفحة",
-"unauthorizedredirectMessage": "سيتم تحويلك إلى الصفحة الرئيسية قريبًا...",
-"pagenotfound":"الصفحة غير موجودة",
-"gotohome":"اذهب الى الصفحة الرئيسية"
+  "loading": "جاري التحميل",
+  "unauthorizedtitle": "أنت غير مصرح لك بالدخول إلى هذه الصفحة",
+  "unauthorizedredirectMessage": "سيتم تحويلك إلى الصفحة الرئيسية قريبًا...",
+  "pagenotfound": "الصفحة غير موجودة",
+  "gotohome": "اذهب الى الصفحة الرئيسية"
 }
