@@ -120,6 +120,22 @@
             </div>
           </div>
         </div>
+        <div class="terms-box">
+          <label>
+            <input type="checkbox" v-model="agreeToTerms" />
+            {{ $t("thirdjoin.terms.label") }}
+            <!-- <<< استخدم هذا -->
+            <router-link to="/termsandconditions" target="_blank">
+              {{ $t("thirdjoin.terms.link") }}
+              <!-- <<< و هذا -->
+            </router-link>
+          </label>
+
+          <p v-if="showError" class="error-text">
+            {{ $t("thirdjoin.terms.error") }}
+            <!-- <<< و هذا لرسالة الخطأ -->
+          </p>
+        </div>
 
         <div class="form-actions">
           <button type="button" class="back-btn" @click="goBack">
@@ -151,6 +167,8 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { onMounted } from "vue";
+const agreeToTerms = ref(false); // terms and conditions checkbox
+const showError = ref(false); // error message for terms and conditions
 
 onMounted(() => {
   const personalcheck = localStorage.getItem("personalData");
@@ -218,6 +236,12 @@ const uploadToCloudinary = async (file) => {
   }
 };
 const handleSubmit = async () => {
+  if (!agreeToTerms.value) {
+    // Terms and Conditions checkbox validation
+    showError.value = true;
+    return;
+  }
+  showError.value = false;
   // Prevent multiple submissions
   if (isSubmitting.value) return;
   isSubmitting.value = true;
@@ -487,5 +511,10 @@ input[type="file"] {
   .upload-grid {
     grid-template-columns: 1fr;
   }
+}
+.error-text {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 </style>

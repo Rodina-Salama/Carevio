@@ -26,6 +26,7 @@ import bookingInformation from "@/views/BookingConfirmation/bookingInformation.v
 import NurseBookingDetail from "@/views/nurse/NurseBookingDetail.vue";
 import NotAuthorized from "@/views/NotAuthorized.vue";
 import ChangePasswordnurse from "@/views/nurse/ChangePasswordnurse.vue";
+import TermsAndConditions from "@/views/TermsAndConditions.vue";
 const routes = [
   { path: "/", name: "HomePage", component: HomePage },
   { path: "/about", name: "AboutPage", component: AboutPage },
@@ -82,6 +83,16 @@ const routes = [
     path: "/changepasswordnurse",
     name: "ChangePasswordnurse",
     component: ChangePasswordnurse,
+  },
+  {
+    path: "/termsandconditions",
+    name: "termsandconditions",
+    component: TermsAndConditions,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/views/NotFound.vue"),
   },
 ];
 

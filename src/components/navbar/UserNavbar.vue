@@ -82,6 +82,32 @@
           </button>
         </div>
       </div>
+
+      <div class="notification-menu" ref="notifDropdownRef">
+        <div class="notification-icon" @click="toggleNotifDropdown">
+          <span class="bell">🔔</span>
+          <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+        </div>
+        <div v-if="isNotifOpen" class="dropdown-menu notif-dropdown">
+          <div v-if="notifications.length === 0" class="no-notifications">
+            No notifications
+          </div>
+          <div
+            v-else
+            v-for="notif in notifications"
+            :key="notif.id"
+            class="notification-item"
+            @click="handleNotifClick(notif)"
+          >
+            <p class="notif-message">{{ notif.message }}</p>
+            <p class="notif-time">
+              {{ notif.createdAt.toDate().toLocaleString() }}
+            </p>
+            <span v-if="!notif.isRead" class="unread-dot"></span>
+          </div>
+        </div>
+      </div>
+
       <div class="lang-switch-container" @click="toggleLang">
         <img
           :src="currentLang === 'ar' ? usFlag : egyptFlag"
@@ -101,15 +127,28 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import avatarPlaceholder from "@/assets/avatar.jpg";
 import { signOut } from "firebase/auth";
-import { auth } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import {
+  collection,
+  where,
+  query,
+  onSnapshot,
+  orderBy,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 
 const { locale } = useI18n();
 const currentLang = ref(locale.value);
 const isMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
+const isNotifOpen = ref(false);
+const notifDropdownRef = ref(null);
+const notifications = ref([]);
+const unreadCount = ref(0);
 
 import egyptFlag from "@/assets/egflag.png";
 import usFlag from "@/assets/usflag.png";
@@ -124,6 +163,25 @@ onMounted(() => {
   const savedLang = localStorage.getItem("lang") || "en";
   currentLang.value = savedLang;
   locale.value = savedLang;
+
+  // Setup notifications listener if user is logged in
+  if (auth.currentUser) {
+    const userId = auth.currentUser.uid;
+    const notifsQuery = query(
+      collection(db, "bookings"),
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(notifsQuery, (snapshot) => {
+      notifications.value = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      unreadCount.value = notifications.value.filter((n) => !n.isRead).length;
+    });
+  }
+
+  document.addEventListener("click", handleClickOutside);
 });
 
 const userStore = useUserStore();
@@ -155,15 +213,48 @@ const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isDropdownOpen.value = false;
   }
+  if (
+    notifDropdownRef.value &&
+    !notifDropdownRef.value.contains(event.target)
+  ) {
+    isNotifOpen.value = false;
+  }
 };
 const handleProfileClick = () => {
   router.push("/userprofile");
   closeDropdown();
 };
 
-onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
+const toggleNotifDropdown = () => {
+  isNotifOpen.value = !isNotifOpen.value;
+  if (isNotifOpen.value) {
+    markAllAsRead();
+  }
+};
+
+const closeNotifDropdown = () => {
+  isNotifOpen.value = false;
+};
+
+const markAllAsRead = async () => {
+  for (const notif of notifications.value) {
+    if (!notif.isRead) {
+      const notifRef = doc(db, `bookings/${notif.id}`); // Updated to bookings collection
+      try {
+        await updateDoc(notifRef, { isRead: true });
+        notif.isRead = true; // Update local state
+      } catch (error) {
+        console.error(`Failed to update booking ${notif.id}:`, error);
+      }
+    }
+  }
+  unreadCount.value = 0;
+};
+
+const handleNotifClick = () => {
+  router.push("/my-bookings");
+  closeNotifDropdown();
+};
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
@@ -180,6 +271,7 @@ onBeforeUnmount(() => {
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   font-family: "Cairo", sans-serif;
+  /* overflow-x: hidden; Prevent horizontal scrollbar on navbar */
 }
 .dropdown-router {
   text-decoration: none;
@@ -550,5 +642,123 @@ onBeforeUnmount(() => {
 
 .lang-circle-btn:hover {
   background-color: #a4caf0;
+}
+
+/* New styles for notifications */
+.notification-menu {
+  position: relative;
+}
+
+.notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  font-size: 1.5rem;
+}
+
+.bell {
+  color: #19599a;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.notif-dropdown {
+  max-width: calc(
+    100vw - 100px
+  ); /* Account for 50px left gap + 50px right buffer */
+  min-width: 200px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  left: 10px;
+  right: auto;
+  transform: translateX(0);
+  position: absolute;
+  top: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 10;
+  border-radius: 6px;
+}
+
+[dir="rtl"] .notif-dropdown {
+  left: 50px; /* 50px gap from left in RTL */
+  right: auto;
+}
+
+[dir="ltr"] .notif-dropdown {
+  right: 50px; /* 50px gap from right in LTR */
+  left: auto;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.notification-item:hover {
+  background: #f0f0f0;
+}
+
+.notif-message {
+  margin: 0;
+  font-size: 14px;
+}
+
+.notif-time {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.unread-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.no-notifications {
+  padding: 10px;
+  text-align: center;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .notification-menu .dropdown-menu {
+    all: unset;
+    margin-top: 12px;
+    width: calc(100% - 20px);
+    max-width: calc(100vw - 20px);
+    left: 10px;
+    right: 10px;
+  }
+
+  .notification-item {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
 }
 </style>

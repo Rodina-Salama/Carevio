@@ -1,13 +1,12 @@
 {
+  "pricePerHour": "السعر لكل ساعة",
   "bookNow": "احجز الآن",
-  "priceLabel": "السعر بالساعة",
   "availableDays": "الأيام المتاحة",
-  "availableTime": "الأوقات المتاحة",
+  "availableTime": "الوقت المتاح",
   "experience": "الخبرة",
-  "experienceUnit": "سنة",
+  "years": "سنة",
   "about": "نبذة",
   "services": "الخدمات",
   "reviews": "التقييمات",
-  "rating": "التقييم",
-  "user": "مستخدم"
+  "rating": "التقييم"
 }

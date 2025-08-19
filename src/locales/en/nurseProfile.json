@@ -1,13 +1,12 @@
 {
+  "pricePerHour": "Price per hour",
   "bookNow": "BOOK NOW",
-  "priceLabel": "Price per hour",
   "availableDays": "Available Days",
   "availableTime": "Available Time",
   "experience": "Experience",
-  "experienceUnit": "years",
+  "years": "years",
   "about": "About",
   "services": "Services",
   "reviews": "Reviews",
-  "rating": "Rating",
-  "user": "User"
+  "rating": "Rating"
 }

@@ -38,7 +38,7 @@
         {{ $t("bookingConfirmation.note") }}
       </div>
       <div class="payment-methods">
-        <label @click="handlePaypalClick">
+        <label>
           <input type="radio" value="paypal" v-model="paymentMethod" />
           <img :src="paypalImg" alt="PayPal" />
           {{ $t("bookingConfirmation.paypal") }}
@@ -50,6 +50,11 @@
           {{ $t("bookingConfirmation.cash") }}
         </label>
       </div>
+      <div
+        v-if="paymentMethod === 'paypal'"
+        id="paypal-button-container"
+        style="margin-top: 20px"
+      ></div>
 
       <div class="actions">
         <button class="confirm" @click="handleConfirm" :disabled="isSubmitting">
@@ -92,7 +97,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+/* global paypal */
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import paypalImg from "@/assets/paypal.png";
 import cashImg from "@/assets/cash.png";
@@ -118,6 +124,9 @@ const showSuccessMessage = ref(false);
 const countdown = ref(5);
 const isSubmitting = ref(false);
 let countdownInterval = null;
+const PAYPAL_CLIENT_ID =
+  "Aee-eboFAYCRkaPthczyNOOnGtR-HrHmZ38YPvC0HhLEJvipiACMrJNE6yAMqzQrDP6MV4O0Lzy8xT1D";
+const paypalPaid = ref(false);
 
 onMounted(() => {
   const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
@@ -141,19 +150,64 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (countdownInterval) clearInterval(countdownInterval);
 });
+watch(paymentMethod, (newMethod) => {
+  if (newMethod === "paypal") {
+    nextTick(() => {
+      if (!document.getElementById("paypal-sdk")) {
+        const script = document.createElement("script");
+        script.id = "paypal-sdk";
+        script.src = `https://www.sandbox.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=EUR`;
+        script.onload = () => {
+          renderPaypalButtons();
+        };
+        document.body.appendChild(script);
+      } else {
+        renderPaypalButtons();
+      }
+    });
+  }
+});
+const renderPaypalButtons = () => {
+  const container = document.getElementById("paypal-button-container");
+  if (!window.paypal || !container) return;
 
-const handlePaypalClick = () => {
-  paymentMethod.value = "paypal";
-  const width = 500;
-  const height = 700;
-  const left = (window.innerWidth - width) / 2;
-  const top = (window.innerHeight - height) / 2;
+  container.innerHTML = "";
 
-  window.open(
-    "https://www.paypal.com/signin?returnUri=%2Fmyaccount%2Fsummary",
-    "PayPalLogin",
-    `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
-  );
+  window.paypal
+    .Buttons({
+      fundingSource: paypal.FUNDING.PAYPAL,
+      style: {
+        layout: "vertical",
+        color: "gold",
+        shape: "rect",
+        label: "paypal",
+      },
+      createOrder(data, actions) {
+        const amountValue = booking.value.total
+          ? booking.value.total.toString()
+          : "100.00";
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: amountValue,
+                currency_code: "EUR",
+              },
+            },
+          ],
+        });
+      },
+      onApprove() {
+        console.log("Payment approved (no capture)");
+        paypalPaid.value = true;
+        handleConfirm();
+      },
+      onError(err) {
+        console.error("PayPal error:", err);
+        alert("Something went wrong with the payment.");
+      },
+    })
+    .render("#paypal-button-container");
 };
 
 const saveBooking = async () => {
@@ -230,7 +284,10 @@ const handleConfirm = async () => {
     alert(t("booking.selectPayment"));
     return;
   }
-
+  if (paymentMethod.value === "paypal" && !paypalPaid.value) {
+    alert(t("booking.completePaypalFirst")); // الدفع لسه متمش
+    return;
+  }
   isSubmitting.value = true;
 
   try {
