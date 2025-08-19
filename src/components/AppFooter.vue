@@ -19,21 +19,29 @@
         <h3 class="footer-heading">{{ $t("footer.pages") }}</h3>
         <ul class="footer-links">
           <li>
-            <router-link to="/">{{ $t("footer.home") }}</router-link>
+            <router-link to="/" @click="scrollToTop">
+              {{ $t("footer.home") }}
+            </router-link>
           </li>
           <li>
-            <router-link to="/about">{{ $t("footer.about") }}</router-link>
+            <router-link to="/about" @click="scrollToTop">
+              {{ $t("footer.about") }}
+            </router-link>
           </li>
           <li>
-            <router-link to="/browse">{{ $t("footer.browse") }}</router-link>
+            <router-link to="/browse" @click="scrollToTop">
+              {{ $t("footer.browse") }}
+            </router-link>
           </li>
           <li>
-            <router-link to="/services">{{
-              $t("footer.services")
-            }}</router-link>
+            <router-link to="/services" @click="scrollToTop">
+              {{ $t("footer.services") }}
+            </router-link>
           </li>
           <li>
-            <router-link to="/contact">{{ $t("footer.contact") }}</router-link>
+            <router-link to="/contact" @click="scrollToTop">
+              {{ $t("footer.contact") }}
+            </router-link>
           </li>
         </ul>
       </div>
@@ -66,6 +74,11 @@
 <script>
 export default {
   name: "AppFooter",
+  methods: {
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+  },
 };
 </script>
 

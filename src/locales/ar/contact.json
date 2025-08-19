@@ -8,7 +8,7 @@
   },
   "submitButton": "إرسال الرسالة",
   "info": {
-    "emailLabel": "البريد الإلكتروني:",
+    "emailLabel": "البريد:",
     "phoneLabel": "الهاتف:"
   },
   "popup": {

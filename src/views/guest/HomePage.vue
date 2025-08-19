@@ -394,7 +394,7 @@ select {
 .features {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -426,6 +426,9 @@ select {
     flex: 1 1 calc(50% - 2rem);
     /* 2 cards per row */
   }
+  .features{
+    justify-content: center;
+    }
 }
 
 /* Extra small screens (1 card per row) */
