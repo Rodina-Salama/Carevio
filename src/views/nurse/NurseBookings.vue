@@ -99,7 +99,7 @@ dayjs.updateLocale("en", {
   weekStart: 6, // السبت
 });
 dayjs.updateLocale("ar", {
-  weekStart: 6, // السبت
+  weekStart: 6,
 });
 export default {
   components: {
@@ -145,12 +145,19 @@ export default {
     const filteredBookings = computed(() => {
       const now = dayjs();
 
-      let filtered = bookings.value.filter((b) => {
-        const endTime = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
-        return activeTab.value === "active"
-          ? endTime.isAfter(now)
-          : endTime.isBefore(now);
-      });
+      let filtered = bookings.value
+        .filter((b) => !b.cancelled)
+        .filter((b) => {
+          let endTime = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
+          const startTime = dayjs(`${b.date} ${b.from}`, "YYYY-MM-DD hh:mm A");
+
+          if (endTime.isBefore(startTime)) {
+            endTime = endTime.add(1, "day");
+          }
+          return activeTab.value === "active"
+            ? endTime.isAfter(now)
+            : endTime.isBefore(now);
+        });
 
       if (timeFilter.value === "today") {
         filtered = filtered.filter((b) => dayjs(b.date).isSame(now, "day"));

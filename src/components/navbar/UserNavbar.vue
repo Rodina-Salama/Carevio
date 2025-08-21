@@ -1,5 +1,10 @@
 <template>
-  <nav class="navbar" v-if="!loading">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Icons"
+    rel="stylesheet"
+  />
+
+  <nav class="navbar">
     <div class="navbar-brand">
       <img src="@/assets/icon2.png" alt="Logo" class="logo" />
       <span class="site-name">Carevio</span>
@@ -9,83 +14,93 @@
         <span class="bar"></span>
       </button>
     </div>
+    <div class="leftmenu">
+      <div class="navbar-menu" :class="{ active: isMenuOpen }">
+        <ul class="nav-links">
+          <li>
+            <router-link to="/" @click="closeMenu" active-class="active-link">
+              {{ $t("navbar.home") }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/about"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.about") }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/browse"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.browse") }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/services"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.services") }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/my-bookings"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.bookings") }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              to="/contact"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.contact") }}</router-link
+            >
+          </li>
+        </ul>
 
-    <div class="navbar-menu" :class="{ active: isMenuOpen }">
-      <ul class="nav-links">
-        <li>
-          <router-link to="/" @click="closeMenu" active-class="active-link">
-            {{ $t("navbar.home") }}</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            to="/about"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.about") }}</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            to="/browse"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.browse") }}</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            to="/services"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.services") }}</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            to="/my-bookings"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.bookings") }}</router-link
-          >
-        </li>
-        <li>
-          <router-link
-            to="/contact"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.contact") }}</router-link
-          >
-        </li>
-      </ul>
-
-      <div class="user-menu" ref="dropdownRef">
-        <div class="user-info" @click="toggleDropdown">
-          <img
-            :src="userStore.profileData.profileImage || avatarPlaceholder"
-            class="user-avatar"
-            alt="avatar"
-          />
-          <span class="user-name">{{ userStore.profileData.fullName }}</span>
+        <div class="user-menu" ref="dropdownRef">
+          <div class="user-info" @click="toggleDropdown">
+            <img
+              :src="userStore.profileData.profileImage || avatarPlaceholder"
+              class="user-avatar"
+              alt="avatar"
+            />
+            <span class="user-name">{{ userStore.profileData.fullName }}</span>
+          </div>
+          <div v-if="isDropdownOpen" class="dropdown-menu">
+            <button class="dropdown-item" @click="handleProfileClick">
+              {{ $t("navbar.profile") }}
+            </button>
+            <button class="dropdown-item" @click="logout">
+              {{ $t("navbar.logout") }}
+            </button>
+          </div>
         </div>
-        <div v-if="isDropdownOpen" class="dropdown-menu">
-          <button class="dropdown-item" @click="handleProfileClick">
-            {{ $t("navbar.profile") }}
-          </button>
-          <button class="dropdown-item" @click="logout">
-            {{ $t("navbar.logout") }}
+        <div class="lang-switch-container" @click="toggleLang">
+          <img
+            :src="currentLang === 'ar' ? usFlag : egyptFlag"
+            alt="flag"
+            class="lang-flag"
+          />
+          <button class="lang-circle-btn">
+            <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
           </button>
         </div>
       </div>
-
       <div class="notification-menu" ref="notifDropdownRef">
         <div class="notification-icon" @click="toggleNotifDropdown">
-          <span class="bell">🔔</span>
+          <span class="material-symbols-outlined">notifications</span>
           <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
         </div>
         <div v-if="isNotifOpen" class="dropdown-menu notif-dropdown">
@@ -93,30 +108,19 @@
             No notifications
           </div>
           <div
-            v-else
             v-for="notif in notifications"
             :key="notif.id"
             class="notification-item"
             @click="handleNotifClick(notif)"
           >
-            <p class="notif-message">{{ notif.message }}</p>
-            <p class="notif-time">
-              {{ notif.createdAt.toDate().toLocaleString() }}
-            </p>
+            <p></p>
+            <p>{{ notif.message[currentLang] }}</p>
+            <small>{{
+              new Date(notif.createdAt.seconds * 1000).toLocaleString()
+            }}</small>
             <span v-if="!notif.isRead" class="unread-dot"></span>
           </div>
         </div>
-      </div>
-
-      <div class="lang-switch-container" @click="toggleLang">
-        <img
-          :src="currentLang === 'ar' ? usFlag : egyptFlag"
-          alt="flag"
-          class="lang-flag"
-        />
-        <button class="lang-circle-btn">
-          <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
-        </button>
       </div>
     </div>
   </nav>
@@ -130,15 +134,8 @@ import { signOut } from "firebase/auth";
 import { auth, db } from "@/firebase/config";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import {
-  collection,
-  where,
-  query,
-  onSnapshot,
-  orderBy,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import { onSnapshot, updateDoc, doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 const { locale } = useI18n();
 const currentLang = ref(locale.value);
@@ -149,7 +146,6 @@ const isNotifOpen = ref(false);
 const notifDropdownRef = ref(null);
 const notifications = ref([]);
 const unreadCount = ref(0);
-
 import egyptFlag from "@/assets/egflag.png";
 import usFlag from "@/assets/usflag.png";
 
@@ -164,24 +160,26 @@ onMounted(() => {
   currentLang.value = savedLang;
   locale.value = savedLang;
 
-  // Setup notifications listener if user is logged in
-  if (auth.currentUser) {
-    const userId = auth.currentUser.uid;
-    const notifsQuery = query(
-      collection(db, "bookings"),
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc")
-    );
-    onSnapshot(notifsQuery, (snapshot) => {
-      notifications.value = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      unreadCount.value = notifications.value.filter((n) => !n.isRead).length;
-    });
-  }
-
   document.addEventListener("click", handleClickOutside);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const notifRef = doc(db, "notifications", user.uid);
+
+      onSnapshot(notifRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const notifs = docSnap.data().notifications || [];
+          // sort descending by createdAt
+          notifications.value = notifs.sort(
+            (a, b) => b.createdAt.seconds - a.createdAt.seconds
+          );
+          unreadCount.value = notifications.value.filter(
+            (n) => !n.isRead
+          ).length;
+        }
+      });
+    }
+  });
 });
 
 const userStore = useUserStore();
@@ -227,32 +225,46 @@ const handleProfileClick = () => {
 
 const toggleNotifDropdown = () => {
   isNotifOpen.value = !isNotifOpen.value;
-  if (isNotifOpen.value) {
-    markAllAsRead();
-  }
 };
 
 const closeNotifDropdown = () => {
   isNotifOpen.value = false;
 };
 
-const markAllAsRead = async () => {
-  for (const notif of notifications.value) {
-    if (!notif.isRead) {
-      const notifRef = doc(db, `bookings/${notif.id}`); // Updated to bookings collection
-      try {
-        await updateDoc(notifRef, { isRead: true });
-        notif.isRead = true; // Update local state
-      } catch (error) {
-        console.error(`Failed to update booking ${notif.id}:`, error);
+const handleNotifClick = async (notif) => {
+  if (!notif.isRead) {
+    const notifRef = doc(db, `notifications/${auth.currentUser.uid}`);
+
+    try {
+      const docSnap = await getDoc(notifRef);
+      if (docSnap.exists()) {
+        const currentNotifs = docSnap.data().notifications || [];
+        const updatedNotifs = currentNotifs.map((n) =>
+          n.bookingId === notif.bookingId && n.type === notif.type
+            ? { ...n, isRead: true }
+            : n
+        );
+
+        await updateDoc(notifRef, { notifications: updatedNotifs });
+
+        notif.isRead = true;
+        unreadCount.value = updatedNotifs.filter((n) => !n.isRead).length;
       }
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
     }
   }
-  unreadCount.value = 0;
-};
 
-const handleNotifClick = () => {
-  router.push("/my-bookings");
+  isNotifOpen.value = false;
+
+  if (notif.type === "booking-cancelled-patient") {
+    router.push("/browse");
+  } else if (notif.type === "review-reminder") {
+    router.push("/my-bookings");
+  } else {
+    router.push("/"); // default
+  }
+
   closeNotifDropdown();
 };
 
@@ -663,21 +675,23 @@ onBeforeUnmount(() => {
 }
 
 .badge {
-  position: absolute;
-  top: -5px;
-  right: -10px;
-  background-color: red;
+  position: relative;
+  top: -4px;
+  inset-inline-end: 8px;
+  background-color: #ff3b30;
   color: white;
   border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.75rem;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
   font-weight: bold;
 }
 
 .notif-dropdown {
-  max-width: calc(
-    100vw - 100px
-  ); /* Account for 50px left gap + 50px right buffer */
+  max-width: calc(100vw - 100px);
   min-width: 200px;
   width: 300px;
   max-height: 400px;
@@ -697,12 +711,12 @@ onBeforeUnmount(() => {
 }
 
 [dir="rtl"] .notif-dropdown {
-  left: 50px; /* 50px gap from left in RTL */
+  left: 20px;
   right: auto;
 }
 
 [dir="ltr"] .notif-dropdown {
-  right: 50px; /* 50px gap from right in LTR */
+  right: 20px;
   left: auto;
 }
 
@@ -746,19 +760,30 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
-  .notification-menu .dropdown-menu {
-    all: unset;
-    margin-top: 12px;
-    width: calc(100% - 20px);
-    max-width: calc(100vw - 20px);
-    left: 10px;
-    right: 10px;
-  }
-
   .notification-item {
     border: 1px solid #eee;
     border-radius: 6px;
     margin-bottom: 8px;
+  }
+}
+.leftmenu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .leftmenu {
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .notification-menu {
+    align-self: flex-end;
+  }
+
+  .navbar-menu.active {
+    width: 100%;
   }
 }
 </style>

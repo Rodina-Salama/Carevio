@@ -1,53 +1,53 @@
 <template>
   <div class="booking-confirmation" v-if="!showSuccessMessage">
     <div class="back-button" @click="$router.back()">
-      {{ $t("bookingConfirmation.back") }}
+      ← {{ $t("booking.back") }}
     </div>
 
-    <h1 class="title">{{ $t("bookingConfirmation.title") }}</h1>
+    <h1 class="title">{{ $t("booking.confirmationTitle") }}</h1>
     <p class="subtitle">
-      {{ $t("bookingConfirmation.subtitle") }}
+      {{ $t("booking.reviewText") }}
     </p>
 
     <div class="details-box">
       <div class="detail">
-        <strong>{{ $t("bookingConfirmation.date") }}</strong
+        <strong>{{ $t("booking.date") }}</strong
         ><span>{{ booking.date }}</span>
       </div>
       <div class="detail">
-        <strong>{{ $t("bookingConfirmation.time") }}</strong
+        <strong>{{ $t("booking.time") }}</strong
         ><span>{{ booking.time }}</span>
       </div>
       <div class="detail">
-        <strong>{{ $t("bookingConfirmation.nurse") }}</strong
+        <strong>{{ $t("booking.nurse") }}</strong
         ><span>{{ booking.nurse }}</span>
       </div>
       <div class="detail">
-        <strong>{{ $t("bookingConfirmation.service") }}</strong
-        ><span>{{ booking.service }}</span>
+        <strong>{{ $t("booking.service") }}</strong>
+        <span>{{ $t(`data.specializations.${booking.service}`) }}</span>
       </div>
       <div class="detail">
-        <strong>{{ $t("bookingConfirmation.address") }}</strong
+        <strong>{{ $t("booking.address") }}</strong
         ><span>{{ booking.address }}</span>
       </div>
       <div class="detail">
-        <strong>{{ $t("bookingConfirmation.total") }}</strong
+        <strong>{{ $t("booking.totalCost") }}</strong
         ><span>{{ booking.total }} EGP</span>
       </div>
-      <div>
-        {{ $t("bookingConfirmation.note") }}
+      <div class="noteInfo">
+        {{ $t("booking.noteInfo") }}
       </div>
       <div class="payment-methods">
         <label>
           <input type="radio" value="paypal" v-model="paymentMethod" />
           <img :src="paypalImg" alt="PayPal" />
-          {{ $t("bookingConfirmation.paypal") }}
+          {{ $t("booking.paypal") }}
         </label>
 
         <label>
           <input type="radio" value="cash" v-model="paymentMethod" />
           <img :src="cashImg" alt="Cash" />
-          {{ $t("bookingConfirmation.cash") }}
+          {{ $t("booking.cash") }}
         </label>
       </div>
       <div
@@ -58,7 +58,7 @@
 
       <div class="actions">
         <button class="confirm" @click="handleConfirm" :disabled="isSubmitting">
-          {{ $t("bookingConfirmation.confirm") }}
+          {{ $t("booking.confirmBooking") }}
         </button>
       </div>
     </div>
@@ -67,9 +67,7 @@
   <!-- Success Modal -->
   <div v-if="showSuccessMessage" class="modal-overlay">
     <div class="modal-content">
-      <h2 class="success-title">
-        {{ $t("bookingConfirmation.successTitle") }}
-      </h2>
+      <h2 class="success-title">{{ $t("booking.confirmed") }}</h2>
       <div class="success-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -83,13 +81,12 @@
         </svg>
       </div>
       <p class="success-text">
-        {{ $t("bookingConfirmation.successText") }}
+        {{ $t("booking.emailNotice") }}
       </p>
       <p class="success-note">
-        {{ $t("bookingConfirmation.success.successRedirect") }}
-        {{ countdown }}
+        {{ $t("booking.redirectNote") }}
         <button @click="router.push('/my-bookings')">
-          {{ $t("bookingConfirmation.successGoNow") }}
+          {{ $t("booking.goNow") }}
         </button>
       </p>
     </div>
@@ -106,7 +103,7 @@ import { db } from "@/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { useI18n } from "vue-i18n";
-
+import { doc, setDoc, arrayUnion } from "firebase/firestore";
 const { t } = useI18n();
 const router = useRouter();
 
@@ -127,7 +124,26 @@ let countdownInterval = null;
 const PAYPAL_CLIENT_ID =
   "Aee-eboFAYCRkaPthczyNOOnGtR-HrHmZ38YPvC0HhLEJvipiACMrJNE6yAMqzQrDP6MV4O0Lzy8xT1D";
 const paypalPaid = ref(false);
+const addNewBookingNotificationForNurse = async (storedBooking, bookingId) => {
+  if (!storedBooking.nurseId) return;
 
+  const notifRef = doc(db, "notifications", storedBooking.nurseId);
+  await setDoc(
+    notifRef,
+    {
+      notifications: arrayUnion({
+        type: "new-booking-nurse",
+        bookingId,
+        message: {
+          en: `You have a new booking on ${storedBooking.date} from ${storedBooking.from} to ${storedBooking.to}.`,
+          ar: `لديك حجز جديد يوم ${storedBooking.date} من ${storedBooking.from} إلى ${storedBooking.to}.`,
+        },
+        createdAt: new Date(),
+      }),
+    },
+    { merge: true }
+  );
+};
 onMounted(() => {
   const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
   if (!storedBooking) {
@@ -215,11 +231,13 @@ const saveBooking = async () => {
     const storedBooking = JSON.parse(localStorage.getItem("bookingData"));
     if (!storedBooking) throw new Error("No booking data in localStorage");
 
-    await addDoc(collection(db, "bookings"), {
+    const docRef = await addDoc(collection(db, "bookings"), {
       ...storedBooking,
       paymentMethod: paymentMethod.value,
       createdAt: new Date(),
     });
+
+    return { docRef, storedBooking };
   } catch (err) {
     console.error("Booking save error:", err);
     alert("Failed to save booking.");
@@ -291,8 +309,9 @@ const handleConfirm = async () => {
   isSubmitting.value = true;
 
   try {
-    await saveBooking();
+    const { docRef, storedBooking } = await saveBooking();
     await sendEmail();
+    await addNewBookingNotificationForNurse(storedBooking, docRef.id);
     localStorage.removeItem("bookingData");
     showSuccessMessage.value = true;
     startCountdown();

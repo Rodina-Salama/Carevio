@@ -4,7 +4,7 @@
       <div class="carousel-container">
         <Carousel
           :items-to-show="1"
-          :autoplay="true"
+          :autoplay="1000"
           :autoplayTimeout="10000"
           :wrapAround="true"
           :pauseAutoplayOnHover="true"
@@ -123,7 +123,7 @@
 
         <Carousel
           :items-to-show="1"
-          :autoplay="true"
+          :autoplay="1000"
           :autoplayTimeout="10000"
           :wrapAround="true"
           :pauseAutoplayOnHover="true"
@@ -309,7 +309,7 @@ const navigateToServices = () => {
   background: rgba(6, 33, 58, 0.6);
   padding: 3rem;
   border-radius: 10px;
-  z-index: 10;
+  z-index: 2;
 }
 
 .hero-text h1 {

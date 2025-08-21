@@ -140,6 +140,7 @@ import { db } from "@/firebase";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "vue-router";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import { addPointsToNurse } from "@/services/rewardsService";
 
 const router = useRouter();
 const bookings = ref([]);
@@ -152,7 +153,6 @@ const userId = userStore.firebaseUser?.uid;
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
-const now = dayjs();
 
 // Fetch all bookings of the user
 const fetchBookings = async () => {
@@ -167,14 +167,29 @@ const fetchBookings = async () => {
   }));
 
   activeBookings.value = bookings.value.filter((b) => {
-    const end = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
-    return end.isAfter(now);
+    if (b.cancelled) return false;
+    let endTime = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD h:mm A");
+    const startTime = dayjs(`${b.date} ${b.from}`, "YYYY-MM-DD h:mm A");
+
+    if (endTime.isBefore(startTime)) {
+      endTime = endTime.add(1, "day");
+    }
+
+    return endTime.isAfter(dayjs());
   });
 
   pastBookings.value = bookings.value.filter((b) => {
-    const end = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD hh:mm A");
-    return end.isBefore(now);
+    if (b.cancelled) return false;
+    let endTime = dayjs(`${b.date} ${b.to}`, "YYYY-MM-DD h:mm A");
+    const startTime = dayjs(`${b.date} ${b.from}`, "YYYY-MM-DD h:mm A");
+
+    if (endTime.isBefore(startTime)) {
+      endTime = endTime.add(1, "day");
+    }
+
+    return endTime.isBefore(dayjs());
   });
+
   loading.value = false;
 };
 
@@ -243,7 +258,14 @@ const submitReview = async () => {
     fullName: fullName.value,
     profileImage: profileImage.value,
   });
-
+  if (rating.value === 5) {
+    await addPointsToNurse(
+      selectedBooking.value.nurseId,
+      10,
+      "five_star_review",
+      bookingId
+    );
+  }
   // Update UI
   selectedBooking.value.review = comment.value;
   selectedBooking.value.rating = rating.value;

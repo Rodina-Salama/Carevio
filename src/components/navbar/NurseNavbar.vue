@@ -1,4 +1,8 @@
 <template>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Icons"
+    rel="stylesheet"
+  />
   <nav class="navbar">
     <div class="navbar-brand">
       <img src="@/assets/icon2.png" alt="Logo" class="logo" />
@@ -9,68 +13,93 @@
         <span class="bar"></span>
       </button>
     </div>
+    <div class="leftmenu">
+      <div class="navbar-menu" :class="{ active: isMenuOpen }">
+        <ul class="nav-links">
+          <li>
+            <router-link to="/" @click="closeMenu" active-class="active-link">
+              {{ $t("navbar.home") }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              to="/dashboard"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.dashboard") }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              to="/browse"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.browse") }}
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              to="/contact"
+              @click="closeMenu"
+              active-class="active-link"
+            >
+              {{ $t("navbar.contact") }}
+            </router-link>
+          </li>
+        </ul>
 
-    <div class="navbar-menu" :class="{ active: isMenuOpen }">
-      <ul class="nav-links">
-        <li>
-          <router-link to="/" @click="closeMenu" active-class="active-link">
-            {{ $t("navbar.home") }}
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to="/dashboard"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.dashboard") }}
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to="/browse"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.browse") }}
-          </router-link>
-        </li>
-        <li>
-          <router-link
-            to="/contact"
-            @click="closeMenu"
-            active-class="active-link"
-          >
-            {{ $t("navbar.contact") }}
-          </router-link>
-        </li>
-      </ul>
+        <div class="user-menu" ref="dropdownRef">
+          <div class="user-info" @click="toggleDropdown">
+            <img
+              :src="userStore.profileData.profileImage || avatarPlaceholder"
+              class="user-avatar"
+              alt="avatar"
+            />
+            <span class="user-name">{{ userStore.profileData.fullName }}</span>
+          </div>
 
-      <div class="user-menu" ref="dropdownRef">
-        <div class="user-info" @click="toggleDropdown">
-          <img
-            :src="userStore.profileData.profileImage || avatarPlaceholder"
-            class="user-avatar"
-            alt="avatar"
-          />
-          <span class="user-name">{{ userStore.profileData.fullName }}</span>
+          <div v-if="isDropdownOpen" class="dropdown-menu">
+            <button class="dropdown-item" @click="logout">
+              {{ $t("navbar.logout") }}
+            </button>
+          </div>
         </div>
-
-        <div v-if="isDropdownOpen" class="dropdown-menu">
-          <button class="dropdown-item" @click="logout">
-            {{ $t("navbar.logout") }}
+        <div class="lang-switch-container" @click="toggleLang">
+          <img
+            :src="currentLang === 'ar' ? usFlag : egyptFlag"
+            alt="flag"
+            class="lang-flag"
+          />
+          <button class="lang-circle-btn">
+            <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
           </button>
         </div>
       </div>
-      <div class="lang-switch-container" @click="toggleLang">
-        <img
-          :src="currentLang === 'ar' ? usFlag : egyptFlag"
-          alt="flag"
-          class="lang-flag"
-        />
-        <button class="lang-circle-btn">
-          <span>{{ currentLang === "ar" ? "EN" : "AR" }}</span>
-        </button>
+      <div class="notification-menu" ref="notifDropdownRef">
+        <div class="notification-icon" @click="toggleNotifDropdown">
+          <span class="material-symbols-outlined">notifications</span>
+          <span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
+        </div>
+        <div v-if="isNotifOpen" class="dropdown-menu notif-dropdown">
+          <div v-if="notifications.length === 0" class="no-notifications">
+            No notifications
+          </div>
+          <div
+            v-for="notif in notifications"
+            :key="notif.id"
+            class="notification-item"
+            @click="handleNotifClick(notif)"
+          >
+            <p></p>
+            <p>{{ notif.message[currentLang] }}</p>
+            <small>{{
+              new Date(notif.createdAt.seconds * 1000).toLocaleString()
+            }}</small>
+            <span v-if="!notif.isRead" class="unread-dot"></span>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
@@ -84,28 +113,55 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { db } from "@/firebase/config";
+import { onSnapshot } from "firebase/firestore";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import egyptFlag from "@/assets/egflag.png";
 import usFlag from "@/assets/usflag.png";
+import { onAuthStateChanged } from "firebase/auth";
 const { locale } = useI18n();
 const currentLang = ref("ar");
-
+const isNotifOpen = ref(false);
+const notifDropdownRef = ref(null);
+const notifications = ref([]);
+const unreadCount = ref(0);
 function toggleLang() {
   currentLang.value = currentLang.value === "ar" ? "en" : "ar";
   locale.value = currentLang.value;
   localStorage.setItem("lang", currentLang.value);
 }
+const userStore = useUserStore();
 
 onMounted(() => {
   const savedLang = localStorage.getItem("lang") || "en";
   currentLang.value = savedLang;
   locale.value = savedLang;
-});
 
+  document.addEventListener("click", handleClickOutside);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const notifRef = doc(db, "notifications", user.uid);
+
+      onSnapshot(notifRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const notifs = docSnap.data().notifications || [];
+          // sort descending by createdAt
+          notifications.value = notifs.sort(
+            (a, b) => b.createdAt.seconds - a.createdAt.seconds
+          );
+          unreadCount.value = notifications.value.filter(
+            (n) => !n.isRead
+          ).length;
+        }
+      });
+    }
+  });
+});
 const isMenuOpen = ref(false);
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
-const userStore = useUserStore();
 const router = useRouter();
 
 const toggleMenu = () => {
@@ -119,7 +175,9 @@ const closeMenu = () => {
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
-
+const closeNotifDropdown = () => {
+  isNotifOpen.value = false;
+};
 const logout = async () => {
   await signOut(auth);
   userStore.clearUser();
@@ -130,11 +188,50 @@ const handleClickOutside = (event) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     isDropdownOpen.value = false;
   }
+  if (
+    notifDropdownRef.value &&
+    !notifDropdownRef.value.contains(event.target)
+  ) {
+    isNotifOpen.value = false;
+  }
 };
+const toggleNotifDropdown = () => {
+  isNotifOpen.value = !isNotifOpen.value;
+};
+const handleNotifClick = async (notif) => {
+  if (!notif.isRead) {
+    const notifRef = doc(db, `notifications/${auth.currentUser.uid}`);
 
-onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
+    try {
+      const docSnap = await getDoc(notifRef);
+      if (docSnap.exists()) {
+        const currentNotifs = docSnap.data().notifications || [];
+        const updatedNotifs = currentNotifs.map((n) =>
+          n.bookingId === notif.bookingId && n.type === notif.type
+            ? { ...n, isRead: true }
+            : n
+        );
+
+        await updateDoc(notifRef, { notifications: updatedNotifs });
+
+        notif.isRead = true;
+        unreadCount.value = updatedNotifs.filter((n) => !n.isRead).length;
+      }
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+    }
+  }
+
+  isNotifOpen.value = false;
+  if (notif.type === "new-booking-nurse") {
+    router.push(`/nursebookings/${notif.bookingId}`);
+  } else if (notif.type === "booking-cancelled-nurse") {
+    router.push("/nursebookings");
+  } else {
+    router.push("/"); // default
+  }
+  closeNotifDropdown();
+};
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
@@ -491,5 +588,135 @@ onBeforeUnmount(() => {
 
 .lang-circle-btn:hover {
   background-color: #a4caf0;
+}
+/* New styles for notifications */
+.notification-menu {
+  position: relative;
+}
+
+.notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  font-size: 1.5rem;
+}
+
+.bell {
+  color: #19599a;
+}
+
+.badge {
+  position: relative;
+  top: -4px;
+  inset-inline-end: 8px;
+  background-color: #ff3b30;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.notif-dropdown {
+  max-width: calc(100vw - 100px);
+  min-width: 200px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  left: 10px;
+  right: auto;
+  transform: translateX(0);
+  position: absolute;
+  top: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  z-index: 10;
+  border-radius: 6px;
+}
+
+[dir="rtl"] .notif-dropdown {
+  left: 20px;
+  right: auto;
+}
+
+[dir="ltr"] .notif-dropdown {
+  right: 20px;
+  left: auto;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.notification-item:hover {
+  background: #f0f0f0;
+}
+
+.notif-message {
+  margin: 0;
+  font-size: 14px;
+}
+
+.notif-time {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.unread-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.no-notifications {
+  padding: 10px;
+  text-align: center;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .notification-item {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+}
+.leftmenu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .leftmenu {
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .notification-menu {
+    align-self: flex-end;
+  }
+
+  .navbar-menu.active {
+    width: 100%;
+  }
 }
 </style>

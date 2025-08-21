@@ -1,12 +1,12 @@
 {
-  "title": "تقييمات المرضى",
-  "average": "التقييم المتوسط",
-  "reviews": "مراجعة",
+  "title": "Patient Reviews",
+  "average": "Average Rating",
+  "reviews": "Review",
   "filter": {
-    "all": "الكل",
-    "stars": "{n} نجوم"
+    "all": "All",
+    "stars": "{n} Stars"
   },
-  "minutesAgo": "منذ {n} دقيقة",
-  "hoursAgo": "منذ {n} ساعة",
-  "daysAgo": "منذ {n} يوم"
+  "minutesAgo": "{n} minutes ago",
+  "hoursAgo": "{n} hours ago",
+  "daysAgo": "{n} days ago"
 }

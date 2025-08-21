@@ -10,5 +10,9 @@
   "logout": "تسجيل الخروج",
   "joinAsNurse": "انضم كممرض/ة",
   "signIn": "تسجيل الدخول",
-  "signUp": "إنشاء حساب"
+  "signUp": "إنشاء حساب",
+  "notification": {
+      "cancelled": "تم إلغاء حجزك مع {nurseName} بتاريخ {date}.",
+      "review": "تذكير: يرجى ترك تقييم للممرضة {nurseName}"
+    }
 }

@@ -23,10 +23,10 @@
         </div>
         <div class="nurse-profile-right">
           <div class="price-label">
-            {{ $t("nurseProfile.priceLabel") }} :
-            <span class="price-value"
-              >{{ nurse?.professional?.price }} EGP</span
-            >
+            {{ $t("nurseProfile.pricePerHour") }} :
+            <span class="price-value">
+              {{ nurse?.professional?.price }} EGP
+            </span>
           </div>
           <button
             class="action-button"
@@ -47,16 +47,20 @@
           {{ nurseDays.join(", ") }}
         </p>
       </div>
-      <div class="shift-section" v-if="nurse?.professional?.shifts?.length">
-        <h4 class="section-title">{{ $t("nurseProfile.AvailableTime") }}</h4>
-      </div>
 
-      <div class="shift-section">
+      <div
+        class="shift-section"
+        v-if="nurseShifts.length && nurseShifts[0] !== t('general.unknown')"
+      >
         <h4 class="section-title">{{ $t("nurseProfile.availableTime") }}</h4>
         <p class="section-text">
-          {{ nurse?.professional?.experience }}
-          {{ $t("nurseProfile.experienceUnit") }}
+          {{ nurseShifts.join(", ") }}
+        </p>
+      </div>
 
+      <div class="experience-section" v-if="nurse?.professional?.experience">
+        <h4 class="section-title">{{ $t("nurseProfile.experience") }}</h4>
+        <p class="section-text">
           {{ nurse?.professional?.experience }} {{ $t("nurseProfile.years") }}
         </p>
       </div>
@@ -87,10 +91,6 @@
         <div class="review-card" v-for="(review, idx) in reviews" :key="idx">
           <div class="review-header">
             <div class="review-user-info">
-              <span class="review-user-name">
-                {{ review.fullName || $t("nurseProfile.user") }}
-              </span>
-
               <span class="review-user-name">{{
                 review.fullName || "User"
               }}</span>
@@ -167,6 +167,14 @@ const nurseCity = computed(() => {
 const nurseRegion = computed(() => {
   const area = nurse.value?.personal?.area;
   return area ? t(`data.areas.${area}`) : t("general.unknown");
+});
+
+const nurseShifts = computed(() => {
+  return (
+    nurse.value?.professional?.shifts?.map((shift) =>
+      t(`data.shifts.${shift}`)
+    ) || [t("general.unknown")]
+  );
 });
 
 const nurseDays = computed(() => {

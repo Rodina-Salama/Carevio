@@ -36,6 +36,23 @@
         </section>
 
         <section>
+          <h2>
+            {{ $t("terms.termsPage.sections.platformExclusivity.title") }}
+          </h2>
+          <p>{{ $t("terms.termsPage.sections.platformExclusivity.body") }}</p>
+        </section>
+
+        <section>
+          <h2>
+            {{ $t("terms.termsPage.sections.bookingCancellation.title") }}
+          </h2>
+          <p>{{ $t("terms.termsPage.sections.bookingCancellation.body") }}</p>
+        </section>
+        <section>
+          <h2>{{ $t("terms.termsPage.sections.weeklyPayments.title") }}</h2>
+          <p>{{ $t("terms.termsPage.sections.weeklyPayments.body") }}</p>
+        </section>
+        <section>
           <h2>{{ $t("terms.termsPage.sections.changes.title") }}</h2>
           <p>{{ $t("terms.termsPage.sections.changes.body") }}</p>
         </section>

@@ -1,6 +1,8 @@
 {
   "title": "Earnings",
   "total": "Total Earnings",
+        "nurseOwed": "You will receive",
+      "siteOwed": "You owe the site",
   "week": "Earnings This Week",
   "month": "Earnings This Month",
   "recent": "Recent Transactions",
@@ -9,5 +11,16 @@
   "amount": "Amount Paid",
   "status": "Status",
   "paid": "Paid",
-  "paymentMethod": "Payment Method"
+  "paymentMethod": "Payment Method",
+  "points": "Your points",
+"rewards": "Rewards",
+    "tooltip": "Earn 10 points for each completed booking and 10 points for a 5-star review. Every 200 points are automatically converted into 200 EGP.",
+    "rewardsTooltip": "Your points are automatically redeemed for cash every 200 points.",
+    "setPaymentMethod": "Set Your Payment Method",
+    "selectMethod": "Select a method",
+    "paypal": "PayPal",
+    "enterPaypal": "Enter your PayPal email",
+    "save": "Save",
+    "edit": "Edit",
+    "addMethod": "Add Payment Method"
 }

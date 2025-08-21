@@ -143,7 +143,6 @@ export default {
       const diffDays = Math.floor(diffHours / 24);
       return `${diffDays} days ago`;
     }
-
     async function fetchBookings() {
       if (!nurseId) return;
 
@@ -162,11 +161,11 @@ export default {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        sessions++;
-        const bookingStart = new Date(`${data.date} ${data.from}`);
-        const bookingEnd = new Date(`${data.date} ${data.to}`);
 
-        if (bookingEnd < now) {
+        if (data.confirmed === true && data.cancelled !== true) {
+          sessions++;
+          const bookingEnd = new Date(`${data.date} ${data.to}`);
+
           totalEarn += (data.price || 0) * 0.85;
 
           if (
@@ -177,7 +176,8 @@ export default {
           }
         }
 
-        if (bookingStart > now) {
+        const bookingStart = new Date(`${data.date} ${data.from}`);
+        if (bookingStart > now && data.cancelled !== true) {
           futureBookings.push(data);
         }
       });

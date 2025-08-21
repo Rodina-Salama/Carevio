@@ -24,13 +24,25 @@
         "title": "5. Nurse Conduct",
         "body": "Nurses must adhere to professional ethics, respect privacy, and refrain from using any offensive language towards clients. Violations may result in supervisory actions or removal from the platform."
       },
+      "platformExclusivity": {
+        "title": "6. Platform Exclusivity",
+        "body": "All interactions, communications, and service arrangements between nurses and clients must take place strictly through the Carevio platform. Direct dealings outside the platform are strictly prohibited and may lead to suspension or permanent ban."
+      },
+      "bookingCancellation": {
+        "title": "7. Booking and Cancellation",
+        "body": "All appointment cancellations must be made exclusively by contacting Carevio through the official platform (e.g., 'Contact Us' form or support email). Cancellations made directly with the nurse or client will not be considered valid."
+      },
+       "weeklyPayments": {
+          "title": "8. Weekly Payments",
+          "body": "The nurse is required to pay the platform’s share from any completed bookings according to the approved policies. Payment schedules are set periodically. Failure to pay the due share may result in legal actions to ensure the platform’s rights are protected."
+        },
       "changes": {
-        "title": "6. Changes to Terms",
+        "title": "9. Changes to Terms",
         "body": "We reserve the right to update these terms at any time. Any changes will be posted on this page."
       },
       "law": {
-        "title": "7. Governing Law",
-        "body": "In matters not provided for herein, the applicable local laws shall apply. Any disputes arising from these terms shall be subject to the jurisdiction of the competent courts."
+        "title": "10. Governing Law",
+        "body": "For any matters not covered in these terms, the applicable local laws shall apply, the applicable local laws shall apply. Any disputes arising from these terms shall be subject to the jurisdiction of the competent courts."
       }
     }
   }

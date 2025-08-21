@@ -82,8 +82,6 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
-// ❌ Optional: remove if not using emailjs
-// import emailjs from "emailjs-com";
 
 const form = ref({
   name: "",
@@ -99,7 +97,7 @@ const showSuccess = ref(false);
 //       name: form.value.name,
 //       email: form.value.email,
 //       message: form.value.message,
-//       createdAt: serverTimestamp(), // 🔄 timestamp
+//       createdAt: serverTimestamp(),
 //       status: "pending", // Default status
 //     });
 // };

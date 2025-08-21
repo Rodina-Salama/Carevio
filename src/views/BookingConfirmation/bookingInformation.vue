@@ -1,15 +1,15 @@
 <template>
   <LoadingSpinner v-if="loading" class="loading-wrapper" />
   <div class="booking-information" v-if="!loading">
-    <h1 class="title">{{ $t("bookingNurse.title") }}</h1>
+    <h1 class="title">{{ $t("booking.title") }}</h1>
     <p
       v-if="!nurseData?.isVisible || nurseData?.isBanned"
       class="nurse-warning"
     >
-      {{ $t("bookingNurse.unavailable") }}
+      {{ $t("booking.notAvailable") }}
     </p>
     <p class="subtitle">
-      {{ $t("bookingNurse.subtitle") }}
+      {{ $t("booking.bookingWith") }}
       <strong>
         {{ nurseData?.personal?.firstNameEn || "..." }}
         {{ nurseData?.personal?.lastNameEn || "" }}
@@ -19,28 +19,26 @@
     <div class="form-box">
       <!-- User Name -->
       <div class="form-item">
-        <label for="userName"> {{ $t("bookingNurse.userName") }}</label>
+        <label for="userName">{{ $t("booking.yourName") }}</label>
         <input
           type="text"
           id="userName"
           v-model="booking.userName"
-          :placeholder="$t('bookingNurse.userNamePlaceholder')"
+          :placeholder="$t('booking.placeholderName')"
           required
         />
       </div>
 
       <!-- Service Selection -->
       <div class="form-item">
-        <label for="service">{{ $t("bookingNurse.service") }}</label>
+        <label for="service">{{ $t("booking.selectService") }}</label>
         <select
           id="service"
           v-model="booking.service"
           @change="updatePrice"
           required
         >
-          <option disabled value="">
-            {{ $t("bookingNurse.servicePlaceholder") }}
-          </option>
+          <option disabled value="">{{ $t("booking.chooseService") }}</option>
           <option
             v-for="service in nurseData?.professional.specialization || []"
             :key="service"
@@ -52,7 +50,7 @@
       </div>
       <!-- Location (readonly) -->
       <div class="form-item">
-        <label>{{ $t("bookingNurse.location") }}</label>
+        <label>{{ $t("booking.location") }}</label>
         <input
           type="text"
           :value="
@@ -66,19 +64,24 @@
 
       <!-- User Address -->
       <div class="form-item">
-        <label for="address">{{ $t("bookingNurse.address") }}</label>
+        <label for="address">{{ $t("booking.yourAddress") }}</label>
         <input
           type="text"
           id="address"
           v-model="booking.address"
-          :placeholder="$t('bookingNurse.addressPlaceholder')"
+          :placeholder="$t('booking.placeholderAddress')"
           required
+          disabled
         />
+        <div
+          id="map"
+          style="height: 300px; margin-top: 10px; border-radius: 8px"
+        ></div>
       </div>
 
       <!-- Date Selection -->
       <div class="form-item">
-        <label for="date">{{ $t("bookingNurse.date") }}</label>
+        <label for="date">{{ $t("booking.selectDate") }}</label>
         <input
           type="date"
           id="date"
@@ -92,11 +95,9 @@
 
       <!-- Shift Selection -->
       <div class="form-item">
-        <label for="shift">{{ $t("bookingNurse.time") }}</label>
+        <label for="shift">{{ $t("booking.selectTime") }}</label>
         <select id="shift" v-model="selectedShift">
-          <option disabled value="">
-            {{ $t("bookingNurse.shiftPlaceholder") }}
-          </option>
+          <option disabled value="">{{ $t("booking.selectShift") }}</option>
           <option
             v-for="shift in nurseData?.professional?.shifts || []"
             :key="shift"
@@ -109,10 +110,10 @@
 
       <!-- From Time -->
       <div class="form-item" v-if="selectedShift">
-        <label for="fromTime">{{ $t("bookingNurse.from") }}</label>
+        <label for="fromTime">{{ $t("booking.from") }}</label>
         <select id="fromTime" v-model="selectedFrom">
           <option disabled value="">
-            {{ $t("bookingNurse.fromPlaceholder") }}
+            {{ $t("booking.selectStartTime") }}
           </option>
           <option
             v-for="slot in fromOptions"
@@ -126,11 +127,9 @@
 
       <!-- To Time -->
       <div class="form-item" v-if="selectedFrom">
-        <label for="toTime">{{ $t("bookingNurse.to") }}</label>
+        <label for="toTime">{{ $t("booking.to") }}</label>
         <select id="toTime" v-model="selectedTo">
-          <option disabled value="">
-            {{ $t("bookingNurse.toPlaceholder") }}
-          </option>
+          <option disabled value="">{{ $t("booking.selectEndTime") }}</option>
           <option v-for="slot in toOptions" :key="slot.to" :value="slot.to">
             {{ slot.to }}
           </option>
@@ -139,7 +138,7 @@
 
       <!-- Price Display -->
       <div class="form-item">
-        <label> {{ $t("bookingNurse.price") }}</label>
+        <label>{{ $t("booking.priceCalculation") }}</label>
         <div v-if="calculatedPrice">
           <p v-if="detailedPriceDisplay">
             {{ detailedPriceDisplay }}
@@ -150,25 +149,25 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="notes">{{ $t("bookingNurse.notes") }}</label>
+        <label for="notes">{{ $t("booking.notes") }}:</label>
         <textarea
           id="notes"
           v-model="booking.notes"
           rows="4"
-          :placeholder="$t('bookingNurse.notesPlaceholder')"
+          :placeholder="$t('booking.placeholderNotes')"
           class="form-control"
         ></textarea>
       </div>
-      <div>
-        {{ $t("bookingNurse.disclaimer") }}
+      <div class="noteInfo">
+        {{ $t("booking.noteInfo") }}
       </div>
       <!-- Buttons -->
       <div class="actions">
         <button class="cancel" @click="$router.back()">
-          {{ $t("bookingNurse.back") }}
+          {{ $t("booking.back") }}
         </button>
         <button class="confirm" @click="proceedToPayment">
-          {{ $t("bookingNurse.confirm") }}
+          {{ $t("booking.proceed") }}
         </button>
       </div>
     </div>
@@ -185,7 +184,17 @@ import { useUserStore } from "@/stores/userStore";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useI18n } from "vue-i18n";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { onBeforeUnmount } from "vue";
 
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 const { t } = useI18n();
 const userStore = useUserStore();
 const router = useRouter();
@@ -194,6 +203,11 @@ const nurseId = route.query.nurseId;
 const selectedShift = ref("");
 const selectedFrom = ref("");
 const selectedTo = ref("");
+const address = ref("");
+const map = ref(null);
+const marker = ref(null);
+const selectedLatLng = ref(null);
+
 function parseTimeTo24Hour(timeString) {
   const [time, modifier] = timeString.split(" ");
   let [hours, minutes] = time.split(":").map(Number);
@@ -360,13 +374,15 @@ const proceedToPayment = () => {
   const nurseFullName = `${nurseData.value?.personal?.firstNameEn || ""} ${
     nurseData.value?.personal?.lastNameEn || ""
   }`.trim();
+  booking.value.address = address.value;
 
   const bookingData = {
     nurseId,
     nurseName: nurseFullName,
     nursePhone: nurseData.value?.personal?.phone || "",
     nurseEmail: nurseData.value?.personal?.email || "",
-
+    isRead: false,
+    isReadnurse: false,
     userId: userStore.firebaseUser?.uid || "guest",
     userName: userStore.profileData?.fullName || "",
     userPhone: userStore.profileData?.phone || "",
@@ -381,6 +397,12 @@ const proceedToPayment = () => {
     totalHours: totalHours.value,
     price: calculatedPrice.value,
     notes: booking.value.notes,
+    location: selectedLatLng.value
+      ? {
+          latitude: selectedLatLng.value.lat,
+          longitude: selectedLatLng.value.lng,
+        }
+      : null,
   };
   const checkForConflict = async () => {
     const bookingsRef = collection(db, "bookings");
@@ -394,17 +416,27 @@ const proceedToPayment = () => {
     const querySnapshot = await getDocs(q);
     const newFrom = parseTimeTo24Hour(selectedFrom.value);
     const newTo = parseTimeTo24Hour(selectedTo.value);
-    const newStart = newFrom[0] * 60 + newFrom[1];
-    const newEnd = newTo[0] * 60 + newTo[1];
+    let newStart = newFrom[0] * 60 + newFrom[1];
+    let newEnd = newTo[0] * 60 + newTo[1];
+    if (newEnd <= newStart) {
+      newEnd += 24 * 60;
+    }
 
     let conflictFound = false;
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      if (data.cancelled === true) {
+        return;
+      }
+
       const existingFrom = parseTimeTo24Hour(data.from);
       const existingTo = parseTimeTo24Hour(data.to);
-      const existingStart = existingFrom[0] * 60 + existingFrom[1];
-      const existingEnd = existingTo[0] * 60 + existingTo[1];
+      let existingStart = existingFrom[0] * 60 + existingFrom[1];
+      let existingEnd = existingTo[0] * 60 + existingTo[1];
+      if (existingEnd <= existingStart) {
+        existingEnd += 24 * 60;
+      }
 
       const overlap = Math.max(
         0,
@@ -429,8 +461,91 @@ const proceedToPayment = () => {
     router.push("/bookingconfirmation");
   });
 };
+async function fetchAddress(lat, lng) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+    );
+    const data = await response.json();
+    return data.display_name || "";
+  } catch (error) {
+    console.error("Error fetching address:", error);
+    return "";
+  }
+}
 
-onMounted(fetchNurseData);
+async function fetchLatLngFromAddress(address) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        address
+      )}`
+    );
+    const data = await response.json();
+    if (data && data.length > 0) {
+      return {
+        lat: parseFloat(data[0].lat),
+        lng: parseFloat(data[0].lon),
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching lat/lng:", error);
+    return null;
+  }
+}
+
+onMounted(async () => {
+  await fetchNurseData();
+
+  let initialAddress = "";
+  if (nurseData.value) {
+    if (nurseData.value.personal.city && nurseData.value.personal.area) {
+      initialAddress = `${nurseData.value.personal.city}, ${nurseData.value.personal.area}`;
+    } else if (nurseData.value.personal.government) {
+      initialAddress = nurseData.value.personal.government;
+    }
+  }
+
+  let initialLatLng = { lat: 30.0444, lng: 31.2357 };
+
+  if (initialAddress) {
+    const coords = await fetchLatLngFromAddress(initialAddress);
+    if (coords) {
+      initialLatLng = coords;
+    }
+  }
+  if (map.value) {
+    map.value.remove();
+    map.value = null;
+  }
+
+  map.value = L.map("map").setView([initialLatLng.lat, initialLatLng.lng], 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map.value);
+
+  marker.value = L.marker([initialLatLng.lat, initialLatLng.lng], {
+    draggable: true,
+  }).addTo(map.value);
+
+  address.value = initialAddress;
+
+  marker.value.on("dragend", async (e) => {
+    const pos = e.target.getLatLng();
+    selectedLatLng.value = pos;
+    const newAddress = await fetchAddress(pos.lat, pos.lng);
+    address.value = newAddress;
+    booking.value.address = newAddress;
+  });
+});
+onBeforeUnmount(() => {
+  if (map.value) {
+    map.value.remove();
+    map.value = null;
+  }
+});
 </script>
 
 <style scoped>

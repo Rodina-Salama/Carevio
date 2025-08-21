@@ -51,7 +51,7 @@ export default {
         email: "",
         profileImage: "",
       },
-      defaultImage: require("@/assets/default.png"),
+      defaultImage: require("@/assets/avatar.jpg"),
     };
   },
   computed: {

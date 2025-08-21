@@ -1,6 +1,6 @@
 {
   "home": "Home",
-  "dashboard": "CareDashboard",
+  "dashboard": " Dashboard ",
   "about": "About",
   "browse": "Browse Nurses",
   "services": "Services",
@@ -10,5 +10,9 @@
   "logout": "Log Out",
   "joinAsNurse": "Join as Nurse",
   "signIn": "Sign In",
-  "signUp": "Sign Up"
+  "signUp": "Sign Up",
+    "notification": {
+      "cancelled": "Your booking with {nurseName} on {date} has been cancelled.",
+      "review": "Reminder: Please leave a review for {nurseName}"
+    }
 }
