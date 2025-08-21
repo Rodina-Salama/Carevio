@@ -282,7 +282,6 @@ const maxDate = new Date(new Date().setDate(new Date().getDate() + 14))
   .toISOString()
   .split("T")[0];
 
-// جلب بيانات الممرضة
 const fetchNurseData = async () => {
   const docRef = doc(db, "applications", nurseId);
   const docSnap = await getDoc(docRef);

@@ -13,6 +13,6 @@
   "signUp": "إنشاء حساب",
   "notification": {
       "cancelled": "تم إلغاء حجزك مع {nurseName} بتاريخ {date}.",
-      "review": "تذكير: يرجى ترك تقييم للممرضة {nurseName}"
+      "review": "تذكير: يرجى ترك تقييم للممرض/ة {nurseName}"
     }
 }
