@@ -14,7 +14,7 @@
       },
       "complaint": {
         "title": "3. How to File a Complaint",
-        "body": "The affected party may file a complaint via the 'Contact Us' form or by email at <strong>support@carevio.com</strong>."
+        "body": "The affected party may file a complaint via the 'Contact Us' form or by email."
       },
       "appeal": {
         "title": "4. Right to Appeal",
@@ -30,7 +30,7 @@
       },
       "bookingCancellation": {
         "title": "7. Booking and Cancellation",
-        "body": "All appointment cancellations must be made exclusively by contacting Carevio through the official platform (e.g., 'Contact Us' form or support email). Cancellations made directly with the nurse or client will not be considered valid."
+        "body": "All appointment cancellations must be made exclusively by contacting Carevio through the official platform (e.g., Contact Us form or support email). Cancellations made directly with the nurse or client will not be considered valid."
       },
        "weeklyPayments": {
           "title": "8. Weekly Payments",
