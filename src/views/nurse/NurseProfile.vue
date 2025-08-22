@@ -90,13 +90,18 @@
         <h4 class="section-title">{{ $t("nurseProfile.reviews") }}</h4>
         <div class="review-card" v-for="(review, idx) in reviews" :key="idx">
           <div class="review-header">
+            <img
+              :src="review.profileImage"
+              alt="User Photo"
+              class="review-user-img"
+            />
             <div class="review-user-info">
               <span class="review-user-name">{{
                 review.fullName || "User"
               }}</span>
-              <span class="review-rating"
-                >{{ $t("nurseProfile.rating") }}: {{ review.rating }} ★</span
-              >
+              <span class="review-rating">
+                {{ $t("nurseProfile.rating") }}: {{ review.rating }} ★
+              </span>
             </div>
           </div>
           <p class="review-text">"{{ review.comment }}"</p>
@@ -143,7 +148,31 @@ const goToBooking = () => {
 const fetchReviews = async () => {
   const q = query(collection(db, "reviews"), where("nurseId", "==", nurseId));
   const querySnapshot = await getDocs(q);
-  reviews.value = querySnapshot.docs.map((doc) => doc.data());
+
+  const reviewsWithUsers = await Promise.all(
+    querySnapshot.docs.map(async (docSnap) => {
+      const reviewData = docSnap.data();
+      let userData = {};
+
+      if (reviewData.userId) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", reviewData.userId));
+          if (userDoc.exists()) {
+            userData = userDoc.data();
+          }
+        } catch (err) {
+          console.error("Error fetching user:", err);
+        }
+      }
+
+      return {
+        ...reviewData,
+        profileImage: userData.profileImage || require("@/assets/avatar.jpg"),
+      };
+    })
+  );
+
+  reviews.value = reviewsWithUsers;
 };
 
 onMounted(async () => {
