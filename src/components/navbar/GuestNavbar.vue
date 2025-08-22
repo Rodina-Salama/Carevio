@@ -377,7 +377,6 @@ const closeMenu = () => {
 }
 @media (max-width: 768px) {
   .btn {
-    width: 90%;
     font-size: 0.9rem;
   }
 }

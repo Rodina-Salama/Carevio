@@ -289,8 +289,7 @@ export default {
 /* Smaller selects & buttons on mobile only */
 @media (max-width: 767px) {
   .search-bar select {
-    justify-self: center;
-    width: 100%;
+    margin: 5px;
   }
   .search-bar {
     justify-self: center;
@@ -337,6 +336,7 @@ export default {
 
   .search-bar {
     width: 100%;
+    max-width: 300px;
   }
 }
 
