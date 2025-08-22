@@ -5,16 +5,11 @@
       <div class="progress-track">
         <div class="progress-fill" :style="{ width: '50%' }"></div>
       </div>
-      <div class="progress-label">{{ $t("joinAsNurse.step2.progress") }}</div>
-
       <div class="progress-label">{{ $t("secondjoin.stepLabel") }}</div>
     </div>
 
     <!-- Form Section -->
     <div class="form-card">
-      <h1 class="form-title">{{ $t("joinAsNurse.step2.title") }}</h1>
-      <p class="form-subtitle">{{ $t("joinAsNurse.step2.subtitle") }}</p>
-
       <h1 class="form-title">{{ $t("secondjoin.title") }}</h1>
       <p class="form-subtitle">{{ $t("secondjoin.subtitle") }}</p>
 
@@ -23,13 +18,13 @@
           <!-- Years of Experience -->
           <div class="input-group">
             <label for="experience">{{
-              $t("joinAsNurse.step2.experience")
+              $t("secondjoin.experienceLabel")
             }}</label>
             <input
               type="number"
               id="experience"
               v-model="formData.experience"
-              :placeholder="$t('joinAsNurse.step2.experiencePlaceholder')"
+              :placeholder="$t('secondjoin.experiencePlaceholder')"
               min="0"
               required
             />
@@ -38,38 +33,31 @@
           <!-- License Number -->
           <div class="input-group">
             <label for="licenseNumber">{{
-              $t("joinAsNurse.step2.license")
+              $t("secondjoin.licenseLabel")
             }}</label>
             <input
               type="text"
               id="licenseNumber"
               v-model="formData.licenseNumber"
-              :placeholder="$t('joinAsNurse.step2.licensePlaceholder')"
+              :placeholder="$t('secondjoin.licensePlaceholder')"
               required
             />
           </div>
 
           <!-- Price-->
           <div class="input-group">
-            <label for="Price">
-              {{ $t("joinAsNurse.step2.priceLabel") }}
-            </label>
-
             <label for="price">{{ $t("secondjoin.priceLabel") }}</label>
             <input
               type="text"
               id="price"
               v-model="formData.price"
-              :placeholder="$t('joinAsNurse.step2.pricePlaceholder')"
+              :placeholder="$t('secondjoin.pricePlaceholder')"
               required
             />
           </div>
           <!-- Available Days -->
           <div class="input-group">
-            <label>{{ $t("joinAsNurse.step2.availableDays") }}</label>
-
             <label>{{ $t("secondjoin.availableDays") }}</label>
-
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -91,10 +79,7 @@
           <!-- Shifts -->
           <!-- Shifts -->
           <div class="input-group">
-            <label>{{ $t("joinAsNurse.step2.shifts") }}</label>
-
             <label>{{ $t("secondjoin.availableTime") }}</label>
-
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -116,7 +101,6 @@
 
           <!-- Languages -->
           <div class="input-group">
-            <label>{{ $t("joinAsNurse.step2.languages") }}</label>
             <label>{{ $t("secondjoin.languages") }}</label>
             <div class="checkbox-group">
               <div
@@ -137,10 +121,7 @@
           </div>
           <!-- Specialization -->
           <div class="input-group">
-            <label>{{ $t("joinAsNurse.step2.services") }}</label>
-
             <label>{{ $t("secondjoin.services") }}</label>
-
             <div class="checkbox-group">
               <div
                 class="checkbox-item"
@@ -161,11 +142,11 @@
 
           <!-- Bio -->
           <div class="input-group full-width">
-            <label for="bio">{{ $t("joinAsNurse.step2.bio") }}</label>
+            <label for="bio">{{ $t("secondjoin.bio") }}</label>
             <textarea
               id="bio"
               v-model="formData.bio"
-              :placeholder="$t('joinAsNurse.step2.bioPlaceholder')"
+              :placeholder="$t('secondjoin.bioPlaceholder')"
               rows="4"
               required
             ></textarea>
@@ -174,11 +155,6 @@
 
         <div class="form-actions">
           <button type="button" class="back-btn" @click="goBack">
-            {{ $t("joinAsNurse.buttons.back") }}
-          </button>
-          <button type="submit" class="submit-btn">
-            {{ $t("joinAsNurse.buttons.next") }}
-
             {{ $t("secondjoin.back") }}
           </button>
           <button type="submit" class="submit-btn">

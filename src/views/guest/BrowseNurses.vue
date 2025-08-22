@@ -288,9 +288,6 @@ export default {
 
 /* Smaller selects & buttons on mobile only */
 @media (max-width: 767px) {
-  .search-bar select {
-    margin: 5px;
-  }
   .search-bar {
     justify-self: center;
   }
@@ -336,7 +333,6 @@ export default {
 
   .search-bar {
     width: 100%;
-    max-width: 300px;
   }
 }
 
@@ -575,6 +571,23 @@ export default {
   .card {
     flex: 1 1 calc(30% - 16px);
     max-width: calc(30% - 16px);
+  }
+}
+@media (max-width: 767px) {
+  .search-bar {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: auto;
+  }
+  .search-bar select,
+  .search-bar button {
+    flex: 1 1 48%;
+    min-width: 0;
+    width: 48%;
+    box-sizing: border-box;
   }
 }
 </style>
