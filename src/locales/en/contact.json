@@ -1,10 +1,14 @@
 {
   "title": "Contact Us",
   "subtitle": "We're here to help. Fill out the form or reach out directly.",
+  "phoneError": "Please enter a valid phone number.",
   "placeholders": {
     "name": "Your Name",
     "email": "Your Email",
-    "message": "Your Message"
+    "message": "Your Message",
+    "phone": "Your Phone Number",
+    "selectType": "Select Message Type",
+    "bookingId": "Booking ID"
   },
   "submitButton": "Send Message",
   "info": {
@@ -15,5 +19,9 @@
     "title": "Thank you!",
     "message": "Your message has been submitted. You will hear from us soon.",
     "button": "Got It!"
+  },
+  "types": {
+    "complain": "Complain",
+    "cancellation": "Cancellation"
   }
 }

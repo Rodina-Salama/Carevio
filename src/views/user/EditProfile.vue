@@ -46,6 +46,7 @@ import { useRouter } from "vue-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { useUserStore } from "@/stores/userStore";
 
 export default {
   setup() {
@@ -59,6 +60,7 @@ export default {
     const phone = ref("");
     const profileImage = ref("");
     const previewUrl = ref("");
+    const userStore = useUserStore();
 
     onMounted(() => {
       onAuthStateChanged(auth, async (user) => {
@@ -116,6 +118,10 @@ export default {
         fullName: fullName.value,
         phone: phone.value,
         profileImage: profileImage.value,
+      });
+      userStore.setUser(userStore.firebaseUser, {
+        ...userStore.profileData,
+        fullName: fullName.value,
       });
 
       router.push("/userprofile");

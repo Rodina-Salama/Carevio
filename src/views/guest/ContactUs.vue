@@ -24,6 +24,42 @@
           />
         </div>
         <div class="form-group">
+          <input
+            type="text"
+            v-model="form.phone"
+            :placeholder="$t('contact.placeholders.phone')"
+            required
+            pattern="^01[0-9]{9}$"
+            title="Phone number should start with 01 and be 11 digits long"
+            maxlength="11"
+          />
+
+          <p v-if="phoneError" class="error">{{ phoneError }}</p>
+        </div>
+
+        <div class="form-group">
+          <select v-model="form.type" required>
+            <option disabled value="">
+              {{ $t("contact.placeholders.selectType") }}
+            </option>
+            <option value="complain">{{ $t("contact.types.complain") }}</option>
+            <option value="cancellation" :disabled="!isUserLoggedIn">
+              {{ $t("contact.types.cancellation") }}
+            </option>
+          </select>
+        </div>
+        <div
+          class="form-group"
+          v-if="form.type === 'cancellation' && isUserLoggedIn"
+        >
+          <input
+            type="text"
+            v-model="form.bookingId"
+            :placeholder="$t('contact.placeholders.bookingId')"
+            required
+          />
+        </div>
+        <div class="form-group">
           <textarea
             v-model="form.message"
             :placeholder="$t('contact.placeholders.message')"
@@ -72,8 +108,9 @@
 </template>
 
 <script setup>
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ref } from "vue";
+
 import { db } from "@/firebase";
 import {
   collection,
@@ -83,43 +120,48 @@ import {
   doc,
 } from "firebase/firestore";
 
+const isUserLoggedIn = ref(false);
+
 const form = ref({
   name: "",
   email: "",
+  phone: "",
   message: "",
+  type: "", // complain / cancellation
+  bookingId: "",
 });
+
 const showSuccess = ref(false);
 
-// const handleSubmit = async () => {
-//   try {
-//     // Save to Firestore
-//     await addDoc(collection(db, "complains"), {
-//       name: form.value.name,
-//       email: form.value.email,
-//       message: form.value.message,
-//       createdAt: serverTimestamp(),
-//       status: "pending", // Default status
-//     });
-// };
+// Detect login state
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  isUserLoggedIn.value = !!user;
+});
 
 const handleSubmit = async () => {
   try {
-    const auth = getAuth();
     const user = auth.currentUser;
+
     let messageData = {
       name: form.value.name,
       email: form.value.email,
+      phone: form.value.phone,
       message: form.value.message,
+      type: form.value.type,
       createdAt: serverTimestamp(),
       status: "pending",
     };
 
+    // Add Booking ID only if cancellation + logged in
+    if (form.value.type === "cancellation" && isUserLoggedIn.value) {
+      messageData.bookingId = form.value.bookingId;
+    }
+
     if (user) {
-      // User is logged in
       messageData.userId = user.uid;
       messageData.userName = user.displayName || user.email || "";
 
-      // Fetch user type from Firestore (assuming you store it in "users" collection)
       try {
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
@@ -132,7 +174,6 @@ const handleSubmit = async () => {
         messageData.userType = "unknown";
       }
     } else {
-      // Guest: get IP address
       try {
         const ipRes = await fetch("https://api.ipify.org?format=json");
         const ipData = await ipRes.json();
@@ -144,7 +185,15 @@ const handleSubmit = async () => {
 
     await addDoc(collection(db, "complains"), messageData);
 
-    form.value = { name: "", email: "", message: "" };
+    // Reset form
+    form.value = {
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+      type: "",
+      bookingId: "",
+    };
     showSuccess.value = true;
     setTimeout(() => (showSuccess.value = false), 5000);
   } catch (error) {
@@ -196,6 +245,7 @@ const handleSubmit = async () => {
 }
 
 input,
+select,
 textarea {
   padding: 1rem;
   border: 1px solid #e0e0e0;

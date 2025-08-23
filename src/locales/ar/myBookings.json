@@ -14,5 +14,6 @@
   "modalTitle": "قيّم تجربتك",
   "reviewPlaceholder": "اكتب ملاحظاتك هنا...",
   "submit": "إرسال",
-  "bookSameNurse": "احجز نفس الممرض/ة"
+  "bookSameNurse": "احجز نفس الممرض/ة",
+  "bookingId": "رقم الحجز"
 }

@@ -3,6 +3,7 @@
   <div class="booking-details">
     <button class="back-btn" @click="goBack">← {{ $t("booking.back") }}</button>
     <h1>{{ $t("booking.bookingDetails") }}</h1>
+    <SMALL>{{ $t("myBookings.bookingId") }}: {{ bookingId }}</SMALL>
 
     <div v-if="loading">Loading...</div>
     <div v-else-if="booking">
@@ -263,6 +264,7 @@ export default {
       arrivalConfirmed,
       isActiveNow,
       convertTo24Hour,
+      bookingId,
     };
   },
 };

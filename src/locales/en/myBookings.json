@@ -14,5 +14,6 @@
   "modalTitle": "Rate your experience",
   "reviewPlaceholder": "Write your feedback here...",
   "submit": "Submit",
-  "bookSameNurse": "Book the same nurse"
+  "bookSameNurse": "Book the same nurse",
+  "bookingId": "Booking ID"
 }

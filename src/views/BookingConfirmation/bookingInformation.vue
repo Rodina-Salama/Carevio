@@ -17,18 +17,6 @@
     </p>
 
     <div class="form-box">
-      <!-- User Name -->
-      <div class="form-item">
-        <label for="userName">{{ $t("booking.yourName") }}</label>
-        <input
-          type="text"
-          id="userName"
-          v-model="booking.userName"
-          :placeholder="$t('booking.placeholderName')"
-          required
-        />
-      </div>
-
       <!-- Service Selection -->
       <div class="form-item">
         <label for="service">{{ $t("booking.selectService") }}</label>
@@ -343,7 +331,6 @@ const proceedToPayment = () => {
     return;
   }
   if (
-    !booking.value.userName ||
     !booking.value.service ||
     !booking.value.address ||
     !booking.value.date ||

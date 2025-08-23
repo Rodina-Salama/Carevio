@@ -16,6 +16,7 @@
         class="booking-card"
       >
         <div class="booking-info">
+          <SMALL>{{ $t("myBookings.bookingId") }}: {{ booking.id }}</SMALL>
           <p class="date">
             <strong>{{ booking.date }}</strong> — {{ booking.from }}
             {{ $t("myBookings.to") }}
@@ -46,6 +47,7 @@
         class="booking-card"
       >
         <div class="booking-info">
+          <SMALL>{{ $t("myBookings.bookingId") }}: {{ booking.id }}</SMALL>
           <p class="date">
             <strong>{{ booking.date }}</strong> — {{ booking.from }}
             {{ $t("myBookings.to") }}
