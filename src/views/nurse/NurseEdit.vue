@@ -168,6 +168,8 @@ import { cities, areas } from "@/data/locationOptions";
 import { languageOptions } from "@/data/languageOptions";
 import { availableDays } from "@/data/availableDays";
 import { onAuthStateChanged } from "firebase/auth";
+import { useUserStore } from "@/stores/userStore";
+
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 export default {
   components: {
@@ -260,6 +262,8 @@ export default {
           await updateDoc(appRef, {
             "documents.photo.url": data.secure_url,
           });
+          const userStore = useUserStore();
+          userStore.profileData.profileImage = data.secure_url;
 
           alert("Photo uploaded and saved successfully!");
         } else {

@@ -2,6 +2,12 @@
   <div class="browse-nurses">
     <!-- Search Bar -->
     <div class="search-bar">
+      <input
+        type="text"
+        v-model="searchName"
+        placeholder="Search by name"
+        class="name-search"
+      />
       <select v-model="selectedCity">
         <option value="">{{ $t("browse.chooseCity") }}</option>
         <option v-for="city in cities" :key="city" :value="city">
@@ -59,7 +65,7 @@
         <LoadingSpinner />
       </div>
       <template v-else-if="filteredNurses.length">
-        <div v-for="nurse in filteredNurses" :key="nurse.id" class="card">
+        <div v-for="nurse in paginatedNurses" :key="nurse.id" class="card">
           <div class="badge">{{ $t("browse.verifiedBadge") }}</div>
           <div class="header">
             <img
@@ -120,6 +126,15 @@
       </p>
     </div>
   </div>
+  <div v-if="totalPages > 1" class="pagination">
+    <button :disabled="currentPage === 1" @click="currentPage--">Prev</button>
+
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+    <button :disabled="currentPage === totalPages" @click="currentPage++">
+      Next
+    </button>
+  </div>
 </template>
 
 <script>
@@ -135,12 +150,15 @@ export default {
   data() {
     return {
       nurses: [],
+      searchName: "",
       selectedCity: "",
       selectedArea: "",
       selectedService: "",
       selectedGender: "",
       selectedDay: "",
       selectedShift: "",
+      currentPage: 1,
+      perPage: 12,
       cities,
       areas,
       specializationOptions,
@@ -150,6 +168,16 @@ export default {
     };
   },
   computed: {
+    paginatedNurses() {
+      const start = (this.currentPage - 1) * this.perPage;
+      const end = start + this.perPage;
+      return this.filteredNurses.slice(start, end);
+    },
+
+    totalPages() {
+      return Math.ceil(this.filteredNurses.length / this.perPage);
+    },
+
     acceptedNurses() {
       return this.nurses.filter(
         (nurse) =>
@@ -168,7 +196,11 @@ export default {
 
         const areaMatch =
           !this.selectedArea || nurse.personal.area === this.selectedArea;
-
+        const nameMatch =
+          !this.searchName ||
+          `${nurse.personal.firstNameEn} ${nurse.personal.lastNameEn}`
+            .toLowerCase()
+            .includes(this.searchName.toLowerCase());
         const serviceMatch =
           !this.selectedService ||
           nurse.professional.specialization?.includes(this.selectedService);
@@ -192,7 +224,8 @@ export default {
           serviceMatch &&
           genderMatch &&
           dayMatch &&
-          shiftMatch
+          shiftMatch &&
+          nameMatch
         );
       });
     },
@@ -302,7 +335,7 @@ export default {
 /* Desktop - 6 columns */
 @media (min-width: 1024px) {
   .search-bar {
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     max-width: 1200px;
   }
 }
@@ -582,6 +615,14 @@ export default {
     max-width: 100vw;
     overflow-x: auto;
   }
+  input[type="text"] {
+    padding: 0.5rem 0.75rem;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
   .search-bar select,
   .search-bar button {
     flex: 1 1 48%;
@@ -589,5 +630,32 @@ export default {
     width: 48%;
     box-sizing: border-box;
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #19599a;
+  border-radius: 4px;
+  background-color: white;
+  color: #19599a;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #19599a;
+  color: white;
 }
 </style>

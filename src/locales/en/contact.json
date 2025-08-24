@@ -21,7 +21,7 @@
     "button": "Got It!"
   },
   "types": {
-    "complain": "Complain",
+    "complain": "Complain request",
     "cancellation": "Cancellation"
   }
 }

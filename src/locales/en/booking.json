@@ -1,5 +1,6 @@
 {
     "title": "Book a Nurse",
+        "completePaypalFirst":"Please complete the PayPal payment first",
     "notAvailable": "This nurse is currently not available for booking.",
     "bookingWith": "You're booking with",
     "yourName": "Your Name",

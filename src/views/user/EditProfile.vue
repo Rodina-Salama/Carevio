@@ -122,6 +122,7 @@ export default {
       userStore.setUser(userStore.firebaseUser, {
         ...userStore.profileData,
         fullName: fullName.value,
+        profileImage: profileImage.value,
       });
 
       router.push("/userprofile");

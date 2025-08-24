@@ -9,7 +9,7 @@
           type="email"
           id="search-input"
           v-model="searchText"
-          :placeholder="$t('emailPlaceholder')"
+          :placeholder="$t('forgetPassword.emailPlaceholder')"
           required
         />
       </div>
